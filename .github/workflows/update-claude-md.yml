@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths-ignore:
       - 'CLAUDE.md'
+      - '.github/**'
 
 jobs:
   update-claude-md:
@@ -13,117 +14,15 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+      - name: Generate CLAUDE.md from project structure
+        run: python3 .github/scripts/generate-claude-md.py
 
-      - name: Install anthropic SDK
-        run: pip install anthropic
-
-      - name: Collect project structure
-        id: structure
-        run: |
-          echo "FILES<<EOF" >> $GITHUB_OUTPUT
-          find src prisma -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.prisma" \) \
-            ! -path "*/node_modules/*" \
-            | sort >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Read key files
-        id: content
-        run: |
-          {
-            echo 'CONTENT<<HEREDOC'
-            echo "=== package.json ==="
-            cat package.json
-            echo ""
-            echo "=== prisma/schema.prisma ==="
-            cat prisma/schema.prisma
-            echo ""
-            echo "=== auth.ts ==="
-            cat auth.ts
-            echo ""
-            echo "=== middleware.ts ==="
-            cat middleware.ts
-            echo ""
-            echo "=== src/lib/utils.ts ==="
-            cat src/lib/utils.ts
-            echo ""
-            echo "=== src/app/(app)/layout.tsx ==="
-            cat "src/app/(app)/layout.tsx"
-            echo ""
-            echo "=== src/app/api/trips/[id]/route.ts ==="
-            cat "src/app/api/trips/[id]/route.ts"
-            echo 'HEREDOC'
-          } >> $GITHUB_OUTPUT
-
-      - name: Generate CLAUDE.md via Claude API
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          python3 << 'PYEOF'
-          import anthropic
-          import os
-
-          files_list = """${{ steps.structure.outputs.FILES }}"""
-          key_content = """${{ steps.content.outputs.CONTENT }}"""
-
-          with open("CLAUDE.md", "r") as f:
-              current_claude_md = f.read()
-
-          client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-
-          prompt = f"""You are updating the CLAUDE.md file for a Next.js travel organizer project.
-
-          Current CLAUDE.md:
-          {current_claude_md}
-
-          Project file tree (src/, prisma/):
-          {files_list}
-
-          Key file contents:
-          {key_content}
-
-          Task: Update CLAUDE.md to reflect the current state of the project. Keep all sections that are still accurate. Add or update sections if new patterns, files, or architecture decisions are detected. Remove sections that are no longer relevant.
-
-          Rules:
-          - Start with exactly: "# CLAUDE.md\\n\\nThis file provides guidance to Claude Code (claude.ai/code) when working with code in this repository."
-          - Keep the Commands table
-          - Keep the Node.js/Scoop PATH note since it's Windows-specific
-          - Be concise — no obvious instructions, no generic advice
-          - Output ONLY the full updated CLAUDE.md content, nothing else
-          """
-
-          message = client.messages.create(
-              model="claude-sonnet-4-6",
-              max_tokens=4096,
-              messages=[{"role": "user", "content": prompt}]
-          )
-
-          updated = message.content[0].text.strip()
-
-          with open("CLAUDE.md", "w") as f:
-              f.write(updated + "\n")
-
-          print("CLAUDE.md updated successfully")
-          PYEOF
-
-      - name: Check for changes
-        id: diff
-        run: |
-          git diff --quiet CLAUDE.md && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
-
-      - name: Commit updated CLAUDE.md
-        if: steps.diff.outputs.changed == 'true'
+      - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add CLAUDE.md
-          git commit -m "docs: auto-update CLAUDE.md [skip ci]"
-          git push
+          git diff --staged --quiet && echo "No changes to CLAUDE.md" || \
+            (git commit -m "docs: auto-update CLAUDE.md [skip ci]" && git push)
