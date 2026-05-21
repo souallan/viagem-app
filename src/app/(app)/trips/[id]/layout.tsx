@@ -12,6 +12,8 @@ const tabs = [
   { href: "/budget", label: "Orçamento" },
   { href: "/documents", label: "Documentos" },
   { href: "/packing", label: "Malas" },
+  { href: "/map", label: "🗺️ Mapa" },
+  { href: "/compare", label: "💰 Cotação" },
 ];
 
 export default async function TripLayout({

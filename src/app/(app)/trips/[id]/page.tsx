@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate, formatCurrency, tripStatusLabel, tripStatusColor } from "@/lib/utils";
 import { Calendar, MapPin, DollarSign, FileText, Luggage, Activity } from "lucide-react";
+import WeatherWidget from "@/components/trips/weather-widget";
 
 export default async function TripOverviewPage({
   params,
@@ -63,6 +64,8 @@ export default async function TripOverviewPage({
       {trip.description && (
         <p className="text-gray-600">{trip.description}</p>
       )}
+
+      <WeatherWidget destination={trip.destination} />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
