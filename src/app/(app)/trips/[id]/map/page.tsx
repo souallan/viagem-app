@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Card, CardContent } from "@/components/ui/card";
+import { ExternalLink } from "lucide-react";
 import type { MapPlace } from "@/components/trips/map-view";
 
 const MapView = dynamic(() => import("@/components/trips/map-view"), {
@@ -51,6 +52,17 @@ const legend = [
   { color: "bg-emerald-500", label: "Atividade" },
   { color: "bg-amber-500", label: "Evento" },
 ];
+
+function buildGoogleMapsUrl(destination: string, places: MapPlace[]): string {
+  const waypoints = places
+    .filter((p) => p.location)
+    .slice(0, 9) // Google Maps allows up to 9 waypoints
+    .map((p) => encodeURIComponent(p.location))
+    .join("|");
+  const dest = encodeURIComponent(destination);
+  if (!waypoints) return `https://maps.google.com/?q=${dest}`;
+  return `https://www.google.com/maps/dir/?api=1&destination=${dest}&waypoints=${waypoints}`;
+}
 
 export default function MapPage() {
   const { id } = useParams<{ id: string }>();
@@ -114,13 +126,24 @@ export default function MapPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h2 className="text-lg font-semibold text-gray-900">Mapa da viagem</h2>
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
           {legend.map((l) => (
             <span key={l.label} className="flex items-center gap-1.5 text-xs text-gray-500">
               <span className={`w-2.5 h-2.5 rounded-full ${l.color}`} />
               {l.label}
             </span>
           ))}
+          {places.length > 0 && (
+            <a
+              href={buildGoogleMapsUrl(trip.destination, places)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 border border-red-100 transition-colors"
+            >
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+              Exportar para Google Maps
+            </a>
+          )}
         </div>
       </div>
 

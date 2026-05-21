@@ -18,26 +18,75 @@ interface PackingItem {
   quantity: number;
 }
 
-const TEMPLATE_CATEGORIES = [
-  { label: "Documentos", items: ["Passaporte", "Visto", "Seguro viagem", "Passagens impressas"] },
-  { label: "Roupas", items: ["Camisetas", "Calças", "Cuecas/Calcinhas", "Meias", "Pijama", "Agasalho"] },
-  { label: "Higiene", items: ["Escova de dentes", "Pasta de dente", "Shampoo", "Condicionador", "Protetor solar", "Desodorante"] },
-  { label: "Eletrônicos", items: ["Carregador de celular", "Adaptador de tomada", "Câmera", "Fones de ouvido"] },
-  { label: "Saúde", items: ["Remédios", "Analgésico", "Band-aid", "Repelente"] },
+const BASE_TEMPLATES = [
+  { label: "Documentos", icon: "📄", items: ["Passaporte", "Visto", "Seguro viagem", "Passagens impressas", "Carteira de identidade"] },
+  { label: "Roupas", icon: "👕", items: ["Camisetas", "Calças", "Cuecas/Calcinhas", "Meias", "Pijama", "Agasalho"] },
+  { label: "Higiene", icon: "🧴", items: ["Escova de dentes", "Pasta de dente", "Shampoo", "Condicionador", "Protetor solar", "Desodorante"] },
+  { label: "Eletrônicos", icon: "🔌", items: ["Carregador de celular", "Adaptador de tomada", "Câmera", "Fones de ouvido", "Power bank"] },
+  { label: "Saúde", icon: "💊", items: ["Remédios", "Analgésico", "Band-aid", "Repelente", "Antialérgico"] },
 ];
+
+const DESTINATION_EXTRAS: { keywords: string[]; label: string; icon: string; items: string[] }[] = [
+  {
+    keywords: ["praia", "beach", "bali", "cancún", "cancun", "maldivas", "maldives", "caribe", "caribbean", "hawaii", "havai"],
+    label: "Praia / Tropical", icon: "🏖️",
+    items: ["Biquíni/Sunga", "Toalha de praia", "Chinelo", "Protetor solar FPS 60+", "Óculos de sol", "Saída de praia"],
+  },
+  {
+    keywords: ["europa", "europe", "paris", "london", "roma", "amsterdam", "barcelona", "berlin", "viena", "prague", "praga"],
+    label: "Europa (adaptador)", icon: "🇪🇺",
+    items: ["Adaptador tipo C/F", "Casaco impermeável", "Roupas em camadas", "ETIAS impresso"],
+  },
+  {
+    keywords: ["japão", "japan", "tokyo", "osaka", "kyoto"],
+    label: "Japão", icon: "🇯🇵",
+    items: ["Adaptador tipo A", "IC Card (Suica/Pasmo)", "Lenços descartáveis", "Cartão de visita", "Seguro viagem"],
+  },
+  {
+    keywords: ["inverno", "neve", "ski", "alpes", "alps", "noruega", "norway", "finlândia", "finland", "islândia", "iceland", "canada", "canadá"],
+    label: "Destino frio / neve", icon: "❄️",
+    items: ["Casaco térmico", "Luvas", "Gorro", "Meias térmicas", "Bota impermeável", "Manta de pescoço"],
+  },
+  {
+    keywords: ["disney", "universal", "parque", "theme park", "orlando"],
+    label: "Parques temáticos", icon: "🎢",
+    items: ["Tênis confortável", "Boné", "Garrafa d'água reutilizável", "Protetor solar", "Carteira de ativação"],
+  },
+  {
+    keywords: ["safari", "africa", "áfica", "quênia", "kenya", "tanzânia", "tanzania"],
+    label: "Safari / África", icon: "🦁",
+    items: ["Roupas tons neutros", "Binóculo", "Repelente forte", "Vacina Febre Amarela", "Bota fechada"],
+  },
+];
+
+function getSmartSuggestions(destination: string) {
+  if (!destination) return [];
+  const lower = destination.toLowerCase();
+  return DESTINATION_EXTRAS.filter((extra) =>
+    extra.keywords.some((kw) => lower.includes(kw))
+  );
+}
 
 export default function PackingPage() {
   const { id } = useParams<{ id: string }>();
   const [items, setItems] = useState<PackingItem[]>([]);
+  const [destination, setDestination] = useState("");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: "", category: "", quantity: "1" });
 
   async function load() {
-    const res = await fetch(`/api/trips/${id}/packing`);
-    if (res.ok) {
-      const data = await res.json();
+    const [packRes, tripRes] = await Promise.all([
+      fetch(`/api/trips/${id}/packing`),
+      fetch(`/api/trips/${id}`),
+    ]);
+    if (packRes.ok) {
+      const data = await packRes.json();
       setItems(data.items ?? []);
+    }
+    if (tripRes.ok) {
+      const trip = await tripRes.json();
+      setDestination(trip.destination ?? "");
     }
   }
 
@@ -130,25 +179,57 @@ export default function PackingPage() {
 
       {/* Templates rápidos */}
       {total === 0 && (
-        <div>
-          <h3 className="text-sm font-semibold text-gray-500 mb-3">Templates rápidos</h3>
-          <div className="space-y-3">
-            {TEMPLATE_CATEGORIES.map((cat) => (
-              <div key={cat.label}>
-                <p className="text-xs font-medium text-gray-400 mb-1.5">{cat.label}</p>
-                <div className="flex flex-wrap gap-2">
-                  {cat.items.map((item) => (
-                    <button
-                      key={item}
-                      onClick={() => addTemplateItem(item, cat.label)}
-                      className="text-xs bg-gray-100 hover:bg-blue-50 hover:text-blue-700 text-gray-600 px-2.5 py-1 rounded-full transition-colors"
-                    >
-                      + {item}
-                    </button>
+        <div className="space-y-5">
+          {/* Smart suggestions based on destination */}
+          {(() => {
+            const smart = getSmartSuggestions(destination);
+            return smart.length > 0 ? (
+              <div className="rounded-xl border border-teal-100 bg-teal-50 p-4">
+                <p className="text-xs font-semibold text-teal-700 mb-3 flex items-center gap-1.5">
+                  ✨ Sugestões para {destination}
+                </p>
+                <div className="space-y-3">
+                  {smart.map((cat) => (
+                    <div key={cat.label}>
+                      <p className="text-xs font-medium text-teal-600 mb-1.5">{cat.icon} {cat.label}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {cat.items.map((item) => (
+                          <button
+                            key={item}
+                            onClick={() => addTemplateItem(item, cat.label)}
+                            className="text-xs bg-white hover:bg-teal-100 hover:text-teal-700 text-gray-600 border border-teal-200 px-2.5 py-1 rounded-full transition-colors"
+                          >
+                            + {item}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
-            ))}
+            ) : null;
+          })()}
+
+          <div>
+            <h3 className="text-sm font-semibold text-gray-500 mb-3">Itens essenciais</h3>
+            <div className="space-y-3">
+              {BASE_TEMPLATES.map((cat) => (
+                <div key={cat.label}>
+                  <p className="text-xs font-medium text-gray-400 mb-1.5">{cat.icon} {cat.label}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {cat.items.map((item) => (
+                      <button
+                        key={item}
+                        onClick={() => addTemplateItem(item, cat.label)}
+                        className="text-xs bg-gray-100 hover:bg-blue-50 hover:text-blue-700 text-gray-600 px-2.5 py-1 rounded-full transition-colors"
+                      >
+                        + {item}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -162,11 +243,24 @@ export default function PackingPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {Object.entries(grouped).map(([category, catItems]) => (
+          {Object.entries(grouped).map(([category, catItems]) => {
+            const catPacked = catItems.filter((i) => i.isPacked).length;
+            const catTotal = catItems.length;
+            const catPct = catTotal > 0 ? Math.round((catPacked / catTotal) * 100) : 0;
+            return (
             <div key={category}>
-              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+              <div className="flex items-center justify-between mb-1.5">
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
                 {category}
               </h3>
+              <span className="text-xs text-gray-400">{catPacked}/{catTotal} · {catPct}%</span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-1 mb-2">
+                <div
+                  className={`h-1 rounded-full transition-all ${catPct === 100 ? "bg-green-500" : "bg-sky-400"}`}
+                  style={{ width: `${catPct}%` }}
+                />
+              </div>
               <div className="space-y-1.5">
                 {catItems.map((item) => (
                   <div
@@ -200,7 +294,8 @@ export default function PackingPage() {
                 ))}
               </div>
             </div>
-          ))}
+          );
+          })}
         </div>
       )}
 

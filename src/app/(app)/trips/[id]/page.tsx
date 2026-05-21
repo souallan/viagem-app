@@ -10,6 +10,7 @@ import {
   Hotel, Star, Compass, Newspaper,
 } from "lucide-react";
 import WeatherWidget from "@/components/trips/weather-widget";
+import ImmigrationAlerts from "@/components/trips/immigration-alerts";
 
 export default async function TripOverviewPage({
   params,
@@ -78,6 +79,8 @@ export default async function TripOverviewPage({
       {trip.description && <p className="text-gray-600">{trip.description}</p>}
 
       <WeatherWidget destination={trip.destination} />
+
+      <ImmigrationAlerts destination={trip.destination} />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">

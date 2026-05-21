@@ -14,6 +14,7 @@ const tabs = [
   { href: "/packing", label: "Malas" },
   { href: "/map", label: "🗺️ Mapa" },
   { href: "/compare", label: "💰 Cotação" },
+  { href: "/currency", label: "💱 Divisas" },
 ];
 
 export default async function TripLayout({
