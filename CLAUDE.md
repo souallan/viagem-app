@@ -108,9 +108,11 @@ Registered routes:
 - `/trips/[id]`
 - `/trips/[id]/accommodation`
 - `/trips/[id]/budget`
+- `/trips/[id]/compare`
 - `/trips/[id]/documents`
 - `/trips/[id]/edit`
 - `/trips/[id]/itinerary`
+- `/trips/[id]/map`
 - `/trips/[id]/packing`
 - `/trips/[id]/transport`
 - `/trips/new`
