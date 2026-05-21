@@ -105,6 +105,7 @@ Registered routes:
 - `/dashboard`
 - `/login`
 - `/register`
+- `/routes`
 - `/trips/[id]`
 - `/trips/[id]/accommodation`
 - `/trips/[id]/budget`
