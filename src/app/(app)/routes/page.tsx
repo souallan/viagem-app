@@ -5,8 +5,6 @@ import Link from "next/link";
 import { Search, Clock, MapPin, ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
 import { ROUTE_TEMPLATES, RouteTemplate } from "@/lib/route-templates";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 const CONTINENTS = ["Todos", "Europa", "Ásia", "Américas", "Oriente Médio"];
 
@@ -33,7 +31,7 @@ export default function RoutesPage() {
     <div className="space-y-8">
       {/* Header */}
       <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-8 text-white">
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-10" aria-hidden="true">
           <div className="absolute top-4 right-8 text-6xl animate-float">✈️</div>
           <div className="absolute bottom-4 left-12 text-4xl animate-float" style={{ animationDelay: "1s" }}>🗺️</div>
           <div className="absolute top-8 left-1/3 text-3xl animate-float" style={{ animationDelay: "2s" }}>🌍</div>
@@ -118,9 +116,10 @@ function TemplateCard({
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm travel-card-hover overflow-hidden flex flex-col">
       {/* Cover Image */}
       <div className="relative h-48 overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={template.coverImage}
-          alt={template.destination}
+          alt={`Foto de ${template.destination}`}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -212,11 +211,12 @@ function TemplateCard({
             )}
           </button>
 
-          <Link href={`/trips/new?template=${template.id}`} className="block">
-            <Button className="w-full gap-2 bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-600 hover:to-teal-600 border-0 text-white">
-              Usar este roteiro
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Button>
+          <Link
+            href={`/trips/new?template=${template.id}`}
+            className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-semibold bg-gradient-to-r from-sky-500 to-teal-500 hover:from-sky-600 hover:to-teal-600 text-white transition-all shadow-sm shadow-sky-200"
+          >
+            Usar este roteiro
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </Link>
         </div>
       </div>

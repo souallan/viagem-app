@@ -5,10 +5,8 @@ import {
   Plus, Globe, Plane, MapPin, TrendingUp, Route,
   Calendar, Clock, ArrowRight,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { TripCard } from "@/components/trips/trip-card";
 import { ROUTE_TEMPLATES } from "@/lib/route-templates";
-import { tripStatusColor, tripStatusLabel } from "@/lib/utils";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -35,7 +33,7 @@ export default async function DashboardPage() {
 
         <div className="relative z-10 flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-3xl animate-[float_3s_ease-in-out_infinite]">✈️</span>
+            <span className="text-3xl animate-[float_3s_ease-in-out_infinite]" aria-hidden="true">✈️</span>
             <p className="text-sky-400 text-sm font-semibold tracking-wide uppercase">Bem-vindo de volta</p>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">
@@ -63,10 +61,11 @@ export default async function DashboardPage() {
           ))}
         </div>
 
-        <Link href="/trips/new" className="relative z-10 ml-6 hidden sm:block">
-          <Button className="gap-2 bg-sky-500 hover:bg-sky-400 text-white shadow-lg shadow-sky-900/40 border-0">
-            <Plus className="h-4 w-4" /> Nova viagem
-          </Button>
+        <Link
+          href="/trips/new"
+          className="relative z-10 ml-6 hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-sky-500 hover:bg-sky-400 text-white shadow-lg shadow-sky-900/40 transition-colors"
+        >
+          <Plus className="h-4 w-4" aria-hidden="true" /> Nova viagem
         </Link>
       </div>
 
@@ -98,9 +97,10 @@ export default async function DashboardPage() {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <span className="absolute bottom-2 left-2 text-xl">{tmpl.flag}</span>
+                <span className="absolute bottom-2 left-2 text-xl" aria-hidden="true">{tmpl.flag}</span>
                 <span className="absolute top-2 right-2 bg-black/40 text-white text-xs px-2 py-0.5 rounded-full backdrop-blur-sm flex items-center gap-1">
-                  <Clock className="h-3 w-3" /> {tmpl.duration}d
+                  <Clock className="h-3 w-3" aria-hidden="true" />
+                  <span>{tmpl.duration} dias</span>
                 </span>
               </div>
               <div className="p-3">
@@ -156,21 +156,23 @@ export default async function DashboardPage() {
       {/* ── Empty state ── */}
       {trips.length === 0 && (
         <div className="text-center py-20">
-          <div className="text-6xl mb-4">🌍</div>
+          <div className="text-6xl mb-4" aria-hidden="true">🌍</div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">Sua aventura começa aqui</h3>
           <p className="text-gray-500 mb-8 max-w-sm mx-auto">
-            Crie sua primeira viagem do zero ou escolha um roteiro pronto para uma das destinos mais populares do mundo.
+            Crie sua primeira viagem do zero ou escolha um roteiro pronto para um dos destinos mais populares do mundo.
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Link href="/trips/new">
-              <Button size="lg" className="gap-2 bg-sky-600 hover:bg-sky-700">
-                <Plus className="h-5 w-5" /> Nova viagem
-              </Button>
+            <Link
+              href="/trips/new"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-base font-semibold bg-sky-600 hover:bg-sky-700 text-white transition-colors"
+            >
+              <Plus className="h-5 w-5" aria-hidden="true" /> Nova viagem
             </Link>
-            <Link href="/routes">
-              <Button size="lg" variant="outline" className="gap-2">
-                <Route className="h-5 w-5" /> Explorar roteiros
-              </Button>
+            <Link
+              href="/routes"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-base font-semibold border border-gray-300 bg-white text-gray-700 hover:border-sky-400 hover:text-sky-600 transition-colors"
+            >
+              <Route className="h-5 w-5" aria-hidden="true" /> Explorar roteiros
             </Link>
           </div>
         </div>
