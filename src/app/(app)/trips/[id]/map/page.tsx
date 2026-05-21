@@ -19,6 +19,7 @@ interface Activity {
   id: string;
   title: string;
   type: string;
+  date: string;
   location: string | null;
   address: string | null;
 }
@@ -82,6 +83,11 @@ export default function MapPage() {
     );
   }
 
+  // Assign day numbers based on date order
+  const sortedDates = [...new Set(activities.map((a) => a.date.split("T")[0]))].sort();
+  const dateToDay: Record<string, number> = {};
+  sortedDates.forEach((d, i) => { dateToDay[d] = i + 1; });
+
   const places: MapPlace[] = [
     ...activities
       .filter((a) => a.location || a.address)
@@ -90,6 +96,7 @@ export default function MapPage() {
         location: a.location || a.address || "",
         category: (a.type === "EVENT" ? "event" : "activity") as MapPlace["category"],
         icon: activityTypeIcon[a.type] ?? "📌",
+        day: dateToDay[a.date.split("T")[0]] ?? undefined,
       })),
     ...accommodations
       .filter((a) => a.address)
