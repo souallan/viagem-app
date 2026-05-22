@@ -6,7 +6,7 @@ import { LayoutDashboard, Route, Plane, Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Meus Roteiros", icon: LayoutDashboard },
   { href: "/routes", label: "Roteiros", icon: Route },
   { href: "/tips", label: "Dicas", icon: Lightbulb },
 ];
