@@ -309,12 +309,17 @@ function NewTripForm() {
   }
 
   const applyTemplateActivities = useCallback(
-    async (tripId: string) => {
+    async (tripId: string, tripStartDate: string) => {
       if (!template) return;
       setApplyingTemplate(true);
+      // Base date: use trip startDate if provided, otherwise today
+      const base = tripStartDate ? new Date(tripStartDate) : new Date();
       const total = template.activities.length;
       for (let i = 0; i < total; i++) {
         const act = template.activities[i];
+        // Calculate actual date from day number (day 1 = base, day 2 = base+1, etc.)
+        const actDate = new Date(base);
+        actDate.setDate(actDate.getDate() + (act.day - 1));
         try {
           await fetch(`/api/trips/${tripId}/activities`, {
             method: "POST",
@@ -322,6 +327,7 @@ function NewTripForm() {
             body: JSON.stringify({
               title: act.title,
               type: act.type,
+              date: actDate.toISOString(),
               startTime: act.startTime ?? null,
               endTime: act.endTime ?? null,
               location: act.location ?? null,
@@ -355,7 +361,12 @@ function NewTripForm() {
       const res = await fetch("/api/trips", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, destination: destinationValue }),
+        body: JSON.stringify({
+          ...form,
+          destination: destinationValue,
+          // Include template cover image if no custom image was set
+          coverImage: template?.coverImage ?? null,
+        }),
       });
 
       const data = await res.json();
@@ -366,7 +377,7 @@ function NewTripForm() {
       }
 
       if (template) {
-        await applyTemplateActivities(data.id);
+        await applyTemplateActivities(data.id, form.startDate);
         router.push(`/trips/${data.id}/itinerary`);
       } else {
         router.push(`/trips/${data.id}`);
@@ -504,6 +515,23 @@ function NewTripForm() {
                 rows={3}
               />
             </div>
+
+            {/* Template highlights */}
+            {template && (
+              <div className="rounded-xl border border-sky-100 bg-sky-50 p-4 space-y-2">
+                <p className="text-xs font-semibold text-sky-700 uppercase tracking-wider">O que está incluído neste roteiro</p>
+                <ul className="space-y-1">
+                  {template.highlights.map((h, i) => (
+                    <li key={i} className="text-xs text-gray-700 flex items-start gap-1.5">
+                      <span className="text-sky-500 mt-0.5">✓</span> {h}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-xs text-gray-500 pt-1 border-t border-sky-100">
+                  <span className="font-medium">Orçamento estimado:</span> {template.estimatedBudget} por pessoa · {template.activities.length} atividades planejadas
+                </p>
+              </div>
+            )}
 
             {/* Moeda + Orçamento */}
             <div className="grid grid-cols-2 gap-4">

@@ -29,7 +29,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { title, destination, description, startDate, endDate, currency, budget, status } = body;
+    const { title, destination, description, startDate, endDate, currency, budget, status, coverImage } = body;
 
     if (!title || !destination) {
       return NextResponse.json(
@@ -48,6 +48,7 @@ export async function POST(request: Request) {
         currency: currency ?? "BRL",
         budget: budget ? parseFloat(budget) : null,
         status: status ?? "PLANNING",
+        coverImage: coverImage ?? null,
         userId: session.user.id,
       },
     });
