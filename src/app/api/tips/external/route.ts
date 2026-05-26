@@ -2,8 +2,7 @@
 import Parser from "rss-parser";
 import { RSS_FEEDS, type ExternalTip } from "@/lib/rss-feeds";
 
-// Revalida cache a cada 1 hora
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 const parser = new Parser({
   timeout: 8000,
