@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { CurrencyInput } from "@/components/ui/currency-input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -95,6 +96,10 @@ export default function EditTripPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    if (form.startDate && form.endDate && form.endDate < form.startDate) {
+      setError("A data de volta não pode ser anterior à data de ida.");
+      return;
+    }
     setLoading(true);
 
     const res = await fetch(`/api/trips/${id}`, {
@@ -289,11 +294,31 @@ export default function EditTripPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="startDate">Data de ida</Label>
-                <Input id="startDate" name="startDate" type="date" value={form.startDate} onChange={handleChange} />
+                <Input
+                  id="startDate"
+                  name="startDate"
+                  type="date"
+                  value={form.startDate}
+                  onChange={(e) => {
+                    const newStart = e.target.value;
+                    setForm((prev) => ({
+                      ...prev,
+                      startDate: newStart,
+                      endDate: prev.endDate && prev.endDate < newStart ? "" : prev.endDate,
+                    }));
+                  }}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="endDate">Data de volta</Label>
-                <Input id="endDate" name="endDate" type="date" value={form.endDate} onChange={handleChange} />
+                <Input
+                  id="endDate"
+                  name="endDate"
+                  type="date"
+                  value={form.endDate}
+                  min={form.startDate || undefined}
+                  onChange={handleChange}
+                />
               </div>
             </div>
 
@@ -315,15 +340,10 @@ export default function EditTripPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="budget">Orçamento total</Label>
-                <Input
-                  id="budget"
-                  name="budget"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="0,00"
+                <CurrencyInput
                   value={form.budget}
-                  onChange={handleChange}
+                  onChange={(raw) => setForm((p) => ({ ...p, budget: raw }))}
+                  currency={form.currency}
                 />
               </div>
             </div>

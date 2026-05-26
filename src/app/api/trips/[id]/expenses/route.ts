@@ -63,6 +63,44 @@ export async function POST(
   }
 }
 
+export async function PUT(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await auth();
+  if (!session?.user?.id) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+
+  const { id } = await params;
+  const trip = await verifyTrip(id, session.user.id);
+  if (!trip) return NextResponse.json({ error: "Viagem não encontrada" }, { status: 404 });
+
+  try {
+    const body = await req.json();
+    const { expenseId, title, category, amount, currency, date, notes, paidBy } = body;
+
+    if (!expenseId || !title || !amount || !date) {
+      return NextResponse.json({ error: "ID, título, valor e data são obrigatórios" }, { status: 400 });
+    }
+
+    await prisma.expense.updateMany({
+      where: { id: expenseId, tripId: id },
+      data: {
+        title,
+        category: category ?? "OTHER",
+        amount: parseFloat(amount),
+        currency: currency ?? trip.currency,
+        date: new Date(date),
+        notes: notes || null,
+        paidBy: paidBy || null,
+      },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Erro ao atualizar despesa" }, { status: 500 });
+  }
+}
+
 export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> }

@@ -66,6 +66,40 @@ export async function POST(
   }
 }
 
+export async function PUT(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await auth();
+  if (!session?.user?.id) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+
+  const { id } = await params;
+  const trip = await verifyTrip(id, session.user.id);
+  if (!trip) return NextResponse.json({ error: "Viagem não encontrada" }, { status: 404 });
+
+  try {
+    const body = await req.json();
+    const { itemId, name, category, quantity } = body;
+
+    if (!itemId || !name) {
+      return NextResponse.json({ error: "ID e nome são obrigatórios" }, { status: 400 });
+    }
+
+    const item = await prisma.packingItem.update({
+      where: { id: itemId },
+      data: {
+        name,
+        category: category || null,
+        quantity: quantity ? parseInt(quantity) : 1,
+      },
+    });
+
+    return NextResponse.json(item);
+  } catch {
+    return NextResponse.json({ error: "Erro ao atualizar item" }, { status: 500 });
+  }
+}
+
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }

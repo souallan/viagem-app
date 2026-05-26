@@ -66,6 +66,47 @@ export async function POST(
   }
 }
 
+export async function PUT(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await auth();
+  if (!session?.user?.id) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+
+  const { id } = await params;
+  const trip = await verifyTrip(id, session.user.id);
+  if (!trip) return NextResponse.json({ error: "Viagem não encontrada" }, { status: 404 });
+
+  try {
+    const body = await req.json();
+    const { itemId, type, from, to, departureTime, arrivalTime, carrier, bookingRef, seat, cost, notes } = body;
+
+    if (!itemId || !from || !to || !departureTime) {
+      return NextResponse.json({ error: "ID, origem, destino e horário de partida são obrigatórios" }, { status: 400 });
+    }
+
+    await prisma.transport.updateMany({
+      where: { id: itemId, tripId: id },
+      data: {
+        type: type ?? "FLIGHT",
+        from,
+        to,
+        departureTime: new Date(departureTime),
+        arrivalTime: arrivalTime ? new Date(arrivalTime) : null,
+        carrier: carrier || null,
+        bookingRef: bookingRef || null,
+        seat: seat || null,
+        cost: cost ? parseFloat(cost) : null,
+        notes: notes || null,
+      },
+    });
+
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Erro ao atualizar transporte" }, { status: 500 });
+  }
+}
+
 export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> }

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <radialGradient id="bg" cx="35%" cy="65%" r="75%">
+      <stop offset="0%"   stop-color="#1e1b5e"/>
+      <stop offset="100%" stop-color="#07060f"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="32" height="32" rx="7" fill="url(#bg)"/>
+
+  <!-- Route path -->
+  <path d="M 7 25 C 10 20, 14 18, 16 16 S 21 12, 25 9"
+        stroke="rgba(255,255,255,0.45)" stroke-width="1.8"
+        stroke-linecap="round" fill="none"/>
+
+  <!-- Origin dot -->
+  <circle cx="7"  cy="25" r="2.8" fill="#f97316"/>
+
+  <!-- Waypoint -->
+  <circle cx="16" cy="16" r="2.2" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.4"/>
+
+  <!-- Destination -->
+  <circle cx="25" cy="9" r="4"   fill="#f59e0b" opacity="0.3"/>
+  <circle cx="25" cy="9" r="2.8" fill="#f59e0b"/>
+  <circle cx="25" cy="9" r="1.3" fill="#fde68a"/>
+</svg>

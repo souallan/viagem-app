@@ -38,7 +38,7 @@ export async function POST(
 
   try {
     const body = await req.json();
-    const { name, type, address, checkIn, checkOut, confirmationNumber, phone, website, cost, notes } = body;
+    const { name, type, address, checkIn, checkOut, confirmationNumber, phone, website, cost, currency, notes } = body;
 
     if (!name || !checkIn || !checkOut) {
       return NextResponse.json({ error: "Nome, check-in e check-out são obrigatórios" }, { status: 400 });
@@ -56,13 +56,58 @@ export async function POST(
         phone,
         website,
         cost: cost ? parseFloat(cost) : null,
+        currency: currency ?? "BRL",
         notes,
       },
     });
 
     return NextResponse.json(item, { status: 201 });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("[accommodations POST]", msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
+}
+
+export async function PUT(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await auth();
+  if (!session?.user?.id) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+
+  const { id } = await params;
+  const trip = await verifyTrip(id, session.user.id);
+  if (!trip) return NextResponse.json({ error: "Viagem não encontrada" }, { status: 404 });
+
+  try {
+    const body = await req.json();
+    const { itemId, name, type, address, checkIn, checkOut, confirmationNumber, phone, website, cost, currency, notes } = body;
+
+    if (!itemId || !name || !checkIn || !checkOut) {
+      return NextResponse.json({ error: "ID, nome, check-in e check-out são obrigatórios" }, { status: 400 });
+    }
+
+    await prisma.accommodation.updateMany({
+      where: { id: itemId, tripId: id },
+      data: {
+        name,
+        type: type ?? "HOTEL",
+        address: address || null,
+        checkIn: new Date(checkIn),
+        checkOut: new Date(checkOut),
+        confirmationNumber: confirmationNumber || null,
+        phone: phone || null,
+        website: website || null,
+        cost: cost ? parseFloat(cost) : null,
+        currency: currency ?? "BRL",
+        notes: notes || null,
+      },
+    });
+
+    return NextResponse.json({ success: true });
   } catch {
-    return NextResponse.json({ error: "Erro ao criar hospedagem" }, { status: 500 });
+    return NextResponse.json({ error: "Erro ao atualizar hospedagem" }, { status: 500 });
   }
 }
 

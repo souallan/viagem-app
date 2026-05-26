@@ -1,21 +1,10 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { cn } from "@/lib/utils";
-
-const tabs = [
-  { href: "", label: "Visão geral" },
-  { href: "/itinerary", label: "Itinerário" },
-  { href: "/accommodation", label: "Hospedagem" },
-  { href: "/transport", label: "Transporte" },
-  { href: "/budget", label: "Orçamento" },
-  { href: "/documents", label: "Documentos" },
-  { href: "/packing", label: "Malas" },
-  { href: "/map", label: "🗺️ Mapa" },
-  { href: "/compare", label: "💰 Cotação" },
-  { href: "/currency", label: "💱 Divisas" },
-];
+import { MapPin } from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { TripTabs } from "@/components/trips/trip-tabs";
 
 export default async function TripLayout({
   children,
@@ -33,30 +22,83 @@ export default async function TripLayout({
 
   if (!trip) notFound();
 
+  const destinations = trip.destination
+    ? trip.destination.split(" → ").map((d) => d.trim()).filter(Boolean)
+    : [];
+
+  const startStr = trip.startDate
+    ? format(new Date(trip.startDate), "d MMM", { locale: ptBR })
+    : null;
+  const endStr = trip.endDate
+    ? format(new Date(trip.endDate), "d MMM yyyy", { locale: ptBR })
+    : null;
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">{trip.title}</h1>
-        <p className="text-gray-500">{trip.destination}</p>
+    <div className="space-y-0">
+      {/* ── Trip Hero Header ── */}
+      <div
+        className="relative overflow-hidden rounded-2xl mb-6"
+        style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #1a56cc 55%, #6d28d9 100%)" }}
+      >
+        {/* Dot pattern */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }}
+        />
+        {/* Blur orbs */}
+        <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full opacity-20"
+          style={{ background: "radial-gradient(circle, #a78bfa, transparent)" }} />
+        <div className="absolute -bottom-8 -left-8 w-40 h-40 rounded-full opacity-15"
+          style={{ background: "radial-gradient(circle, #38bdf8, transparent)" }} />
+
+        <div className="relative z-10 px-6 py-5 sm:px-8 sm:py-6">
+          {/* Title row */}
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight tracking-tight drop-shadow">
+              {trip.title}
+            </h1>
+            {startStr && (
+              <div className="shrink-0 text-right">
+                <p className="text-[10px] text-white/50 font-bold uppercase tracking-widest">Período</p>
+                <p className="text-xs font-bold text-white/80 mt-0.5 whitespace-nowrap">
+                  {startStr}{endStr ? ` → ${endStr}` : ""}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Destination pills */}
+          {destinations.length > 0 && (
+            <div className="flex items-center flex-wrap gap-1.5">
+              <MapPin className="h-3.5 w-3.5 text-white/50 shrink-0" />
+              {destinations.map((dest, i) => {
+                const city = dest.split(",")[0].trim();
+                return (
+                  <div key={i} className="flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-white/15 border border-white/25 text-white backdrop-blur-sm hover:bg-white/25 transition-colors">
+                      {city}
+                    </span>
+                    {i < destinations.length - 1 && (
+                      <svg className="h-3 w-3 text-white/40 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
-      <nav className="flex gap-1 border-b border-gray-200 overflow-x-auto">
-        {tabs.map((tab) => {
-          const href = `/trips/${id}${tab.href}`;
-          return (
-            <Link
-              key={tab.href}
-              href={href}
-              className={cn(
-                "px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors",
-                "border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300"
-              )}
-            >
-              {tab.label}
-            </Link>
-          );
-        })}
-      </nav>
+      {/* ── Tab navigation ── */}
+      <div className="mb-6">
+        <TripTabs tripId={id} />
+        <div className="h-px bg-gray-200 mt-1" />
+      </div>
 
       <div>{children}</div>
     </div>

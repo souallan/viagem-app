@@ -2,79 +2,237 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Design Tokens ──────────────────────────────────────────────── */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
-  }
+    /* Brand — toned down, more sophisticated */
+    --coral:   14 85%  52%;     /* #E8421A — deeper, less saturated */
+    --ocean:   199 80% 36%;     /* #0D7BA3 — steel blue-teal */
+    --gold:    38  70%  50%;    /* #C98B20 — muted gold */
+    --navy:    220 40%  10%;    /* #0E1520 */
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    /* Surfaces */
+    --background:          220  14%  97%;   /* #F5F6F8 cool light gray */
+    --foreground:          220  25%  12%;   /* #161C26 */
+    --card:                0    0%  100%;
+    --card-foreground:     220  25%  12%;
+    --popover:             0    0%  100%;
+    --popover-foreground:  220  25%  12%;
+
+    /* Interactive */
+    --primary:             220  75%  50%;   /* #1A5FCC — professional blue */
+    --primary-foreground:  0    0%  100%;
+    --secondary:           199  80%  36%;
+    --secondary-foreground:0    0%  100%;
+    --accent:              220  14%  94%;
+    --accent-foreground:   220  25%  12%;
+    --destructive:         0    68%  48%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Muted */
+    --muted:               220  14%  94%;
+    --muted-foreground:    220  10%  50%;
+
+    /* Borders */
+    --border:              220  13%  89%;
+    --input:               220  13%  89%;
+    --ring:                220  75%  50%;
+
+    /* Shape */
+    --radius:              0.625rem;
+
+    /* Easing */
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
+/* ── Base resets ─────────────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "cv11", "ss01";
+    letter-spacing: -0.01em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.02em;
+  }
+
+  /* Modern scrollbar */
+  ::-webkit-scrollbar       { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(220 13% 82%);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(220 13% 68%);
   }
 }
 
-/* Travel theme utilities */
-.travel-glass {
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.15);
-}
-.travel-card-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.travel-card-hover:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-}
-.gradient-text {
-  background: linear-gradient(135deg, #0ea5e9, #0d9488);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* ── Utility classes ─────────────────────────────────────────── */
+@layer utilities {
+
+  /* Gradient text — blue professional */
+  .gradient-text {
+    background: linear-gradient(135deg, #1A5FCC 0%, #4A8FE8 60%, #0D7BA3 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-ocean {
+    background: linear-gradient(135deg, #0D7BA3 0%, #38B6D4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-muted {
+    background: linear-gradient(135deg, #64748B 0%, #94A3B8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glass morphism */
+  .glass {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .glass-dark {
+    background: rgba(14, 21, 32, 0.55);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .glass-white {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+  }
+
+  /* Backward compat */
+  .travel-glass { @apply glass; }
+
+  /* Card elevation */
+  .card-elevated {
+    background: white;
+    border: 1px solid hsl(220 13% 91%);
+    box-shadow: 0 1px 2px rgba(14,21,32,0.04), 0 4px 12px rgba(14,21,32,0.05);
+    transition: box-shadow 0.2s var(--ease-smooth), transform 0.2s var(--ease-smooth);
+  }
+  .card-elevated:hover {
+    box-shadow: 0 4px 8px rgba(14,21,32,0.06), 0 12px 32px rgba(14,21,32,0.08);
+    transform: translateY(-1px);
+  }
+
+  .travel-card-hover { @apply card-elevated; }
+
+  /* Primary button — blue */
+  .btn-primary {
+    background: linear-gradient(135deg, #1A5FCC 0%, #2570E8 100%);
+    box-shadow: 0 2px 8px rgba(26, 95, 204, 0.30);
+    transition: box-shadow 0.2s, transform 0.15s var(--ease-spring);
+    color: white;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 4px 16px rgba(26, 95, 204, 0.40);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active { transform: scale(0.98); }
+
+  /* Backward compat — coral button maps to primary blue */
+  .btn-coral { @apply btn-primary; }
+
+  /* Secondary button */
+  .btn-ocean {
+    background: linear-gradient(135deg, #0D7BA3 0%, #1499C8 100%);
+    box-shadow: 0 2px 8px rgba(13, 123, 163, 0.25);
+    transition: box-shadow 0.2s, transform 0.15s var(--ease-spring);
+    color: white;
+  }
+  .btn-ocean:hover {
+    box-shadow: 0 4px 16px rgba(13, 123, 163, 0.35);
+    transform: translateY(-1px);
+  }
+
+  /* Noise texture for hero sections */
+  .noise-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    background-size: 200px;
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 1;
+  }
+
+  /* Glow effects */
+  .glow-primary {
+    box-shadow: 0 0 24px rgba(26, 95, 204, 0.20);
+  }
+  .glow-coral { @apply glow-primary; }
+  .glow-ocean {
+    box-shadow: 0 0 24px rgba(13, 123, 163, 0.20);
+  }
+
+  /* Gradient border */
+  .border-gradient-primary {
+    border: 1.5px solid transparent;
+    background:
+      linear-gradient(white, white) padding-box,
+      linear-gradient(135deg, #1A5FCC, #0D7BA3) border-box;
+  }
+  .border-gradient-coral { @apply border-gradient-primary; }
+
+  /* Shimmer loading skeleton */
+  .skeleton {
+    background: linear-gradient(90deg, hsl(220 14% 94%) 0%, hsl(220 14% 90%) 50%, hsl(220 14% 94%) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+  }
+
+  /* Dot grid pattern */
+  .dot-grid {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.10) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  /* Grid pattern — subtle for dark backgrounds */
+  .grid-pattern {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Tag / badge pill */
+  .tag {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+
+  /* Status pills */
+  .status-planning   { @apply bg-amber-50  text-amber-700  border border-amber-200;  }
+  .status-confirmed  { @apply bg-blue-50   text-blue-700   border border-blue-200;   }
+  .status-progress   { @apply bg-emerald-50 text-emerald-700 border border-emerald-200; }
+  .status-completed  { @apply bg-slate-100 text-slate-600  border border-slate-200;  }
+  .status-cancelled  { @apply bg-red-50    text-red-600    border border-red-200;    }
 }

@@ -5,9 +5,15 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+
+const darkInputClass =
+  "flex h-11 w-full rounded-xl border border-white/15 bg-white/8 px-4 py-2.5 text-sm text-white placeholder:text-slate-500 transition-all duration-200 focus:outline-none focus:border-blue-400/50 focus:ring-2 focus:ring-blue-400/15";
+
+const autofillStyle: React.CSSProperties = {
+  WebkitBoxShadow: "0 0 0 1000px rgba(14,21,32,0.95) inset",
+  WebkitTextFillColor: "white",
+  caretColor: "white",
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,57 +44,58 @@ export default function LoginPage() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Entrar na sua conta</CardTitle>
-        <CardDescription>
-          Use seu email e senha para acessar o ViagemApp
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="seu@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Senha</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-            />
-          </div>
-          {error && (
-            <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-md">
-              {error}
-            </p>
-          )}
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Entrando..." : "Entrar"}
-          </Button>
-        </form>
-      </CardContent>
-      <CardFooter className="justify-center">
-        <p className="text-sm text-gray-600">
-          Não tem conta?{" "}
-          <Link href="/register" className="text-blue-600 hover:underline font-medium">
-            Criar conta grátis
-          </Link>
-        </p>
-      </CardFooter>
-    </Card>
+    <div>
+      <div className="mb-6">
+        <h1 className="text-xl font-bold text-white mb-1">Bem-vindo de volta</h1>
+        <p className="text-sm text-slate-400">Entre na sua conta para continuar planejando</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-1.5">
+          <label className="text-sm font-semibold text-slate-300">Email</label>
+          <input
+            type="email"
+            placeholder="seu@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
+            className={darkInputClass}
+            style={autofillStyle}
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-sm font-semibold text-slate-300">Senha</label>
+          <input
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete="current-password"
+            className={darkInputClass}
+            style={autofillStyle}
+          />
+        </div>
+
+        {error && (
+          <p className="text-sm text-red-300 bg-red-500/15 border border-red-500/25 px-3 py-2 rounded-lg">
+            {error}
+          </p>
+        )}
+
+        <Button type="submit" className="w-full h-11 text-base mt-2" disabled={loading}>
+          {loading ? "Entrando..." : "Entrar"}
+        </Button>
+      </form>
+
+      <p className="text-sm text-slate-500 text-center mt-5">
+        Não tem conta?{" "}
+        <Link href="/register" className="text-blue-400 hover:text-blue-300 font-semibold transition-colors">
+          Criar conta grátis
+        </Link>
+      </p>
+    </div>
   );
 }

@@ -19,15 +19,13 @@ export function formatCurrency(amount: number, currency = "BRL") {
   }).format(amount);
 }
 
-export function tripStatusLabel(status: string) {
-  const labels: Record<string, string> = {
-    PLANNING: "Planejando",
-    CONFIRMED: "Confirmada",
-    IN_PROGRESS: "Em andamento",
-    COMPLETED: "Concluída",
-    CANCELLED: "Cancelada",
-  };
-  return labels[status] ?? status;
+const PT_STATUS: Record<string, string> = {
+  PLANNING: "Planejando", CONFIRMED: "Confirmada",
+  IN_PROGRESS: "Em andamento", COMPLETED: "Concluída", CANCELLED: "Cancelada",
+};
+
+export function tripStatusLabel(status: string, labels?: Record<string, string>) {
+  return (labels ?? PT_STATUS)[status] ?? status;
 }
 
 export function tripStatusColor(status: string) {
@@ -41,27 +39,20 @@ export function tripStatusColor(status: string) {
   return colors[status] ?? "bg-gray-100 text-gray-800";
 }
 
-export function activityTypeLabel(type: string) {
-  const labels: Record<string, string> = {
-    ACTIVITY: "Atividade",
-    MEAL: "Refeição",
-    TRANSPORT: "Transporte",
-    ACCOMMODATION: "Hospedagem",
-    EVENT: "Evento",
-    OTHER: "Outro",
-  };
-  return labels[type] ?? type;
+const PT_ACTIVITY: Record<string, string> = {
+  ACTIVITY: "Atividade", MEAL: "Refeição", TRANSPORT: "Transporte",
+  ACCOMMODATION: "Hospedagem", EVENT: "Evento", OTHER: "Outro",
+};
+
+export function activityTypeLabel(type: string, labels?: Record<string, string>) {
+  return (labels ?? PT_ACTIVITY)[type] ?? type;
 }
 
-export function expenseCategoryLabel(category: string) {
-  const labels: Record<string, string> = {
-    ACCOMMODATION: "Hospedagem",
-    TRANSPORT: "Transporte",
-    FOOD: "Alimentação",
-    ACTIVITY: "Atividade",
-    SHOPPING: "Compras",
-    HEALTH: "Saúde",
-    OTHER: "Outro",
-  };
-  return labels[category] ?? category;
+const PT_EXPENSE: Record<string, string> = {
+  ACCOMMODATION: "Hospedagem", TRANSPORT: "Transporte", FOOD: "Alimentação",
+  ACTIVITY: "Atividade", SHOPPING: "Compras", HEALTH: "Saúde", OTHER: "Outro",
+};
+
+export function expenseCategoryLabel(category: string, labels?: Record<string, string>) {
+  return (labels ?? PT_EXPENSE)[category] ?? category;
 }

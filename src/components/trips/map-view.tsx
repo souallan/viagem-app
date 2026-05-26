@@ -23,14 +23,20 @@ export interface MapPlace {
 interface GeocodedPlace extends MapPlace {
   lat: number;
   lng: number;
+  destIndex?: number;
 }
 
 const categoryColor: Record<string, string> = {
-  destination: "#3b82f6",
-  accommodation: "#8b5cf6",
-  activity: "#10b981",
-  event: "#f59e0b",
+  destination: "#2563eb",
+  accommodation: "#7c3aed",
+  activity: "#059669",
+  event: "#d97706",
 };
+
+const DEST_COLORS = [
+  "#2563eb", "#0891b2", "#7c3aed", "#db2777",
+  "#ea580c", "#65a30d", "#0d9488",
+];
 
 const DAY_COLORS = [
   "#3b82f6", "#10b981", "#f59e0b", "#ef4444",
@@ -49,93 +55,140 @@ async function geocode(query: string): Promise<{ lat: number; lng: number } | nu
   return null;
 }
 
-function makeIcon(emoji: string, color: string, dayNum?: number) {
+/** Teardrop pin for destinations */
+function makePinIcon(label: string, color: string, index: number) {
+  return L.divIcon({
+    html: `
+      <div style="position:relative;width:36px;height:44px">
+        <div style="
+          background:${color};
+          width:36px;height:36px;border-radius:50% 50% 50% 0;
+          transform:rotate(-45deg);
+          border:3px solid white;
+          box-shadow:0 3px 12px rgba(0,0,0,0.35);
+          display:flex;align-items:center;justify-content:center;
+        ">
+          <div style="transform:rotate(45deg);color:white;font-size:11px;font-weight:900;line-height:1">
+            ${index + 1}
+          </div>
+        </div>
+      </div>`,
+    className: "",
+    iconSize: [36, 44],
+    iconAnchor: [18, 44],
+    popupAnchor: [0, -46],
+  });
+}
+
+/** Circular icon for activities/accommodations */
+function makeCircleIcon(emoji: string, color: string, dayNum?: number) {
   const badge = dayNum != null
-    ? `<div style="position:absolute;top:-6px;right:-6px;background:#1e293b;color:white;font-size:9px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid white">D${dayNum}</div>`
+    ? `<div style="position:absolute;top:-5px;right:-5px;background:#1e293b;color:white;font-size:9px;font-weight:700;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid white">D${dayNum}</div>`
     : "";
   return L.divIcon({
-    html: `<div style="position:relative;width:34px;height:34px">
-      <div style="background:${color};width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.35)">${emoji}</div>
+    html: `<div style="position:relative;width:32px;height:32px">
+      <div style="background:${color};width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3)">${emoji}</div>
       ${badge}
     </div>`,
     className: "",
-    iconSize: [34, 34],
-    iconAnchor: [17, 34],
-    popupAnchor: [0, -36],
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -34],
   });
 }
 
 function FitBounds({ positions }: { positions: [number, number][] }) {
   const map = useMap();
   useEffect(() => {
-    if (positions.length === 1) map.setView(positions[0], 13);
-    else if (positions.length > 1) map.fitBounds(L.latLngBounds(positions), { padding: [48, 48] });
+    if (positions.length === 1) map.setView(positions[0], 12);
+    else if (positions.length > 1) map.fitBounds(L.latLngBounds(positions), { padding: [52, 52] });
   }, [map, positions]);
   return null;
 }
 
 export default function MapView({
-  destination,
+  destinations,
   places,
 }: {
-  destination: string;
+  destinations: string[];
   places: MapPlace[];
 }) {
-  const [markers, setMarkers] = useState<GeocodedPlace[]>([]);
+  const [destMarkers, setDestMarkers] = useState<(GeocodedPlace & { destIndex: number })[]>([]);
+  const [placeMarkers, setPlaceMarkers] = useState<GeocodedPlace[]>([]);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      const results: GeocodedPlace[] = [];
-
-      const dest = await geocode(destination);
-      if (cancelled) return;
-      if (dest) {
-        results.push({ label: destination, location: destination, category: "destination", icon: "📍", lat: dest.lat, lng: dest.lng });
+      // 1. Geocode each destination → numbered pins
+      const dests: (GeocodedPlace & { destIndex: number })[] = [];
+      for (let i = 0; i < destinations.length; i++) {
+        if (cancelled) return;
+        const coords = await geocode(destinations[i]);
+        if (coords && !cancelled) {
+          dests.push({
+            label: destinations[i],
+            location: destinations[i],
+            category: "destination",
+            icon: "📍",
+            lat: coords.lat,
+            lng: coords.lng,
+            destIndex: i,
+          });
+        }
+        if (i < destinations.length - 1) await new Promise((r) => setTimeout(r, 300));
       }
+      if (!cancelled) setDestMarkers(dests);
 
+      // 2. Geocode activity / accommodation places
+      const mainCity = destinations[0] ?? "";
+      const pts: GeocodedPlace[] = [];
       for (const place of places) {
         if (cancelled) return;
         if (!place.location) continue;
-        await new Promise((r) => setTimeout(r, 350));
-        const coords = await geocode(`${place.location}, ${destination}`);
-        if (coords && !cancelled) results.push({ ...place, lat: coords.lat, lng: coords.lng });
+        await new Promise((r) => setTimeout(r, 300));
+        const coords = await geocode(place.location.includes(",") ? place.location : `${place.location}, ${mainCity}`);
+        if (coords && !cancelled) pts.push({ ...place, lat: coords.lat, lng: coords.lng });
       }
-
-      if (!cancelled) { setMarkers(results); setReady(true); }
+      if (!cancelled) { setPlaceMarkers(pts); setReady(true); }
     }
     load();
     return () => { cancelled = true; };
-  }, [destination, places]);
+  }, [destinations, places]);
 
-  // Group by day for polylines
-  const dayGroups = markers.reduce<Record<number, GeocodedPlace[]>>((acc, m) => {
-    if (m.day != null && m.category !== "destination") {
-      (acc[m.day] ??= []).push(m);
-    }
+  const allMarkers = [...destMarkers, ...placeMarkers];
+  const positions = allMarkers.map<[number, number]>((m) => [m.lat, m.lng]);
+
+  const dayGroups = placeMarkers.reduce<Record<number, GeocodedPlace[]>>((acc, m) => {
+    if (m.day != null) (acc[m.day] ??= []).push(m);
     return acc;
   }, {});
   const days = Object.keys(dayGroups).map(Number).sort((a, b) => a - b);
 
-  const positions = markers.map<[number, number]>((m) => [m.lat, m.lng]);
-
   return (
     <div className="space-y-3">
-      <div className="relative rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+      <div className="relative rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
         {!ready && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/80">
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/85 rounded-2xl">
             <div className="flex items-center gap-2 text-sm text-gray-500">
-              <span className="animate-spin">🌍</span> Geocodificando locais...
+              <span className="animate-spin inline-block">🌍</span> Posicionando locais no mapa...
             </div>
           </div>
         )}
-        <MapContainer center={[-15.788, -47.879]} zoom={4} style={{ height: 500, zIndex: 0 }} scrollWheelZoom>
+        <MapContainer center={[-15.788, -47.879]} zoom={4} style={{ height: 520, zIndex: 0 }} scrollWheelZoom>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           />
           {ready && <FitBounds positions={positions} />}
+
+          {/* Destination route polyline */}
+          {destMarkers.length > 1 && (
+            <Polyline
+              positions={destMarkers.map<[number, number]>((m) => [m.lat, m.lng])}
+              pathOptions={{ color: "#2563eb", weight: 2.5, opacity: 0.5, dashArray: "8 5" }}
+            />
+          )}
 
           {/* Day route polylines */}
           {days.map((day, idx) => {
@@ -145,22 +198,36 @@ export default function MapView({
               <Polyline
                 key={`route-day-${day}`}
                 positions={pts}
-                pathOptions={{ color: DAY_COLORS[idx % DAY_COLORS.length], weight: 3, opacity: 0.75, dashArray: "6 4" }}
+                pathOptions={{ color: DAY_COLORS[idx % DAY_COLORS.length], weight: 2.5, opacity: 0.7, dashArray: "5 4" }}
               />
             );
           })}
 
-          {/* Markers */}
-          {markers.map((m, i) => (
+          {/* Destination pins (teardrop) */}
+          {destMarkers.map((m) => (
             <Marker
-              key={i}
+              key={`dest-${m.destIndex}`}
               position={[m.lat, m.lng]}
-              icon={makeIcon(
+              icon={makePinIcon(m.label, DEST_COLORS[m.destIndex % DEST_COLORS.length], m.destIndex)}
+            >
+              <Popup>
+                <p className="font-bold text-sm">{m.label}</p>
+                <p className="text-xs text-blue-600 font-semibold">Destino {m.destIndex + 1}</p>
+              </Popup>
+            </Marker>
+          ))}
+
+          {/* Activity / accommodation circles */}
+          {placeMarkers.map((m, i) => (
+            <Marker
+              key={`place-${i}`}
+              position={[m.lat, m.lng]}
+              icon={makeCircleIcon(
                 m.icon,
-                m.day != null && m.category !== "destination"
+                m.day != null
                   ? DAY_COLORS[days.indexOf(m.day) % DAY_COLORS.length]
                   : categoryColor[m.category] ?? "#6b7280",
-                m.day != null && m.category !== "destination" ? m.day : undefined
+                m.day != null ? m.day : undefined
               )}
             >
               <Popup>
@@ -173,9 +240,28 @@ export default function MapView({
         </MapContainer>
       </div>
 
-      {/* Day legend */}
-      {days.length > 0 && (
+      {/* Destination legend */}
+      {destMarkers.length > 0 && (
         <div className="flex flex-wrap gap-2">
+          {destMarkers.map((d) => (
+            <span
+              key={d.destIndex}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border"
+              style={{
+                background: `${DEST_COLORS[d.destIndex % DEST_COLORS.length]}18`,
+                color: DEST_COLORS[d.destIndex % DEST_COLORS.length],
+                borderColor: `${DEST_COLORS[d.destIndex % DEST_COLORS.length]}40`,
+              }}
+            >
+              <span style={{
+                width: 16, height: 16, borderRadius: "50% 50% 50% 0",
+                background: DEST_COLORS[d.destIndex % DEST_COLORS.length],
+                transform: "rotate(-45deg)",
+                display: "inline-block", flexShrink: 0,
+              }} />
+              {d.destIndex + 1}. {d.label.split(",")[0]}
+            </span>
+          ))}
           {days.map((day, idx) => (
             <span
               key={day}
@@ -183,7 +269,7 @@ export default function MapView({
               style={{ background: `${DAY_COLORS[idx % DAY_COLORS.length]}22`, color: DAY_COLORS[idx % DAY_COLORS.length], border: `1px solid ${DAY_COLORS[idx % DAY_COLORS.length]}44` }}
             >
               <span style={{ width: 8, height: 8, borderRadius: "50%", background: DAY_COLORS[idx % DAY_COLORS.length], display: "inline-block" }} />
-              Dia {day} — {dayGroups[day].length} local{dayGroups[day].length !== 1 ? "is" : ""}
+              Dia {day} · {dayGroups[day].length} local{dayGroups[day].length !== 1 ? "is" : ""}
             </span>
           ))}
         </div>

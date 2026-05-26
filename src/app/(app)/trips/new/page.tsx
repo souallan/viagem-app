@@ -10,8 +10,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LocationInput } from "@/components/ui/location-input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { CurrencyInput } from "@/components/ui/currency-input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTemplateById } from "@/lib/route-templates";
 import { cn } from "@/lib/utils";
@@ -72,6 +74,7 @@ function DestinationBuilder({
   onChange: (next: string[]) => void;
 }) {
   const [input, setInput] = useState("");
+  const [inputValidated, setInputValidated] = useState(false);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
 
@@ -80,6 +83,7 @@ function DestinationBuilder({
     if (!val) return;
     onChange([...destinations, val]);
     setInput("");
+    setInputValidated(false);
   }
 
   function remove(i: number) {
@@ -130,20 +134,23 @@ function DestinationBuilder({
 
       {/* Input row */}
       <div className="flex gap-2">
-        <Input
-          placeholder="Ex: Paris, França"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") { e.preventDefault(); add(); }
-          }}
-          className="flex-1"
-        />
+        <div className="flex-1">
+          <LocationInput
+            value={input}
+            onChange={(val, validated) => { setInput(val); setInputValidated(validated); }}
+            placeholder="Ex: Paris, França"
+          />
+          {input.trim() && !inputValidated && (
+            <p className="text-xs text-amber-600 mt-1 flex items-center gap-1">
+              ⚠ Selecione uma sugestão para validar o destino
+            </p>
+          )}
+        </div>
         <Button
           type="button"
           onClick={add}
           disabled={!input.trim()}
-          className="shrink-0 gap-1.5"
+          className="shrink-0 gap-1.5 self-start"
         >
           <Plus className="h-4 w-4" aria-hidden="true" />
           Adicionar
@@ -265,23 +272,52 @@ function DestinationBuilder({
   );
 }
 
+interface CommunityActivity {
+  id: string;
+  title: string;
+  type: string;
+  day: number;
+  startTime: string | null;
+  endTime: string | null;
+  location: string | null;
+  description: string | null;
+  cost: number | null;
+}
+
+interface CommunityRouteData {
+  id: string;
+  title: string;
+  destination: string;
+  description: string;
+  currency: string;
+  coverImage: string | null;
+  flag: string;
+  duration: number;
+  estimatedBudget: string;
+  highlights: string;
+  activities: CommunityActivity[];
+  authorName: string;
+}
+
 function NewTripForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const templateId = searchParams.get("template");
+  const communityId = searchParams.get("community");
   const template = templateId ? getTemplateById(templateId) : undefined;
 
   const [loading, setLoading] = useState(false);
   const [applyingTemplate, setApplyingTemplate] = useState(false);
   const [templateProgress, setTemplateProgress] = useState(0);
   const [error, setError] = useState("");
+  const [communityRoute, setCommunityRoute] = useState<CommunityRouteData | null>(null);
 
   const [destinations, setDestinations] = useState<string[]>(
     template?.destination ? [template.destination] : []
   );
 
   const [form, setForm] = useState({
-    title: template?.title ?? "",
+    title: (template?.title ?? "").toUpperCase(),
     description: template?.description ?? "",
     startDate: "",
     endDate: "",
@@ -294,7 +330,7 @@ function NewTripForm() {
     if (template) {
       setForm((prev) => ({
         ...prev,
-        title: template.title,
+        title: template.title.toUpperCase(),
         currency: template.currency,
         description: template.description,
       }));
@@ -302,22 +338,41 @@ function NewTripForm() {
     }
   }, [template]);
 
+  useEffect(() => {
+    if (!communityId) return;
+    fetch(`/api/community-routes/${communityId}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((data: CommunityRouteData | null) => {
+        if (!data) return;
+        setCommunityRoute(data);
+        setForm((prev) => ({
+          ...prev,
+          title: data.title.toUpperCase(),
+          currency: data.currency,
+          description: data.description,
+        }));
+        setDestinations([data.destination]);
+      });
+  }, [communityId]);
+
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const value = e.target.name === "title" ? e.target.value.toUpperCase() : e.target.value;
+    setForm((prev) => ({ ...prev, [e.target.name]: value }));
   }
 
-  const applyTemplateActivities = useCallback(
-    async (tripId: string, tripStartDate: string) => {
-      if (!template) return;
+  const applyActivitiesToTrip = useCallback(
+    async (
+      tripId: string,
+      tripStartDate: string,
+      activities: Array<{ title: string; type: string; day: number; startTime?: string | null; endTime?: string | null; location?: string | null; address?: string | null; description?: string | null; cost?: number | null }>
+    ) => {
       setApplyingTemplate(true);
-      // Base date: use trip startDate if provided, otherwise today
       const base = tripStartDate ? new Date(tripStartDate) : new Date();
-      const total = template.activities.length;
+      const total = activities.length;
       for (let i = 0; i < total; i++) {
-        const act = template.activities[i];
-        // Calculate actual date from day number (day 1 = base, day 2 = base+1, etc.)
+        const act = activities[i];
         const actDate = new Date(base);
         actDate.setDate(actDate.getDate() + (act.day - 1));
         try {
@@ -343,13 +398,17 @@ function NewTripForm() {
       }
       setApplyingTemplate(false);
     },
-    [template]
+    []
   );
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (destinations.length === 0) {
       setError("Adicione pelo menos um destino.");
+      return;
+    }
+    if (form.startDate && form.endDate && form.endDate < form.startDate) {
+      setError("A data de volta não pode ser anterior à data de ida.");
       return;
     }
     setError("");
@@ -377,7 +436,10 @@ function NewTripForm() {
       }
 
       if (template) {
-        await applyTemplateActivities(data.id, form.startDate);
+        await applyActivitiesToTrip(data.id, form.startDate, template.activities);
+        router.push(`/trips/${data.id}/itinerary`);
+      } else if (communityRoute) {
+        await applyActivitiesToTrip(data.id, form.startDate, communityRoute.activities);
         router.push(`/trips/${data.id}/itinerary`);
       } else {
         router.push(`/trips/${data.id}`);
@@ -388,13 +450,16 @@ function NewTripForm() {
     }
   }
 
+  const activeSource = template ?? communityRoute;
+  const activityCount = template?.activities.length ?? communityRoute?.activities.length ?? 0;
+
   if (applyingTemplate) {
     return (
       <div className="max-w-md mx-auto text-center py-16">
         <div className="text-5xl mb-4 animate-float" aria-hidden="true">✈️</div>
         <h2 className="text-xl font-bold text-gray-900 mb-2">Aplicando roteiro...</h2>
         <p className="text-gray-500 mb-6 text-sm">
-          Estamos adicionando {template?.activities.length} atividades à sua viagem.
+          Estamos adicionando {activityCount} atividades à sua viagem.
         </p>
         <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
           <div
@@ -411,7 +476,7 @@ function NewTripForm() {
     <div className="max-w-2xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <Link href={template ? "/routes" : "/dashboard"}>
+        <Link href={activeSource ? "/routes" : "/dashboard"}>
           <Button variant="ghost" size="icon">
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           </Button>
@@ -422,6 +487,11 @@ function NewTripForm() {
             <p className="text-sm text-sky-600 mt-0.5">
               Usando roteiro: <span className="font-semibold">{template.title}</span>{" "}
               <span aria-hidden="true">{template.flag}</span>
+            </p>
+          )}
+          {communityRoute && (
+            <p className="text-sm text-violet-600 mt-0.5">
+              Roteiro da comunidade: <span className="font-semibold">{communityRoute.title}</span>
             </p>
           )}
         </div>
@@ -447,6 +517,38 @@ function NewTripForm() {
               </p>
               <p className="text-xs text-sky-700 mt-1">
                 {template.activities.length} atividades serão adicionadas automaticamente
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Community route banner */}
+      {communityRoute && (
+        <div className="mb-5 p-4 rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100">
+          <div className="flex items-start gap-3">
+            {communityRoute.coverImage ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={communityRoute.coverImage}
+                alt={communityRoute.destination}
+                className="h-14 w-20 rounded-lg object-cover shrink-0"
+              />
+            ) : (
+              <div className="h-14 w-20 rounded-lg bg-violet-200 flex items-center justify-center text-2xl shrink-0">
+                {communityRoute.flag || "🗺️"}
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg" aria-hidden="true">{communityRoute.flag || "📍"}</span>
+                <p className="font-semibold text-gray-900 text-sm">{communityRoute.title}</p>
+              </div>
+              <p className="text-xs text-gray-500 mt-0.5">
+                {communityRoute.destination} · {communityRoute.duration} dias
+              </p>
+              <p className="text-xs text-violet-700 mt-1">
+                {communityRoute.activities.length} atividades serão adicionadas automaticamente
               </p>
             </div>
           </div>
@@ -488,7 +590,14 @@ function NewTripForm() {
                   name="startDate"
                   type="date"
                   value={form.startDate}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    const newStart = e.target.value;
+                    setForm((prev) => ({
+                      ...prev,
+                      startDate: newStart,
+                      endDate: prev.endDate && prev.endDate < newStart ? "" : prev.endDate,
+                    }));
+                  }}
                 />
               </div>
               <div className="space-y-2">
@@ -498,6 +607,7 @@ function NewTripForm() {
                   name="endDate"
                   type="date"
                   value={form.endDate}
+                  min={form.startDate || undefined}
                   onChange={handleChange}
                 />
               </div>
@@ -533,6 +643,28 @@ function NewTripForm() {
               </div>
             )}
 
+            {/* Community route highlights */}
+            {communityRoute && (() => {
+              const highlights: string[] = (() => { try { return JSON.parse(communityRoute.highlights); } catch { return []; } })();
+              return highlights.length > 0 ? (
+                <div className="rounded-xl border border-violet-100 bg-violet-50 p-4 space-y-2">
+                  <p className="text-xs font-semibold text-violet-700 uppercase tracking-wider">Destaques deste roteiro</p>
+                  <ul className="space-y-1">
+                    {highlights.map((h, i) => (
+                      <li key={i} className="text-xs text-gray-700 flex items-start gap-1.5">
+                        <span className="text-violet-500 mt-0.5">✓</span> {h}
+                      </li>
+                    ))}
+                  </ul>
+                  {communityRoute.estimatedBudget && (
+                    <p className="text-xs text-gray-500 pt-1 border-t border-violet-100">
+                      <span className="font-medium">Orçamento estimado:</span> {communityRoute.estimatedBudget} · {communityRoute.activities.length} atividades planejadas
+                    </p>
+                  )}
+                </div>
+              ) : null;
+            })()}
+
             {/* Moeda + Orçamento */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -559,15 +691,10 @@ function NewTripForm() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="budget">Orçamento total</Label>
-                <Input
-                  id="budget"
-                  name="budget"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="0,00"
+                <CurrencyInput
                   value={form.budget}
-                  onChange={handleChange}
+                  onChange={(raw) => setForm((p) => ({ ...p, budget: raw }))}
+                  currency={form.currency}
                 />
               </div>
             </div>
@@ -610,7 +737,7 @@ function NewTripForm() {
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" aria-hidden="true" />
                     Criando...
                   </>
-                ) : template ? (
+                ) : (template || communityRoute) ? (
                   "Criar com roteiro"
                 ) : (
                   "Criar viagem"
