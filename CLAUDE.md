@@ -70,6 +70,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `Document` | |
 | `PackingList` | |
 | `PackingItem` | |
+| `TripPrepItem` | |
+| `JournalEntry` | |
+| `CommunityRoute` | |
+| `RouteComment` | |
+| `CommunityActivity` | |
+| `Experience` | |
 
 **SQLite does not support Prisma enums.** All enum-like fields are stored as `String`.
 Valid values are documented in comments above each model in `prisma/schema.prisma`.
@@ -88,33 +94,65 @@ if (!trip) return 404;
 `params` must be **awaited** (Next.js 15 dynamic segments are `Promise<{id: string}>`).
 
 Registered routes:
+- `/admin/analytics` — GET
+- `/admin/content` — DELETE, GET
+- `/admin/stats` — GET
+- `/admin/users` — DELETE, GET, PATCH
 - `/auth/[...nextauth]` — 
+- `/community-routes/[id]/comments` — GET, POST
+- `/community-routes/[id]` — DELETE, GET
+- `/community-routes` — GET, POST
+- `/exchange-rate` — GET
+- `/experiences/[id]` — DELETE, GET, PATCH, PUT
+- `/experiences` — GET, POST
+- `/public-stats` — GET
 - `/register` — POST
-- `/trips/[id]/accommodations` — DELETE, GET, POST
-- `/trips/[id]/activities` — DELETE, GET, POST
+- `/share/[token]` — GET
+- `/tips/community` — GET
+- `/tips/external` — GET
+- `/trips/[id]/accommodations` — DELETE, GET, POST, PUT
+- `/trips/[id]/activities` — DELETE, GET, POST, PUT
 - `/trips/[id]/documents` — DELETE, GET, POST
-- `/trips/[id]/expenses` — DELETE, GET, POST
-- `/trips/[id]/packing` — DELETE, GET, PATCH, POST
+- `/trips/[id]/expenses` — DELETE, GET, POST, PUT
+- `/trips/[id]/journal` — DELETE, GET, POST, PUT
+- `/trips/[id]/members` — DELETE, GET, POST
+- `/trips/[id]/packing` — DELETE, GET, PATCH, POST, PUT
+- `/trips/[id]/prep` — DELETE, GET, PATCH, POST
 - `/trips/[id]` — DELETE, GET, PUT
-- `/trips/[id]/transports` — DELETE, GET, POST
+- `/trips/[id]/share` — DELETE, POST
+- `/trips/[id]/share-route` — POST
+- `/trips/[id]/transports` — DELETE, GET, POST, PUT
 - `/trips` — GET, POST
+- `/user` — GET, PUT
 
 ### Pages
 
 - `/`
 - `/dashboard`
+- `/experiences`
+- `/experiences/[id]`
+- `/experiences/[id]/edit`
+- `/experiences/new`
 - `/login`
+- `/profile`
 - `/register`
 - `/routes`
+- `/routes/contribute`
+- `/share/[token]`
+- `/tips`
 - `/trips/[id]`
 - `/trips/[id]/accommodation`
 - `/trips/[id]/budget`
 - `/trips/[id]/compare`
+- `/trips/[id]/currency`
 - `/trips/[id]/documents`
 - `/trips/[id]/edit`
 - `/trips/[id]/itinerary`
+- `/trips/[id]/journal`
 - `/trips/[id]/map`
 - `/trips/[id]/packing`
+- `/trips/[id]/prep`
+- `/trips/[id]/summary`
 - `/trips/[id]/transport`
 - `/trips/new`
 
@@ -126,7 +164,7 @@ Packing item toggle uses `PATCH { itemId, isPacked }`.
 ### UI Components
 
 Custom components in `src/components/ui/` — hand-written, shadcn-compatible API, **no Radix UI**.
-Available: `badge`, `button`, `card`, `dialog`, `input`, `label`, `select`, `textarea`.
+Available: `badge`, `button`, `card`, `currency-input`, `dialog`, `input`, `label`, `location-input`, `select`, `textarea`.
 
 `Dialog` uses a backdrop + `Escape` key handler (no Radix).
 `cn()` in `src/lib/utils.ts` combines clsx + tailwind-merge.
