@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { createVerifyToken } from "@/lib/otp";
+import { sendVerificationEmail } from "@/lib/email";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -49,6 +51,14 @@ export async function POST(request: Request) {
       data: { name, email, password: hashed },
       select: { id: true, name: true, email: true },
     });
+
+    // Send verification email (non-blocking — don't fail registration if email fails)
+    try {
+      const token = await createVerifyToken(email);
+      await sendVerificationEmail(email, token, name);
+    } catch {
+      // Log but don't block registration
+    }
 
     return NextResponse.json(user, { status: 201 });
   } catch {
