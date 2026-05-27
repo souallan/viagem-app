@@ -133,7 +133,10 @@ Registered routes:
 
 - `/`
 - `/admin`
+- `/admin/content`
 - `/admin/settings`
+- `/admin/stats`
+- `/admin/users`
 - `/dashboard`
 - `/experiences`
 - `/experiences/[id]`
