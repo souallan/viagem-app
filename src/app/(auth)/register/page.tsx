@@ -14,16 +14,32 @@ const autofillStyle: React.CSSProperties = {
   caretColor: "white",
 };
 
+function getPasswordStrength(pw: string): { level: 0 | 1 | 2 | 3; label: string; color: string } {
+  if (pw.length === 0) return { level: 0, label: "", color: "" };
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+  if (/\d/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  if (score <= 1) return { level: 1, label: "Fraca", color: "bg-red-500" };
+  if (score === 2) return { level: 2, label: "Média", color: "bg-yellow-500" };
+  return { level: 3, label: "Forte", color: "bg-green-500" };
+}
+
 export default function RegisterPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const pwStrength = getPasswordStrength(password);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!accepted) { setError("Você precisa aceitar a Política de Privacidade para criar uma conta."); return; }
     setError("");
     setLoading(true);
 
@@ -97,7 +113,46 @@ export default function RegisterPage() {
             className={darkInputClass}
             style={autofillStyle}
           />
+          {password.length > 0 && (
+            <div className="space-y-1 pt-1">
+              <div className="flex gap-1">
+                {[1, 2, 3].map((n) => (
+                  <div
+                    key={n}
+                    className={`h-1 flex-1 rounded-full transition-all duration-300 ${n <= pwStrength.level ? pwStrength.color : "bg-white/10"}`}
+                  />
+                ))}
+              </div>
+              {pwStrength.label && (
+                <p className={`text-[11px] font-semibold ${pwStrength.level === 1 ? "text-red-400" : pwStrength.level === 2 ? "text-yellow-400" : "text-green-400"}`}>
+                  Senha {pwStrength.label}
+                  {pwStrength.level < 3 && " — adicione letras maiúsculas, números ou símbolos"}
+                </p>
+              )}
+            </div>
+          )}
         </div>
+
+        {/* Consentimento LGPD */}
+        <label className="flex items-start gap-3 cursor-pointer group">
+          <input
+            type="checkbox"
+            checked={accepted}
+            onChange={(e) => setAccepted(e.target.checked)}
+            className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/10 text-blue-500 focus:ring-blue-500/30 cursor-pointer shrink-0"
+          />
+          <span className="text-xs text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">
+            Li e aceito a{" "}
+            <Link
+              href="/privacy"
+              target="_blank"
+              className="text-blue-400 hover:text-blue-300 underline underline-offset-2"
+            >
+              Política de Privacidade
+            </Link>
+            {" "}e concordo com o tratamento dos meus dados conforme a LGPD (Lei 13.709/2018).
+          </span>
+        </label>
 
         {error && (
           <p className="text-sm text-red-300 bg-red-500/15 border border-red-500/25 px-3 py-2 rounded-lg">
@@ -105,7 +160,7 @@ export default function RegisterPage() {
           </p>
         )}
 
-        <Button type="submit" className="w-full h-11 text-base mt-2" disabled={loading}>
+        <Button type="submit" className="w-full h-11 text-base mt-2" disabled={loading || !accepted}>
           {loading ? "Criando conta..." : "Criar conta grátis"}
         </Button>
       </form>
