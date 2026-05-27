@@ -102,6 +102,9 @@ Registered routes:
 - `/admin/stats` — GET
 - `/admin/users` — DELETE, GET, PATCH
 - `/auth/[...nextauth]` — 
+- `/auth/check-credentials` — POST
+- `/auth/send-verification` — POST
+- `/auth/verify-email` — GET
 - `/community-routes/[id]/comments` — GET, POST
 - `/community-routes/[id]` — DELETE, GET
 - `/community-routes` — GET, POST
@@ -165,6 +168,7 @@ Registered routes:
 - `/trips/[id]/summary`
 - `/trips/[id]/transport`
 - `/trips/new`
+- `/verify-email`
 
 Each trip sub-page fetches data client-side from its API route.
 `DELETE` requests send the item ID in the **JSON body** (not URL params).
