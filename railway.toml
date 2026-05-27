@@ -1,6 +1,6 @@
 [build]
 builder = "nixpacks"
-buildCommand = "npx prisma generate && npm run build && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public"
+buildCommand = "sed -i 's/provider = \"sqlite\"/provider = \"postgresql\"/' prisma/schema.prisma && npx prisma generate && npm run build && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public"
 
 [deploy]
 startCommand = "npx prisma db push --accept-data-loss && node .next/standalone/server.js"
