@@ -3,7 +3,9 @@
     "allow": [
       "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack)",
       "PowerShell($nodePaths = @\\(\"C:\\\\Program Files\\\\nodejs\\\\node.exe\", \"C:\\\\Program Files \\(x86\\)\\\\nodejs\\\\node.exe\", \"$env:APPDATA\\\\nvm\\\\current\\\\node.exe\", \"$env:ProgramFiles\\\\nodejs\\\\node.exe\"\\); foreach \\($p in $nodePaths\\) { if \\(Test-Path $p\\) { Write-Output \"FOUND: $p\"; & $p --version } }; $env:PATH -split \";\" | Select-String -Pattern \"node\" -SimpleMatch)",
-      "PowerShell(Get-Command bun, pnpm, yarn, python -ErrorAction SilentlyContinue | Select-Object Name, Source; [System.Environment]::GetEnvironmentVariable\\(\"PATH\", \"Machine\"\\) -split \";\" | Where-Object { $_ -match \"node|npm|bun|yarn\" })"
+      "PowerShell(Get-Command bun, pnpm, yarn, python -ErrorAction SilentlyContinue | Select-Object Name, Source; [System.Environment]::GetEnvironmentVariable\\(\"PATH\", \"Machine\"\\) -split \";\" | Where-Object { $_ -match \"node|npm|bun|yarn\" })",
+      "WebSearch",
+      "PowerShell($env:PATH = \"$env:USERPROFILE\\\\scoop\\\\shims;$env:USERPROFILE\\\\scoop\\\\apps\\\\nodejs-lts\\\\current;$env:PATH\"; Set-Location \"d:\\\\Projetos\\\\Projetoclaudeviagem\"; npx tsc --noEmit 2>&1 | Select-Object -First 30)"
     ]
   }
 }
