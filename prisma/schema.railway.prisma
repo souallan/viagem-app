@@ -1,4 +1,4 @@
-﻿generator client {
+generator client {
   provider = "prisma-client-js"
 }
 
@@ -65,19 +65,19 @@ model VerificationToken {
 
 // TripStatus values: PLANNING | CONFIRMED | IN_PROGRESS | COMPLETED | CANCELLED
 model Trip {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   destination String
   description String?
-  status      String   @default("PLANNING")
+  status      String    @default("PLANNING")
   startDate   DateTime?
   endDate     DateTime?
   coverImage  String?
-  currency    String   @default("BRL")
+  currency    String    @default("BRL")
   budget      Float?
-  shareToken  String?  @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  shareToken  String?   @unique
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   userId      String
 
   owner          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -148,9 +148,9 @@ model Accommodation {
 
 // TransportType values: FLIGHT | BUS | TRAIN | CAR | BOAT | OTHER
 model Transport {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   tripId        String
-  type          String   @default("FLIGHT")
+  type          String    @default("FLIGHT")
   from          String
   to            String
   departureTime DateTime
@@ -160,7 +160,7 @@ model Transport {
   seat          String?
   cost          Float?
   notes         String?
-  createdAt     DateTime @default(now())
+  createdAt     DateTime  @default(now())
 
   trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
 }
@@ -196,9 +196,9 @@ model Document {
 }
 
 model PackingList {
-  id        String      @id @default(cuid())
-  tripId    String      @unique
-  createdAt DateTime    @default(now())
+  id        String        @id @default(cuid())
+  tripId    String        @unique
+  createdAt DateTime      @default(now())
   items     PackingItem[]
 
   trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
@@ -218,14 +218,14 @@ model PackingItem {
 
 // Category values: DOCUMENTOS | SAUDE | FINANCEIRO | BAGAGEM | HOSPEDAGEM | TRANSPORTE | OUTRO
 model TripPrepItem {
-  id          String   @id @default(cuid())
-  tripId      String
-  title       String
-  category    String   @default("OUTRO")
-  isDone      Boolean  @default(false)
-  dueDate     DateTime?
-  notes       String?
-  createdAt   DateTime @default(now())
+  id        String    @id @default(cuid())
+  tripId    String
+  title     String
+  category  String    @default("OUTRO")
+  isDone    Boolean   @default(false)
+  dueDate   DateTime?
+  notes     String?
+  createdAt DateTime  @default(now())
 
   trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
 }
@@ -245,23 +245,23 @@ model JournalEntry {
 }
 
 model CommunityRoute {
-  id              String              @id @default(cuid())
+  id              String   @id @default(cuid())
   userId          String
-  authorName      String              @default("Viajante")
+  authorName      String   @default("Viajante")
   title           String
   destination     String
-  country         String              @default("")
-  continent       String              @default("Outros")
-  flag            String              @default("ðŸ“")
+  country         String   @default("")
+  continent       String   @default("Outros")
+  flag            String   @default("📍")
   duration        Int
   coverImage      String?
   description     String
-  tags            String              @default("")
-  highlights      String              @default("[]")
-  currency        String              @default("BRL")
-  estimatedBudget String              @default("")
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @updatedAt
+  tags            String   @default("")
+  highlights      String   @default("[]")
+  currency        String   @default("BRL")
+  estimatedBudget String   @default("")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   activities CommunityActivity[]
@@ -281,10 +281,10 @@ model RouteComment {
 }
 
 model CommunityActivity {
-  id          String         @id @default(cuid())
+  id          String  @id @default(cuid())
   routeId     String
   title       String
-  type        String         @default("ACTIVITY")
+  type        String  @default("ACTIVITY")
   day         Int
   startTime   String?
   endTime     String?
