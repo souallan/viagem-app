@@ -23,6 +23,18 @@ export async function GET() {
   return NextResponse.json({ ...user, stats: { trips, experiences, routes } });
 }
 
+const ALLOWED_IMAGE_DOMAINS = ["images.unsplash.com", "res.cloudinary.com", "lh3.googleusercontent.com", "avatars.githubusercontent.com"];
+
+function isAllowedImageUrl(url: string | null | undefined): boolean {
+  if (!url) return true;
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "https:" && ALLOWED_IMAGE_DOMAINS.some((d) => parsed.hostname === d);
+  } catch {
+    return false;
+  }
+}
+
 export async function PUT(req: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -35,15 +47,27 @@ export async function PUT(req: NextRequest) {
 
   const data: Record<string, unknown> = {};
 
-  if (name !== undefined) data.name = name.trim() || user.name;
-  if (image !== undefined) data.image = image || null;
+  if (name !== undefined) {
+    const trimmed = String(name ?? "").trim();
+    if (trimmed.length < 2 || trimmed.length > 100) {
+      return NextResponse.json({ error: "Nome deve ter entre 2 e 100 caracteres." }, { status: 400 });
+    }
+    data.name = trimmed;
+  }
+
+  if (image !== undefined) {
+    if (image && !isAllowedImageUrl(image)) {
+      return NextResponse.json({ error: "URL de imagem não permitida." }, { status: 400 });
+    }
+    data.image = image || null;
+  }
 
   if (newPassword) {
     if (!currentPassword) return NextResponse.json({ error: "Informe a senha atual." }, { status: 400 });
     if (!user.password) return NextResponse.json({ error: "Conta sem senha local." }, { status: 400 });
     const valid = await bcrypt.compare(currentPassword, user.password);
     if (!valid) return NextResponse.json({ error: "Senha atual incorreta." }, { status: 400 });
-    if (newPassword.length < 8) return NextResponse.json({ error: "A nova senha deve ter mínimo 8 caracteres." }, { status: 400 });
+    if (newPassword.length < 8 || newPassword.length > 128) return NextResponse.json({ error: "A nova senha deve ter entre 8 e 128 caracteres." }, { status: 400 });
     data.password = await bcrypt.hash(newPassword, 12);
   }
 

@@ -2,13 +2,36 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export async function POST(request: Request) {
   try {
-    const { name, email, password } = await request.json();
+    const body = await request.json();
+    const name: string = (body.name ?? "").trim();
+    const email: string = (body.email ?? "").trim().toLowerCase();
+    const password: string = body.password ?? "";
 
     if (!name || !email || !password) {
       return NextResponse.json(
         { error: "Nome, email e senha são obrigatórios" },
+        { status: 400 }
+      );
+    }
+    if (name.length < 2 || name.length > 100) {
+      return NextResponse.json(
+        { error: "Nome deve ter entre 2 e 100 caracteres." },
+        { status: 400 }
+      );
+    }
+    if (!EMAIL_REGEX.test(email) || email.length > 254) {
+      return NextResponse.json(
+        { error: "Email inválido." },
+        { status: 400 }
+      );
+    }
+    if (password.length < 8 || password.length > 128) {
+      return NextResponse.json(
+        { error: "Senha deve ter entre 8 e 128 caracteres." },
         { status: 400 }
       );
     }
