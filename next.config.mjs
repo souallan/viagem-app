@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
 
 const securityHeaders = [
   { key: "X-Frame-Options",           value: "DENY" },
@@ -20,7 +20,7 @@ const securityHeaders = [
   },
 ];
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   output: "standalone",
   images: {
     remotePatterns: [
