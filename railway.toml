@@ -1,8 +1,8 @@
 [build]
 builder = "nixpacks"
-buildCommand = "bash scripts/railway-build.sh"
+buildCommand = "cp prisma/schema.railway.prisma prisma/schema.prisma && npx prisma generate && npm run build && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public"
 
 [deploy]
-startCommand = "npx prisma db push --accept-data-loss && node .next/standalone/server.js"
+startCommand = "cp prisma/schema.railway.prisma prisma/schema.prisma && npx prisma db push --accept-data-loss && node .next/standalone/server.js"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
