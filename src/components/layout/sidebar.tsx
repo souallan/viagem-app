@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Route, Plane, Lightbulb, Globe, BookOpen, Mail, Instagram, MessageCircle, Shield, UserCircle2, Settings } from "lucide-react";
+import { LayoutDashboard, Route, Plane, Lightbulb, Globe, BookOpen, Mail, Instagram, MessageCircle, Shield, UserCircle2, Settings, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
 import { SITE_CONFIG } from "@/lib/site-config";
@@ -114,7 +114,7 @@ export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             <div className={cn("w-6 h-6 rounded-md flex items-center justify-center shrink-0", pathname.startsWith("/admin") ? "bg-red-600/30" : "bg-red-900/20")}>
               <Settings className={cn("h-3.5 w-3.5", pathname.startsWith("/admin") ? "text-red-400" : "text-red-800")} />
             </div>
-            <span>Admin Panel</span>
+            <span>{t.sidebar.adminPanel}</span>
             {!pathname.startsWith("/admin") && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-red-700/60" />}
           </Link>
         </div>
@@ -199,6 +199,10 @@ export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
           <p className="text-[9px] text-slate-800 mt-1">
             v1.0 · {t.sidebar.madeWith}
           </p>
+          <Link href="/privacy" className="flex items-center gap-1 text-[9px] text-slate-700 hover:text-slate-500 transition-colors mt-1.5">
+            <Lock className="h-2.5 w-2.5" />
+            {t.sidebar.privacyPolicy}
+          </Link>
         </div>
       </div>
     </aside>

@@ -5,7 +5,9 @@ import { signOut } from "next-auth/react";
 import {
   User, Mail, Lock, Camera, Save, LogOut,
   Plane, BookOpen, Route, CheckCircle2, AlertCircle, Pencil,
+  Download, Trash2, ShieldAlert,
 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -60,6 +62,12 @@ export default function ProfilePage() {
   const [pwSaving, setPwSaving] = useState(false);
   const [pwMsg, setPwMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
 
+  // LGPD state
+  const [deleteConfirm, setDeleteConfirm] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteMsg, setDeleteMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
+  const [exportLoading, setExportLoading] = useState(false);
+
   async function load() {
     const res = await fetch("/api/user");
     if (res.ok) {
@@ -90,6 +98,38 @@ export default function ProfilePage() {
     } else {
       const data = await res.json().catch(() => ({}));
       setProfileMsg({ type: "err", text: data.error ?? "Erro ao salvar perfil." });
+    }
+  }
+
+  async function handleExport() {
+    setExportLoading(true);
+    const res = await fetch("/api/user/export");
+    setExportLoading(false);
+    if (!res.ok) return;
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `roteiroapp-dados-${user?.id?.slice(0, 8) ?? "export"}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function handleDeleteAccount(e: React.FormEvent) {
+    e.preventDefault();
+    setDeleting(true);
+    setDeleteMsg(null);
+    const res = await fetch("/api/user", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: deleteConfirm }),
+    });
+    setDeleting(false);
+    if (res.ok) {
+      await signOut({ callbackUrl: "/login" });
+    } else {
+      const data = await res.json().catch(() => ({}));
+      setDeleteMsg({ type: "err", text: data.error ?? "Erro ao excluir conta." });
     }
   }
 
@@ -313,7 +353,7 @@ export default function ProfilePage() {
         </form>
       </div>
 
-      {/* ── Danger zone ── */}
+      {/* ── Sessão ── */}
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
         <h2 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
           <LogOut className="h-4 w-4 text-red-400" />
@@ -331,6 +371,74 @@ export default function ProfilePage() {
           <LogOut className="h-4 w-4" />
           Sair da conta
         </Button>
+      </div>
+
+      {/* ── LGPD — Privacidade e dados ── */}
+      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-6">
+        <h2 className="font-bold text-gray-800 flex items-center gap-2">
+          <ShieldAlert className="h-4 w-4 text-violet-500" />
+          Privacidade e seus dados
+        </h2>
+        <p className="text-xs text-gray-400 -mt-2">
+          Em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018).{" "}
+          <Link href="/privacy" className="text-primary-600 hover:underline">Ver política de privacidade</Link>
+        </p>
+
+        {/* Export */}
+        <div className="flex items-start justify-between gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+          <div>
+            <p className="text-sm font-semibold text-gray-800">Exportar meus dados</p>
+            <p className="text-xs text-gray-500 mt-0.5">Baixe um arquivo JSON com todas as viagens, experiências e roteiros vinculados à sua conta.</p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+            disabled={exportLoading}
+            className="gap-2 shrink-0"
+          >
+            <Download className="h-3.5 w-3.5" />
+            {exportLoading ? "Gerando..." : "Baixar"}
+          </Button>
+        </div>
+
+        {/* Delete account */}
+        <div className="p-4 rounded-2xl bg-red-50 border border-red-100 space-y-3">
+          <div className="flex items-center gap-2">
+            <Trash2 className="h-4 w-4 text-red-500 shrink-0" />
+            <p className="text-sm font-semibold text-red-700">Excluir conta permanentemente</p>
+          </div>
+          <p className="text-xs text-red-500">
+            Esta ação é irreversível. Todos os seus dados (viagens, despesas, documentos, relatos e roteiros) serão apagados definitivamente.
+          </p>
+          <form onSubmit={handleDeleteAccount} className="space-y-3">
+            <Input
+              type="password"
+              placeholder="Digite sua senha para confirmar"
+              value={deleteConfirm}
+              onChange={(e) => setDeleteConfirm(e.target.value)}
+              className="border-red-200 focus:border-red-400 bg-white text-sm"
+            />
+            {deleteMsg && (
+              <div className={cn(
+                "flex items-center gap-2 text-xs px-3 py-2 rounded-xl",
+                deleteMsg.type === "err" ? "bg-red-100 text-red-700 border border-red-200" : "bg-green-50 text-green-700"
+              )}>
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                {deleteMsg.text}
+              </div>
+            )}
+            <Button
+              type="submit"
+              size="sm"
+              disabled={deleting || !deleteConfirm}
+              className="gap-2 bg-red-600 hover:bg-red-700 text-white border-0"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              {deleting ? "Excluindo..." : "Excluir minha conta"}
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -48,6 +48,8 @@ const translations = {
       profile: "Meu Perfil",
       contact: "Contato",
       madeWith: "Feito com ♥ no Brasil",
+      adminPanel: "Painel Admin",
+      privacyPolicy: "Política de Privacidade",
     },
     dashboard: {
       welcomeBack: "Bem-vindo de volta",
@@ -614,6 +616,8 @@ const translations = {
       profile: "Mi Perfil",
       contact: "Contacto",
       madeWith: "Hecho con ♥ en Brasil",
+      adminPanel: "Panel Admin",
+      privacyPolicy: "Política de Privacidad",
     },
     dashboard: {
       welcomeBack: "Bienvenido de nuevo",
@@ -1176,6 +1180,8 @@ const translations = {
       profile: "My Profile",
       contact: "Contact",
       madeWith: "Made with ♥ in Brazil",
+      adminPanel: "Admin Panel",
+      privacyPolicy: "Privacy Policy",
     },
     dashboard: {
       welcomeBack: "Welcome back",

@@ -1,14 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { auditLog } from "@/lib/audit";
 
-async function isAdmin() {
+async function adminSession() {
   const session = await auth();
-  return (session?.user as { role?: string } | undefined)?.role === "ADMIN";
+  const isAdmin = (session?.user as { role?: string } | undefined)?.role === "ADMIN";
+  return { session, isAdmin };
 }
 
 export async function GET() {
-  if (!(await isAdmin())) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  const { isAdmin } = await adminSession();
+  if (!isAdmin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const [experiences, routes, trips] = await Promise.all([
     prisma.experience.findMany({
@@ -43,7 +46,8 @@ export async function GET() {
 }
 
 export async function DELETE(req: NextRequest) {
-  if (!(await isAdmin())) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  const { session, isAdmin } = await adminSession();
+  if (!isAdmin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { type, id } = await req.json();
   if (!type || !id) return NextResponse.json({ error: "Missing fields" }, { status: 400 });
@@ -52,6 +56,16 @@ export async function DELETE(req: NextRequest) {
   else if (type === "route") await prisma.communityRoute.delete({ where: { id } });
   else if (type === "trip") await prisma.trip.delete({ where: { id } });
   else return NextResponse.json({ error: "Unknown type" }, { status: 400 });
+
+  await auditLog({
+    actorId: session!.user!.id!,
+    actorEmail: session!.user!.email ?? "",
+    action: "CONTENT_DELETE",
+    targetId: id,
+    targetType: type,
+    detail: `Conteúdo do tipo "${type}" (id: ${id}) removido por admin`,
+    ip: req.headers.get("x-forwarded-for") ?? undefined,
+  });
 
   return NextResponse.json({ ok: true });
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { auditLog } from "@/lib/audit";
 
 export async function GET() {
   const session = await auth();
@@ -53,4 +54,35 @@ export async function PUT(req: NextRequest) {
   });
 
   return NextResponse.json(updated);
+}
+
+export async function DELETE(req: NextRequest) {
+  const session = await auth();
+  if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { password } = await req.json();
+  if (!password) return NextResponse.json({ error: "Confirme com sua senha." }, { status: 400 });
+
+  const user = await prisma.user.findUnique({ where: { id: session.user.id } });
+  if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  if (user.password) {
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) return NextResponse.json({ error: "Senha incorreta." }, { status: 400 });
+  }
+
+  await auditLog({
+    actorId: user.id,
+    actorEmail: user.email,
+    action: "ACCOUNT_DELETE",
+    targetId: user.id,
+    targetType: "User",
+    detail: `Conta excluída pelo próprio usuário: ${user.email}`,
+    ip: req.headers.get("x-forwarded-for") ?? undefined,
+  });
+
+  // Cascade delete via Prisma schema (onDelete: Cascade on all relations)
+  await prisma.user.delete({ where: { id: user.id } });
+
+  return NextResponse.json({ ok: true });
 }

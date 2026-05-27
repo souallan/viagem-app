@@ -295,6 +295,19 @@ model CommunityActivity {
   route CommunityRoute @relation(fields: [routeId], references: [id], onDelete: Cascade)
 }
 
+// AuditAction values: USER_DELETE | USER_ROLE_CHANGE | CONTENT_DELETE | DATA_EXPORT | ACCOUNT_DELETE
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String
+  actorEmail String
+  action     String
+  targetId   String?
+  targetType String?
+  detail     String?
+  ip         String?
+  createdAt  DateTime @default(now())
+}
+
 // Mood values: AMAZING | GREAT | GOOD | MIXED | CHALLENGING
 model Experience {
   id             String   @id @default(cuid())
