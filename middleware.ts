@@ -18,7 +18,7 @@ function rateLimit(key: string, maxRequests: number, windowMs: number): boolean 
   return true;
 }
 
-// Clean up old entries every 5 minutes to prevent memory leak
+// Clean up old entries every 5 minutes
 let lastCleanup = Date.now();
 function maybeCleanup() {
   const now = Date.now();
@@ -46,35 +46,9 @@ export function middleware(req: NextRequest) {
     }
   }
 
-  const res = NextResponse.next();
-
-  // Security headers
-  res.headers.set("X-Frame-Options", "DENY");
-  res.headers.set("X-Content-Type-Options", "nosniff");
-  res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  res.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-  res.headers.set(
-    "Strict-Transport-Security",
-    "max-age=63072000; includeSubDomains; preload"
-  );
-  res.headers.set(
-    "Content-Security-Policy",
-    [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://images.unsplash.com https://res.cloudinary.com",
-      "font-src 'self'",
-      "connect-src 'self' https://api.frankfurter.app",
-      "frame-ancestors 'none'",
-    ].join("; ")
-  );
-
-  return res;
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|public/).*)",
-  ],
+  matcher: ["/api/auth/:path*", "/api/register"],
 };
