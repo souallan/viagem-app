@@ -5,34 +5,27 @@ import Link from "next/link";
 import {
   Plane, Map, Wallet, Package, BookOpen, Star, ArrowRight,
   CheckCircle, Globe, Lightbulb, Route, Check, X,
-  MapPin, Clock, Users, TrendingUp, Shield, Zap,
+  MapPin, Clock, Users, TrendingUp, Shield, Zap, Monitor,
 } from "lucide-react";
 import { landingI18n, type LandingLang } from "@/lib/landing-i18n";
 import { AppShowcase } from "@/components/landing/app-showcase";
 
 const FEATURE_ICONS = [Map, Wallet, Package, Route, BookOpen, Shield];
 const FEATURE_COLORS = [
-  { color: "from-blue-500/20 to-blue-600/5",    iconColor: "text-blue-400"    },
-  { color: "from-emerald-500/20 to-emerald-600/5", iconColor: "text-emerald-400" },
-  { color: "from-violet-500/20 to-violet-600/5",  iconColor: "text-violet-400"  },
-  { color: "from-orange-500/20 to-orange-600/5",  iconColor: "text-orange-400"  },
-  { color: "from-pink-500/20 to-pink-600/5",      iconColor: "text-pink-400"    },
-  { color: "from-yellow-500/20 to-yellow-600/5",  iconColor: "text-yellow-400"  },
+  { color: "from-blue-500/20 to-blue-600/5",       iconColor: "text-blue-400"    },
+  { color: "from-emerald-500/20 to-emerald-600/5",  iconColor: "text-emerald-400" },
+  { color: "from-violet-500/20 to-violet-600/5",    iconColor: "text-violet-400"  },
+  { color: "from-orange-500/20 to-orange-600/5",    iconColor: "text-orange-400"  },
+  { color: "from-pink-500/20 to-pink-600/5",        iconColor: "text-pink-400"    },
+  { color: "from-yellow-500/20 to-yellow-600/5",    iconColor: "text-yellow-400"  },
 ];
 const STEP_ICONS = [Plane, Map, TrendingUp];
 const COMMUNITY_ICONS = [BookOpen, Route, Lightbulb, Users, Globe];
 const COMMUNITY_COLORS = ["text-pink-400", "text-orange-400", "text-yellow-400", "text-blue-400", "text-teal-400"];
-
 const COMPETITORS_DATA = [
-  [true,  false, false],
-  [true,  true,  false],
-  [true,  false, false],
-  [true,  false, false],
-  [true,  false, false],
-  [true,  false, false],
-  [true,  false, true ],
-  [true,  false, false],
-  [true,  false, false],
+  [true, false, false], [true, true,  false], [true, false, false],
+  [true, false, false], [true, false, false], [true, false, false],
+  [true, false, true],  [true, false, false], [true, false, false],
 ];
 
 const LANG_OPTIONS: { id: LandingLang; flag: string; label: string }[] = [
@@ -41,27 +34,27 @@ const LANG_OPTIONS: { id: LandingLang; flag: string; label: string }[] = [
   { id: "es", flag: "🇪🇸", label: "ES" },
 ];
 
+type PageTab = "features" | "app" | "howItWorks" | "community";
+const PAGE_TABS: { id: PageTab; Icon: typeof Zap }[] = [
+  { id: "features",    Icon: Zap     },
+  { id: "app",         Icon: Monitor },
+  { id: "howItWorks",  Icon: Route   },
+  { id: "community",   Icon: Users   },
+];
+
 interface Props {
   stats: { users: number; trips: number; destinations: number };
 }
 
 export function LandingClient({ stats }: Props) {
-  const [lang, setLang] = useState<LandingLang>("pt");
+  const [lang, setLang]         = useState<LandingLang>("pt");
+  const [activeTab, setActiveTab] = useState<PageTab>("features");
   const t = landingI18n[lang];
 
   const STATS_ITEMS = [
-    {
-      value: stats.trips > 0 ? `${stats.trips}+` : "100%",
-      label: stats.trips > 0 ? t.stats.trips : t.stats.fallbackFree,
-    },
-    {
-      value: stats.users > 0 ? `${stats.users}+` : "12+",
-      label: stats.users > 0 ? t.stats.users : t.stats.fallbackFeatures,
-    },
-    {
-      value: stats.destinations > 0 ? `${stats.destinations}+` : "3",
-      label: stats.destinations > 0 ? t.stats.destinations : t.stats.fallbackLangs,
-    },
+    { value: stats.trips > 0        ? `${stats.trips}+`        : "100%", label: stats.trips > 0        ? t.stats.trips        : t.stats.fallbackFree     },
+    { value: stats.users > 0        ? `${stats.users}+`        : "12+",  label: stats.users > 0        ? t.stats.users        : t.stats.fallbackFeatures },
+    { value: stats.destinations > 0 ? `${stats.destinations}+` : "3",    label: stats.destinations > 0 ? t.stats.destinations : t.stats.fallbackLangs    },
   ];
 
   return (
@@ -70,7 +63,7 @@ export function LandingClient({ stats }: Props) {
       {/* Grid overlay */}
       <div className="fixed inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
 
-      {/* Glows */}
+      {/* Ambient glows */}
       <div className="fixed top-[-20%] left-[5%] w-[600px] h-[600px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(26,95,204,0.12) 0%, transparent 65%)" }} />
       <div className="fixed bottom-[-20%] right-[-5%] w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(13,123,163,0.09) 0%, transparent 65%)" }} />
 
@@ -93,11 +86,7 @@ export function LandingClient({ stats }: Props) {
               <button
                 key={opt.id}
                 onClick={() => setLang(opt.id)}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${
-                  lang === opt.id
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "text-slate-500 hover:text-slate-300"
-                }`}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${lang === opt.id ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:text-slate-300"}`}
               >
                 <span>{opt.flag}</span>
                 <span>{opt.label}</span>
@@ -112,9 +101,9 @@ export function LandingClient({ stats }: Props) {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-6 md:px-14 pt-16 pb-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="relative z-10 max-w-7xl mx-auto px-6 md:px-14 pt-14 pb-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div>
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-blue-500/25 bg-blue-600/10 text-blue-300 text-xs font-semibold mb-7">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-blue-500/25 bg-blue-600/10 text-blue-300 text-xs font-semibold mb-6">
             <Star className="h-3 w-3 fill-current" />
             {t.hero.badge}
           </div>
@@ -126,7 +115,7 @@ export function LandingClient({ stats }: Props) {
           </h1>
           <p className="text-base text-slate-400 leading-relaxed mb-8 max-w-lg">{t.hero.subtitle}</p>
 
-          <div className="flex flex-col sm:flex-row gap-3 mb-10">
+          <div className="flex flex-col sm:flex-row gap-3 mb-8">
             <Link href="/register" className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: "linear-gradient(135deg,#1A5FCC,#2570E8)", boxShadow: "0 6px 22px rgba(26,95,204,0.38)" }}>
               {t.hero.cta} <ArrowRight className="h-4 w-4" />
             </Link>
@@ -155,17 +144,19 @@ export function LandingClient({ stats }: Props) {
             </div>
           </div>
           <div className="absolute -top-4 -right-4 flex items-center gap-2 px-3 py-2 rounded-xl border border-emerald-500/25 text-xs font-semibold text-emerald-300" style={{ background: "rgba(16,185,129,0.10)", backdropFilter: "blur(12px)" }}>
-            <CheckCircle className="h-3.5 w-3.5" /> {lang === "pt" ? "Orçamento no controle" : lang === "en" ? "Budget on track" : "Presupuesto controlado"}
+            <CheckCircle className="h-3.5 w-3.5" />{" "}
+            {lang === "pt" ? "Orçamento no controle" : lang === "en" ? "Budget on track" : "Presupuesto controlado"}
           </div>
           <div className="absolute -bottom-4 -left-4 flex items-center gap-2 px-3 py-2 rounded-xl border border-blue-500/25 text-xs font-semibold text-blue-300" style={{ background: "rgba(37,112,232,0.12)", backdropFilter: "blur(12px)" }}>
-            <MapPin className="h-3.5 w-3.5" /> {lang === "pt" ? "4 atividades hoje" : lang === "en" ? "4 activities today" : "4 actividades hoy"}
+            <MapPin className="h-3.5 w-3.5" />{" "}
+            {lang === "pt" ? "4 atividades hoje" : lang === "en" ? "4 activities today" : "4 actividades hoy"}
           </div>
         </div>
       </section>
 
-      {/* ── LIVE STATS ── */}
+      {/* ── STATS ── */}
       <section className="relative z-10 border-y border-white/5" style={{ background: "rgba(255,255,255,0.02)" }}>
-        <div className="max-w-4xl mx-auto px-6 py-10 grid grid-cols-3 divide-x divide-white/5 text-center">
+        <div className="max-w-4xl mx-auto px-6 py-8 grid grid-cols-3 divide-x divide-white/5 text-center">
           {STATS_ITEMS.map((s, i) => (
             <div key={i} className="px-6">
               <div className="text-3xl md:text-4xl font-black mb-1" style={{ background: "linear-gradient(90deg,#5585FA,#38BDF8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -177,171 +168,203 @@ export function LandingClient({ stats }: Props) {
         </div>
       </section>
 
-      {/* ── FEATURES ── */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-24">
-        <div className="text-center mb-14">
-          <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">{t.features.sectionLabel}</p>
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight">
-            {t.features.title1}<br />
-            <span className="text-slate-500 font-medium">{t.features.title2}</span>
-          </h2>
+      {/* ── PAGE TABS ── */}
+      <div className="sticky top-0 z-40 border-b border-white/6 backdrop-blur-md" style={{ background: "rgba(7,13,20,0.90)" }}>
+        <div className="max-w-6xl mx-auto px-4 md:px-14 overflow-x-auto">
+          <div className="flex items-center gap-1 py-2 min-w-max">
+            {PAGE_TABS.map(({ id, Icon }) => (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
+                  activeTab === id
+                    ? "text-white shadow-lg"
+                    : "text-slate-500 hover:text-slate-200 hover:bg-white/5"
+                }`}
+                style={activeTab === id ? { background: "linear-gradient(135deg,#1A5FCC,#2570E8)", boxShadow: "0 3px 12px rgba(26,95,204,0.35)" } : {}}
+              >
+                <Icon className="h-4 w-4" />
+                {t.pageTabs[id]}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {t.features.items.map((f, i) => {
-            const Icon = FEATURE_ICONS[i];
-            const { color, iconColor } = FEATURE_COLORS[i];
-            return (
-              <div key={f.title} className="group rounded-2xl border border-white/6 p-6 hover:border-white/12 transition-all duration-300" style={{ background: "rgba(255,255,255,0.03)" }}>
-                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon className={`h-5 w-5 ${iconColor}`} />
-                </div>
-                <h3 className="font-bold text-white mb-2">{f.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ── APP SHOWCASE ── */}
-      <div className="relative z-10 border-y border-white/5" style={{ background: "rgba(255,255,255,0.015)" }}>
-        <AppShowcase t={t.showcase} />
       </div>
 
-      {/* ── ITINERARY FEATURE ── */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">{t.itineraryFeature.sectionLabel}</p>
-            <h2 className="text-3xl font-black tracking-tight mb-5">
-              {t.itineraryFeature.title1}<br />
-              <span className="text-slate-400 font-medium">{t.itineraryFeature.title2}</span>
-            </h2>
-            <p className="text-slate-400 leading-relaxed mb-7">{t.itineraryFeature.desc}</p>
-            <div className="space-y-3">
-              {t.itineraryFeature.bullets.map((label, i) => {
-                const BulletIcon = [Clock, MapPin, Zap][i];
+      {/* ── TAB CONTENT ── */}
+      <div className="relative z-10 min-h-[60vh]">
+
+        {/* ── TAB: FEATURES ── */}
+        {activeTab === "features" && (
+          <section className="max-w-6xl mx-auto px-6 md:px-14 py-16">
+            <div className="text-center mb-12">
+              <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">{t.features.sectionLabel}</p>
+              <h2 className="text-3xl md:text-4xl font-black tracking-tight">
+                {t.features.title1}<br />
+                <span className="text-slate-500 font-medium">{t.features.title2}</span>
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {t.features.items.map((f, i) => {
+                const Icon = FEATURE_ICONS[i];
+                const { color, iconColor } = FEATURE_COLORS[i];
                 return (
-                  <div key={label} className="flex items-center gap-3 text-sm text-slate-400">
-                    <BulletIcon className="h-4 w-4 text-blue-400 shrink-0" />
-                    {label}
+                  <div key={f.title} className="group rounded-2xl border border-white/6 p-6 hover:border-white/12 transition-all duration-300" style={{ background: "rgba(255,255,255,0.03)" }}>
+                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                      <Icon className={`h-5 w-5 ${iconColor}`} />
+                    </div>
+                    <h3 className="font-bold text-white mb-2">{f.title}</h3>
+                    <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
                   </div>
                 );
               })}
             </div>
-          </div>
-          <ItineraryMockup />
-        </div>
-      </section>
+          </section>
+        )}
 
-      {/* ── HOW IT WORKS ── */}
-      <section className="relative z-10 border-y border-white/5 py-24" style={{ background: "rgba(255,255,255,0.015)" }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-14">
-          <div className="text-center mb-14">
-            <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">{t.howItWorks.sectionLabel}</p>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight">{t.howItWorks.title}</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            <div className="hidden md:block absolute top-8 left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
-            {t.howItWorks.steps.map((step, i) => {
-              const Icon = STEP_ICONS[i];
-              return (
-                <div key={step.title} className="text-center">
-                  <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center text-2xl font-black text-blue-300" style={{ background: "linear-gradient(135deg,rgba(26,95,204,0.20),rgba(37,112,232,0.10))", border: "1px solid rgba(37,112,232,0.20)" }}>
-                    {String(i + 1).padStart(2, "0")}
+        {/* ── TAB: APP ── */}
+        {activeTab === "app" && (
+          <div>
+            <div className="border-b border-white/5" style={{ background: "rgba(255,255,255,0.015)" }}>
+              <AppShowcase t={t.showcase} />
+            </div>
+
+            <section className="max-w-6xl mx-auto px-6 md:px-14 py-16">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                  <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">{t.itineraryFeature.sectionLabel}</p>
+                  <h2 className="text-3xl font-black tracking-tight mb-5">
+                    {t.itineraryFeature.title1}<br />
+                    <span className="text-slate-400 font-medium">{t.itineraryFeature.title2}</span>
+                  </h2>
+                  <p className="text-slate-400 leading-relaxed mb-7">{t.itineraryFeature.desc}</p>
+                  <div className="space-y-3">
+                    {t.itineraryFeature.bullets.map((label, i) => {
+                      const BulletIcon = [Clock, MapPin, Zap][i];
+                      return (
+                        <div key={label} className="flex items-center gap-3 text-sm text-slate-400">
+                          <BulletIcon className="h-4 w-4 text-blue-400 shrink-0" />
+                          {label}
+                        </div>
+                      );
+                    })}
                   </div>
-                  <h3 className="font-bold text-white mb-2">{step.title}</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed max-w-xs mx-auto">{step.desc}</p>
                 </div>
-              );
-            })}
+                <ItineraryMockup />
+              </div>
+            </section>
           </div>
-        </div>
-      </section>
+        )}
 
-      {/* ── COMPETITORS ── */}
-      <section className="relative z-10 py-24">
-        <div className="max-w-3xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">{t.competitors.sectionLabel}</p>
-            <h2 className="text-3xl font-black tracking-tight">
-              {t.competitors.title1}<br />
-              <span className="text-slate-400 font-medium">{t.competitors.title2}</span>
-            </h2>
+        {/* ── TAB: HOW IT WORKS ── */}
+        {activeTab === "howItWorks" && (
+          <div>
+            <section className="max-w-5xl mx-auto px-6 md:px-14 py-16">
+              <div className="text-center mb-14">
+                <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">{t.howItWorks.sectionLabel}</p>
+                <h2 className="text-3xl md:text-4xl font-black tracking-tight">{t.howItWorks.title}</h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                <div className="hidden md:block absolute top-8 left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+                {t.howItWorks.steps.map((step, i) => {
+                  const Icon = STEP_ICONS[i];
+                  return (
+                    <div key={step.title} className="text-center">
+                      <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center text-2xl font-black text-blue-300" style={{ background: "linear-gradient(135deg,rgba(26,95,204,0.20),rgba(37,112,232,0.10))", border: "1px solid rgba(37,112,232,0.20)" }}>
+                        {String(i + 1).padStart(2, "0")}
+                      </div>
+                      <h3 className="font-bold text-white mb-2">{step.title}</h3>
+                      <p className="text-sm text-slate-500 leading-relaxed max-w-xs mx-auto">{step.desc}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="border-t border-white/5 py-16" style={{ background: "rgba(255,255,255,0.015)" }}>
+              <div className="max-w-3xl mx-auto px-6">
+                <div className="text-center mb-10">
+                  <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">{t.competitors.sectionLabel}</p>
+                  <h2 className="text-3xl font-black tracking-tight">
+                    {t.competitors.title1}<br />
+                    <span className="text-slate-400 font-medium">{t.competitors.title2}</span>
+                  </h2>
+                </div>
+                <div className="rounded-2xl border border-white/8 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
+                  <div className="grid grid-cols-4 border-b border-white/6">
+                    <div className="p-4 text-[11px] text-slate-600 font-semibold">
+                      {lang === "pt" ? "Funcionalidade" : lang === "en" ? "Feature" : "Funcionalidad"}
+                    </div>
+                    {[{ name: "RoteiroApp", highlight: true }, { name: "TripIt", highlight: false }, { name: "Notion", highlight: false }].map(({ name, highlight }) => (
+                      <div key={name} className={`p-4 text-center text-xs font-bold ${highlight ? "text-blue-300" : "text-slate-600"}`}>
+                        {highlight && <div className="text-[9px] text-blue-400 font-semibold mb-0.5">{t.competitors.recommended}</div>}
+                        {name}
+                      </div>
+                    ))}
+                  </div>
+                  {t.competitors.features.map((feature, i) => (
+                    <div key={i} className="grid grid-cols-4 border-b border-white/4 last:border-0">
+                      <div className="p-3 text-xs text-slate-400">{feature}</div>
+                      {COMPETITORS_DATA[i].map((v, j) => (
+                        <div key={j} className={`p-3 flex items-center justify-center ${j === 0 ? "bg-blue-600/5" : ""}`}>
+                          {v ? <Check className="h-4 w-4 text-emerald-400" /> : <X className="h-4 w-4 text-slate-700" />}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
           </div>
-          <div className="rounded-2xl border border-white/8 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
-            <div className="grid grid-cols-4 border-b border-white/6">
-              <div className="p-4 text-[11px] text-slate-600 font-semibold">{lang === "pt" ? "Funcionalidade" : lang === "en" ? "Feature" : "Funcionalidad"}</div>
-              {[
-                { name: "RoteiroApp", highlight: true },
-                { name: "TripIt",     highlight: false },
-                { name: "Notion",     highlight: false },
-              ].map(({ name, highlight }) => (
-                <div key={name} className={`p-4 text-center text-xs font-bold ${highlight ? "text-blue-300" : "text-slate-600"}`}>
-                  {highlight && <div className="text-[9px] text-blue-400 font-semibold mb-0.5">{t.competitors.recommended}</div>}
-                  {name}
+        )}
+
+        {/* ── TAB: COMMUNITY ── */}
+        {activeTab === "community" && (
+          <section className="max-w-6xl mx-auto px-6 md:px-14 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+            <div>
+              <p className="text-xs font-bold text-pink-400 uppercase tracking-widest mb-3">{t.community.sectionLabel}</p>
+              <h2 className="text-3xl font-black tracking-tight mb-5">
+                {t.community.title1}<br />
+                <span className="text-slate-400 font-medium">{t.community.title2}</span>
+              </h2>
+              <p className="text-slate-400 leading-relaxed mb-8">{t.community.desc}</p>
+              <div className="space-y-3">
+                {t.community.bullets.map((label, i) => {
+                  const Icon = COMMUNITY_ICONS[i];
+                  return (
+                    <div key={label} className="flex items-center gap-3 text-sm text-slate-400">
+                      <Icon className={`h-4 w-4 shrink-0 ${COMMUNITY_COLORS[i]}`} />
+                      {label}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="space-y-4">
+              {t.community.testimonials.map((item, i) => (
+                <div key={i} className="rounded-2xl border border-white/6 p-5 hover:border-white/12 transition-all" style={{ background: "rgba(255,255,255,0.03)" }}>
+                  <div className="flex gap-0.5 mb-3">
+                    {Array.from({ length: 5 }).map((_, s) => <Star key={s} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />)}
+                  </div>
+                  <p className="text-sm text-slate-300 leading-relaxed mb-4">&ldquo;{item.text}&rdquo;</p>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center text-[10px] font-black text-white`}>{item.av}</div>
+                    <div>
+                      <div className="text-xs font-bold text-white">{item.name}</div>
+                      <div className="text-[10px] text-slate-600">{item.dest}</div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
-            {t.competitors.features.map((feature, i) => (
-              <div key={i} className="grid grid-cols-4 border-b border-white/4 last:border-0">
-                <div className="p-3 text-xs text-slate-400">{feature}</div>
-                {COMPETITORS_DATA[i].map((v, j) => (
-                  <div key={j} className={`p-3 flex items-center justify-center ${j === 0 ? "bg-blue-600/5" : ""}`}>
-                    {v ? <Check className="h-4 w-4 text-emerald-400" /> : <X className="h-4 w-4 text-slate-700" />}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+          </section>
+        )}
 
-      {/* ── COMMUNITY ── */}
-      <section className="relative z-10 border-y border-white/5 py-24" style={{ background: "rgba(255,255,255,0.015)" }}>
-        <div className="max-w-6xl mx-auto px-6 md:px-14 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <p className="text-xs font-bold text-pink-400 uppercase tracking-widest mb-3">{t.community.sectionLabel}</p>
-            <h2 className="text-3xl font-black tracking-tight mb-5">
-              {t.community.title1}<br />
-              <span className="text-slate-400 font-medium">{t.community.title2}</span>
-            </h2>
-            <p className="text-slate-400 leading-relaxed mb-8">{t.community.desc}</p>
-            <div className="space-y-3">
-              {t.community.bullets.map((label, i) => {
-                const Icon = COMMUNITY_ICONS[i];
-                return (
-                  <div key={label} className="flex items-center gap-3 text-sm text-slate-400">
-                    <Icon className={`h-4 w-4 shrink-0 ${COMMUNITY_COLORS[i]}`} />
-                    {label}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-          <div className="space-y-4">
-            {t.community.testimonials.map((item, i) => (
-              <div key={i} className="rounded-2xl border border-white/6 p-5 hover:border-white/12 transition-all" style={{ background: "rgba(255,255,255,0.03)" }}>
-                <div className="flex gap-0.5 mb-3">
-                  {Array.from({ length: 5 }).map((_, s) => <Star key={s} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />)}
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed mb-4">"{item.text}"</p>
-                <div className="flex items-center gap-2">
-                  <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center text-[10px] font-black text-white`}>{item.av}</div>
-                  <div>
-                    <div className="text-xs font-bold text-white">{item.name}</div>
-                    <div className="text-[10px] text-slate-600">{item.dest}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      </div>
 
       {/* ── CTA ── */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-24">
-        <div className="rounded-3xl p-12 text-center border border-blue-500/20 relative overflow-hidden" style={{ background: "linear-gradient(135deg,rgba(26,95,204,0.15),rgba(13,123,163,0.08))" }}>
+      <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-20">
+        <div className="rounded-3xl p-10 md:p-14 text-center border border-blue-500/20 relative overflow-hidden" style={{ background: "linear-gradient(135deg,rgba(26,95,204,0.15),rgba(13,123,163,0.08))" }}>
           <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 50%,rgba(37,112,232,0.10) 0%,transparent 70%)" }} />
           <div className="relative z-10">
             <div className="w-14 h-14 rounded-2xl mx-auto mb-6 flex items-center justify-center" style={{ background: "linear-gradient(135deg,#1A5FCC,#2570E8)", boxShadow: "0 6px 24px rgba(26,95,204,0.45)" }}>
@@ -381,9 +404,7 @@ export function LandingClient({ stats }: Props) {
               <button
                 key={opt.id}
                 onClick={() => setLang(opt.id)}
-                className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all ${
-                  lang === opt.id ? "bg-blue-600 text-white" : "text-slate-600 hover:text-slate-300"
-                }`}
+                className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all ${lang === opt.id ? "bg-blue-600 text-white" : "text-slate-600 hover:text-slate-300"}`}
               >
                 {opt.flag} {opt.label}
               </button>
@@ -395,7 +416,7 @@ export function LandingClient({ stats }: Props) {
   );
 }
 
-// ── Small hero mockups (kept from original) ───────────────────
+// ── Hero mockups ────────────────────────────────────────────────
 
 function HeroMockDashboard() {
   return (
@@ -416,9 +437,9 @@ function HeroMockDashboard() {
           </div>
           <div className="grid grid-cols-3 gap-2">
             {[
-              { label: "Roma · Ago",    color: "#1A3A5C", accent: "#2D6A9F" },
-              { label: "Tóquio · Nov",  color: "#1C3B2A", accent: "#2D7A4F" },
-              { label: "Lisboa · Fev",  color: "#3B1C35", accent: "#7A2D6A" },
+              { label: "Roma · Ago",   color: "#1A3A5C", accent: "#2D6A9F" },
+              { label: "Tóquio · Nov", color: "#1C3B2A", accent: "#2D7A4F" },
+              { label: "Lisboa · Fev", color: "#3B1C35", accent: "#7A2D6A" },
             ].map((c, i) => (
               <div key={i} className="rounded-lg overflow-hidden border border-white/6">
                 <div className="h-12" style={{ background: `linear-gradient(135deg, ${c.color}, ${c.accent})` }} />
@@ -475,8 +496,10 @@ function HeroMockPacking() {
       </div>
       <div className="p-3 space-y-1.5">
         {[
-          { name: "Passaporte", done: true }, { name: "Seguro viagem", done: true },
-          { name: "Adaptador tomada", done: false }, { name: "Roteador portátil", done: false },
+          { name: "Passaporte",       done: true  },
+          { name: "Seguro viagem",    done: true  },
+          { name: "Adaptador tomada", done: false },
+          { name: "Roteador portátil",done: false },
         ].map((item, i) => (
           <div key={i} className="flex items-center gap-2 py-1 px-1.5 rounded-md" style={{ background: item.done ? "rgba(16,185,129,0.06)" : "rgba(255,255,255,0.02)" }}>
             <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${item.done ? "bg-emerald-500 border-emerald-500" : "border-slate-700"}`}>

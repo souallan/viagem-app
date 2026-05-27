@@ -23,6 +23,12 @@ export const landingI18n = {
       fallbackFeatures: "funcionalidades inclusas",
       fallbackLangs: "idiomas disponíveis",
     },
+    pageTabs: {
+      features: "Funcionalidades",
+      app: "App em ação",
+      howItWorks: "Como funciona",
+      community: "Comunidade",
+    },
     features: {
       sectionLabel: "Funcionalidades",
       title1: "Tudo que sua viagem precisa,",
@@ -146,6 +152,12 @@ export const landingI18n = {
       fallbackFeatures: "features included",
       fallbackLangs: "languages available",
     },
+    pageTabs: {
+      features: "Features",
+      app: "App preview",
+      howItWorks: "How it works",
+      community: "Community",
+    },
     features: {
       sectionLabel: "Features",
       title1: "Everything your trip needs,",
@@ -268,6 +280,12 @@ export const landingI18n = {
       fallbackFree: "Gratis para empezar",
       fallbackFeatures: "funcionalidades incluidas",
       fallbackLangs: "idiomas disponibles",
+    },
+    pageTabs: {
+      features: "Funcionalidades",
+      app: "App en acción",
+      howItWorks: "Cómo funciona",
+      community: "Comunidad",
     },
     features: {
       sectionLabel: "Funcionalidades",
