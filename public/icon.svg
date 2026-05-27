@@ -1,104 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
   <defs>
-    <!-- Background: deep indigo night-sky feel -->
-    <radialGradient id="bg" cx="35%" cy="65%" r="75%">
-      <stop offset="0%"   stop-color="#1e1b5e"/>
-      <stop offset="100%" stop-color="#07060f"/>
-    </radialGradient>
-
-    <!-- Route line gradient: orange → white → gold -->
-    <linearGradient id="routeGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%"   stop-color="#f97316" stop-opacity="0.6"/>
-      <stop offset="50%"  stop-color="#ffffff" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#fbbf24" stop-opacity="0.5"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A5FCC"/>
+      <stop offset="100%" stop-color="#2570E8"/>
     </linearGradient>
-
-    <!-- Destination outer glow -->
-    <radialGradient id="destGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%"   stop-color="#fde68a" stop-opacity="0.4"/>
-      <stop offset="60%"  stop-color="#f59e0b" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    <radialGradient id="glow" cx="50%" cy="35%" r="55%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
     </radialGradient>
-
-    <!-- Origin glow -->
-    <radialGradient id="origGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%"   stop-color="#fb923c" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#f97316" stop-opacity="0"/>
-    </radialGradient>
-
-    <!-- Soft blur for glow layers -->
-    <filter id="softBlur" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="12"/>
-    </filter>
-    <filter id="subtleBlur" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="4"/>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#0a2f6e" flood-opacity="0.5"/>
     </filter>
   </defs>
 
-  <!-- ── App icon background (rounded square) ─────────────────── -->
+  <!-- Background -->
   <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <!-- Inner glow -->
+  <rect width="512" height="512" rx="108" fill="url(#glow)"/>
 
-  <!-- ── Subtle star dots (atmosphere / map feel) ──────────────── -->
-  <circle cx="160" cy="130" r="1.5" fill="white" opacity="0.25"/>
-  <circle cx="90"  cy="200" r="1.2" fill="white" opacity="0.18"/>
-  <circle cx="420" cy="380" r="1.5" fill="white" opacity="0.2"/>
-  <circle cx="70"  cy="370" r="1.0" fill="white" opacity="0.15"/>
-  <circle cx="310" cy="420" r="1.2" fill="white" opacity="0.18"/>
-  <circle cx="440" cy="270" r="1.5" fill="white" opacity="0.22"/>
-  <circle cx="200" cy="60"  r="1.0" fill="white" opacity="0.15"/>
-  <circle cx="460" cy="90"  r="1.2" fill="white" opacity="0.2"/>
-
-  <!-- ── Route arc (main path) ─────────────────────────────────── -->
-  <!-- Shadow line underneath for depth -->
-  <path d="M 118 396 C 168 330, 210 296, 256 258 C 302 220, 346 192, 398 152"
-        stroke="black" stroke-width="22" stroke-linecap="round" fill="none"
-        opacity="0.35" filter="url(#subtleBlur)"/>
-
-  <!-- Main route line -->
-  <path d="M 118 396 C 168 330, 210 296, 256 258 C 302 220, 346 192, 398 152"
-        stroke="url(#routeGrad)" stroke-width="14" stroke-linecap="round" fill="none"/>
-
-  <!-- Dashed overlay on first half (suggest dotted map route) -->
-  <path d="M 118 396 C 168 330, 210 296, 256 258"
-        stroke="white" stroke-width="3" stroke-linecap="round" fill="none"
-        stroke-dasharray="6 14" opacity="0.3"/>
-
-  <!-- ── Origin dot (departure — warm orange) ──────────────────── -->
-  <!-- Glow halo -->
-  <circle cx="118" cy="396" r="56" fill="url(#origGlow)" filter="url(#softBlur)"/>
-  <!-- Outer ring -->
-  <circle cx="118" cy="396" r="26" fill="#f97316" opacity="0.2"/>
-  <!-- Main dot -->
-  <circle cx="118" cy="396" r="20" fill="#f97316"/>
-  <!-- Inner highlight -->
-  <circle cx="112" cy="390" r="6" fill="white" opacity="0.35"/>
-
-  <!-- ── Waypoint (middle — translucent white ring) ─────────────── -->
-  <circle cx="256" cy="258" r="18" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.55)" stroke-width="3.5"/>
-  <circle cx="256" cy="258" r="7"  fill="white" opacity="0.7"/>
-
-  <!-- ── Destination (arrival — golden, glowing) ───────────────── -->
-  <!-- Wide glow -->
-  <circle cx="398" cy="152" r="80" fill="url(#destGlow)" filter="url(#softBlur)"/>
-  <!-- Pulsing outer ring -->
-  <circle cx="398" cy="152" r="52" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0.25"/>
-  <!-- Mid ring -->
-  <circle cx="398" cy="152" r="40" fill="#fbbf24" opacity="0.18"/>
-  <!-- Main golden circle -->
-  <circle cx="398" cy="152" r="30" fill="#f59e0b"/>
-  <!-- Bright center -->
-  <circle cx="398" cy="152" r="16" fill="#fde68a"/>
-  <!-- Core highlight -->
-  <circle cx="392" cy="146" r="6"  fill="white" opacity="0.65"/>
-
-  <!-- Star rays at destination (4 short lines) -->
-  <line x1="398" y1="108" x2="398" y2="118" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/>
-  <line x1="398" y1="186" x2="398" y2="196" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/>
-  <line x1="354" y1="152" x2="364" y2="152" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/>
-  <line x1="432" y1="152" x2="442" y2="152" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" opacity="0.7"/>
-  <!-- Diagonal rays -->
-  <line x1="367" y1="121" x2="374" y2="128" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity="0.45"/>
-  <line x1="422" y1="176" x2="429" y2="183" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity="0.45"/>
-  <line x1="422" y1="121" x2="429" y2="128" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity="0.45"/>
-  <line x1="367" y1="176" x2="374" y2="183" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity="0.45"/>
+  <!-- Airplane silhouette (top-down, pointing up), scaled to ~300px centered -->
+  <!-- Path origin is 24x24, scale=300/24=12.5, visual center at (16,13.25)→(200,165.6), offset to (256,256): tx=56, ty=90 -->
+  <g transform="translate(56,88) scale(12.5)" filter="url(#shadow)">
+    <path
+      d="M16 3 L17.8 10.5 L25 14 L25 15.8 L17.8 14 L17.8 20.5 L20.5 22 L16 23.5 L11.5 22 L14.2 20.5 L14.2 14 L7 15.8 L7 14 L14.2 10.5 Z"
+      fill="white"
+    />
+  </g>
 </svg>

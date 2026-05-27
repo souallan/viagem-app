@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "RoteiroApp",
   },
-  themeColor: "#1e1b5e",
+  themeColor: "#1A5FCC",
 };
 
 export default function RootLayout({

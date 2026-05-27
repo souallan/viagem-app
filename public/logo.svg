@@ -1,68 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 96" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 64" fill="none">
   <defs>
-    <radialGradient id="bg2" cx="30%" cy="60%" r="80%">
-      <stop offset="0%"   stop-color="#1e1b5e"/>
-      <stop offset="100%" stop-color="#07060f"/>
-    </radialGradient>
-    <radialGradient id="dg" cx="50%" cy="50%" r="50%">
-      <stop offset="0%"   stop-color="#fde68a" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
-    </radialGradient>
-    <filter id="gb" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="6"/>
-    </filter>
-    <linearGradient id="rg" x1="0%" y1="100%" x2="100%" y2="0%">
-      <stop offset="0%"   stop-color="#f97316" stop-opacity="0.7"/>
-      <stop offset="100%" stop-color="#fbbf24" stop-opacity="0.6"/>
+    <linearGradient id="iconBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A5FCC"/>
+      <stop offset="100%" stop-color="#2570E8"/>
+    </linearGradient>
+    <linearGradient id="wordmark" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#a5b4fc"/>
     </linearGradient>
   </defs>
 
-  <!-- Background pill -->
-  <rect width="480" height="96" rx="20" fill="url(#bg2)"/>
+  <!-- Icon box: 48x48, centered vertically in 64px height → y=8 -->
+  <rect x="0" y="8" width="48" height="48" rx="11" fill="url(#iconBg)"/>
+  <!-- Subtle top sheen on icon -->
+  <rect x="0" y="8" width="48" height="22" rx="11" fill="white" opacity="0.07"/>
 
-  <!-- ── Mini icon (left side, 72x72 centered vertically) ───────── -->
-  <!-- Route path -->
-  <path d="M 22 74 C 34 60, 44 54, 52 47 C 60 40, 68 35, 78 28"
-        stroke="url(#rg)" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <!-- Airplane inside icon box (path in 24-space, scale=2, centered in 48px box → tx=(48-24*2)/2=0, ty=8+(48-24*2)/2=8) -->
+  <g transform="translate(0,8) scale(2)">
+    <path
+      d="M16 3 L17.8 10.5 L25 14 L25 15.8 L17.8 14 L17.8 20.5 L20.5 22 L16 23.5 L11.5 22 L14.2 20.5 L14.2 14 L7 15.8 L7 14 L14.2 10.5 Z"
+      fill="white"
+    />
+  </g>
 
-  <!-- Origin dot -->
-  <circle cx="22" cy="74" r="5.5"  fill="#f97316"/>
+  <!-- Wordmark: "Roteiro" in white + "App" in amber -->
+  <text
+    x="60" y="38"
+    font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif"
+    font-size="26" font-weight="700" letter-spacing="-0.5"
+    fill="white">Roteiro</text>
+  <text
+    x="185" y="38"
+    font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif"
+    font-size="26" font-weight="700" letter-spacing="-0.5"
+    fill="#f59e0b">App</text>
 
-  <!-- Waypoint -->
-  <circle cx="52" cy="47" r="4.5" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
-  <circle cx="52" cy="47" r="1.8" fill="white" opacity="0.7"/>
-
-  <!-- Destination glow -->
-  <circle cx="78" cy="28" r="18" fill="url(#dg)" filter="url(#gb)"/>
-  <!-- Outer ring -->
-  <circle cx="78" cy="28" r="10" fill="#f59e0b" opacity="0.2"/>
-  <!-- Main -->
-  <circle cx="78" cy="28" r="7.5" fill="#f59e0b"/>
-  <!-- Bright center -->
-  <circle cx="78" cy="28" r="3.5" fill="#fde68a"/>
-
-  <!-- Tiny star rays -->
-  <line x1="78" y1="16" x2="78" y2="19.5" stroke="#fbbf24" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
-  <line x1="78" y1="36.5" x2="78" y2="40"  stroke="#fbbf24" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
-  <line x1="66" y1="28"   x2="69.5" y2="28" stroke="#fbbf24" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
-  <line x1="86.5" y1="28" x2="90"   y2="28" stroke="#fbbf24" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
-
-  <!-- ── Wordmark ────────────────────────────────────────────────── -->
-  <!-- "Roteiro" in white -->
-  <text x="104" y="60"
-        font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif"
-        font-size="34" font-weight="700" letter-spacing="-0.5"
-        fill="white">Roteiro</text>
-
-  <!-- "App" in amber/gold — same size, continues inline -->
-  <text x="282" y="60"
-        font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif"
-        font-size="34" font-weight="700" letter-spacing="-0.5"
-        fill="#f59e0b">App</text>
-
-  <!-- Subtle tagline -->
-  <text x="104" y="78"
-        font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif"
-        font-size="11" font-weight="400" letter-spacing="2.5"
-        fill="rgba(255,255,255,0.35)">ORGANIZE SUAS VIAGENS</text>
+  <!-- Tagline -->
+  <text
+    x="60" y="54"
+    font-family="-apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif"
+    font-size="9" font-weight="500" letter-spacing="2.2"
+    fill="rgba(255,255,255,0.38)">TRAVEL PLANNER</text>
 </svg>
