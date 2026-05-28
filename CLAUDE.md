@@ -156,6 +156,7 @@ Registered routes:
 - `/routes`
 - `/routes/contribute`
 - `/share/[token]`
+- `/terms`
 - `/tips`
 - `/trips/[id]`
 - `/trips/[id]/accommodation`
