@@ -76,6 +76,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `RouteComment` | |
 | `CommunityActivity` | |
 | `AuditLog` | |
+| `NewsletterSubscriber` | |
 | `Experience` | |
 
 **SQLite does not support Prisma enums.** All enum-like fields are stored as `String`.
@@ -113,6 +114,7 @@ Registered routes:
 - `/exchange-rate` — GET
 - `/experiences/[id]` — DELETE, GET, PATCH, PUT
 - `/experiences` — GET, POST
+- `/newsletter` — POST
 - `/public-stats` — GET
 - `/register` — POST
 - `/share/[token]` — GET
@@ -142,6 +144,8 @@ Registered routes:
 - `/admin/settings`
 - `/admin/stats`
 - `/admin/users`
+- `/blog`
+- `/blog/[slug]`
 - `/dashboard`
 - `/experiences`
 - `/experiences/[id]`
