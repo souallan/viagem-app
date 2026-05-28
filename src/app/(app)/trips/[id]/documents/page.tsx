@@ -120,6 +120,56 @@ function InsurancePartnerCard({ p }: { p: AffiliatePartner }) {
   );
 }
 
+function EsimSection() {
+  const { t } = useLanguage();
+  const [open, setOpen] = useState(false);
+  const partners = affiliates.esim;
+  const partnerDisclosure = t.documents.partnerDisclosure;
+
+  return (
+    <div className="rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50 to-white overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/60 transition-colors"
+      >
+        <span className="text-lg">📱</span>
+        <div className="flex-1">
+          <p className="text-sm font-semibold text-gray-800">Internet no exterior</p>
+          <p className="text-xs text-purple-700">eSIM — conecte-se sem trocar o chip</p>
+        </div>
+        <ArrowRight className={`h-4 w-4 shrink-0 transition-transform text-purple-400 ${open ? "rotate-90" : ""}`} />
+      </button>
+      {open && (
+        <div className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {partners.map((p) => (
+            <a
+              key={p.id}
+              href={p.url}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className={`flex items-center gap-3 p-3.5 rounded-xl border bg-white hover:shadow-md hover:-translate-y-0.5 transition-all group ${p.borderColor}`}
+            >
+              <span className="text-2xl shrink-0">{p.emoji}</span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                  <span className="text-sm font-bold text-gray-900">{p.name}</span>
+                  <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${p.badgeColor}`}>{p.badge}</span>
+                </div>
+                <p className="text-xs text-gray-500 truncate">{p.tagline}</p>
+              </div>
+              <ExternalLink className="h-3.5 w-3.5 text-gray-300 group-hover:text-gray-500 shrink-0 transition-colors" />
+            </a>
+          ))}
+          <p className="col-span-full text-[10px] text-gray-400 text-right">
+            {partnerDisclosure}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function InsuranceSection({ hasInsurance }: { hasInsurance: boolean }) {
   const { t } = useLanguage();
   const [open, setOpen] = useState(!hasInsurance);
@@ -420,6 +470,9 @@ export default function DocumentsPage() {
 
       {/* Insurance partners */}
       <InsuranceSection hasInsurance={docs.some((d) => d.type === "INSURANCE")} />
+
+      {/* eSIM */}
+      <EsimSection />
 
       {/* Passport validity notice */}
       {docs.length > 0 && !docs.some((d) => d.type === "PASSPORT") && (

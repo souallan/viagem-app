@@ -9,6 +9,7 @@ import {
   Sunrise, Sun, Moon, LayoutList, Grid3x3, ExternalLink, Compass,
 } from "lucide-react";
 import HolidayAlerts from "@/components/trips/holiday-alerts";
+import { affiliates } from "@/lib/affiliates";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -345,10 +346,8 @@ function PeriodColumn({
 
 function AffiliateActivitiesBanner({ destinations }: { destinations: string[] }) {
   const { t } = useLanguage();
-  const dest = encodeURIComponent(destinations[0] ?? "");
-  // Replace "YOUR_PARTNER_ID" with your GetYourGuide partner ID after registration at partner.getyourguide.com
-  const gygUrl    = `https://www.getyourguide.com/s/?q=${dest}&partner_id=YOUR_PARTNER_ID`;
-  const viatorUrl = `https://www.viator.com/searchResults/all?text=${dest}`;
+  const destination = destinations[0] ?? "";
+  const partners = affiliates.tours;
 
   return (
     <div className="rounded-2xl border border-emerald-100 bg-gradient-to-r from-emerald-50 to-teal-50 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -358,28 +357,25 @@ function AffiliateActivitiesBanner({ destinations }: { destinations: string[] })
       <div className="flex-1 min-w-0">
         <p className="text-sm font-bold text-emerald-900">{t.itinerary.affiliateTitle}</p>
         <p className="text-xs text-emerald-700 mt-0.5">
-          {t.itinerary.affiliateDesc} {destinations[0] ?? t.itinerary.yourDestination}.
+          {t.itinerary.affiliateDesc} {destination || t.itinerary.yourDestination}.
         </p>
       </div>
       <div className="flex items-center gap-2 shrink-0 flex-wrap">
-        <a
-          href={gygUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-sm"
-        >
-          <ExternalLink className="h-3.5 w-3.5" />
-          GetYourGuide
-        </a>
-        <a
-          href={viatorUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-teal-600 text-white hover:bg-teal-700 transition-colors shadow-sm"
-        >
-          <ExternalLink className="h-3.5 w-3.5" />
-          Viator
-        </a>
+        {partners.map((p) => {
+          const url = destination && p.buildUrl ? p.buildUrl(destination) : p.url;
+          return (
+            <a
+              key={p.id}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-sm"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              {p.name}
+            </a>
+          );
+        })}
       </div>
     </div>
   );

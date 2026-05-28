@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { CurrencyInput } from "@/components/ui/currency-input";
 import { Dialog, DialogHeader, DialogTitle, DialogBody, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { affiliates } from "@/lib/affiliates";
 import { formatDate } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
@@ -487,10 +488,7 @@ const EMPTY_FORM = {
 
 function AffiliateBanner({ destination }: { destination: string }) {
   const { t } = useLanguage();
-  const dest = encodeURIComponent(destination || "");
-  // Replace "YOUR_AID" with your Booking.com affiliate ID after registration at partners.booking.com
-  const bookingUrl = `https://www.booking.com/searchresults.html?ss=${dest}&aid=YOUR_AID`;
-  const airbnbUrl  = `https://www.airbnb.com.br/s/${dest}/homes`;
+  const partners = affiliates.accommodation;
 
   return (
     <div className="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-sky-50 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -504,24 +502,21 @@ function AffiliateBanner({ destination }: { destination: string }) {
         </p>
       </div>
       <div className="flex items-center gap-2 shrink-0 flex-wrap">
-        <a
-          href={bookingUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-sm"
-        >
-          <ExternalLink className="h-3.5 w-3.5" />
-          Booking.com
-        </a>
-        <a
-          href={airbnbUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-rose-500 text-white hover:bg-rose-600 transition-colors shadow-sm"
-        >
-          <ExternalLink className="h-3.5 w-3.5" />
-          Airbnb
-        </a>
+        {partners.map((p) => {
+          const url = destination && p.buildUrl ? p.buildUrl(destination) : p.url;
+          return (
+            <a
+              key={p.id}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-sm"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              {p.name}
+            </a>
+          );
+        })}
       </div>
     </div>
   );

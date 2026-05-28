@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { LocationInput } from "@/components/ui/location-input";
 import { CurrencyInput } from "@/components/ui/currency-input";
 import { Dialog, DialogHeader, DialogTitle, DialogBody, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { affiliates } from "@/lib/affiliates";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
@@ -50,12 +51,8 @@ const MODE_KEYS: ModeKey[] = ["FLIGHT", "TRAIN", "BUS", "CAR"];
 
 function AffiliateTransportBanner({ destinations }: { destinations: string[] }) {
   const { t } = useLanguage();
-  const origin = encodeURIComponent(destinations[0] ?? "");
-  const dest   = encodeURIComponent(destinations[destinations.length - 1] ?? "");
-  // Replace "YOUR_AID" with your Skyscanner affiliate ID after registration at partners.skyscanner.net
-  const skyscannerUrl = `https://www.skyscanner.com.br/voos?associateId=YOUR_AID&origin=${origin}&destination=${dest}`;
-  const decolUrl      = `https://www.decolar.com/flights?origin=${origin}&destination=${dest}`;
-  const buserUrl      = "https://buser.com.br";
+  const destination = destinations[0] ?? "";
+  const partners = affiliates.flights;
 
   return (
     <div className="rounded-2xl border border-sky-100 bg-gradient-to-r from-sky-50 to-indigo-50 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -67,33 +64,21 @@ function AffiliateTransportBanner({ destinations }: { destinations: string[] }) 
         <p className="text-xs text-sky-600 mt-0.5">{t.transport.affiliateDesc}</p>
       </div>
       <div className="flex items-center gap-2 shrink-0 flex-wrap">
-        <a
-          href={skyscannerUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-sky-600 text-white hover:bg-sky-700 transition-colors shadow-sm"
-        >
-          <ExternalLink className="h-3.5 w-3.5" />
-          Skyscanner
-        </a>
-        <a
-          href={decolUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition-colors shadow-sm"
-        >
-          <ExternalLink className="h-3.5 w-3.5" />
-          Decolar
-        </a>
-        <a
-          href={buserUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-green-600 text-white hover:bg-green-700 transition-colors shadow-sm"
-        >
-          <ExternalLink className="h-3.5 w-3.5" />
-          Buser
-        </a>
+        {partners.map((p) => {
+          const url = destination && p.buildUrl ? p.buildUrl(destination) : p.url;
+          return (
+            <a
+              key={p.id}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-sky-600 text-white hover:bg-sky-700 transition-colors shadow-sm"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              {p.name}
+            </a>
+          );
+        })}
       </div>
     </div>
   );
@@ -411,8 +396,33 @@ export default function TransportPage() {
         </Button>
       </div>
 
-      {/* ── Affiliate banner ── */}
+      {/* ── Affiliate banners ── */}
       <AffiliateTransportBanner destinations={tripDestinations} />
+
+      {/* Car rental */}
+      <div className="rounded-2xl border border-indigo-100 bg-gradient-to-r from-indigo-50 to-slate-50 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shrink-0">
+          <Car className="h-5 w-5 text-white" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold text-indigo-900">Aluguel de carro</p>
+          <p className="text-xs text-indigo-600 mt-0.5">Compare preços em todo o mundo</p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
+          {affiliates.car.map((p) => (
+            <a
+              key={p.id}
+              href={p.url}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition-colors shadow-sm"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              {p.name}
+            </a>
+          ))}
+        </div>
+      </div>
 
       {/* Empty state */}
       {items.length === 0 ? (
