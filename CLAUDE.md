@@ -153,6 +153,7 @@ Registered routes:
 - `/experiences/new`
 - `/forgot-password`
 - `/login`
+- `/offline`
 - `/pricing`
 - `/privacy`
 - `/profile`
