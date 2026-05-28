@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Route, Plane, Lightbulb, Globe, BookOpen, Mail, Instagram, MessageCircle, Shield, UserCircle2, Settings, Lock } from "lucide-react";
+import { LayoutDashboard, Route, Plane, Lightbulb, Globe, BookOpen, Mail, Instagram, MessageCircle, Shield, UserCircle2, Settings, Lock, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
 import { SITE_CONFIG } from "@/lib/site-config";
@@ -18,6 +18,18 @@ const LANGS: { code: Lang; label: string; flag: string }[] = [
 export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
   const { t, lang, setLang } = useLanguage();
+  const [installPrompt, setInstallPrompt] = useState<Event & { prompt?: () => Promise<void> } | null>(null);
+  const [installed, setInstalled] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault();
+      setInstallPrompt(e as Event & { prompt?: () => Promise<void> });
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    window.addEventListener("appinstalled", () => setInstalled(true));
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
 
   const navItems = [
     { href: "/dashboard", label: t.nav.myTrips, icon: LayoutDashboard },
@@ -117,6 +129,19 @@ export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             <span>{t.sidebar.adminPanel}</span>
             {!pathname.startsWith("/admin") && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-red-700/60" />}
           </Link>
+        </div>
+      )}
+
+      {/* Install PWA button — shown only when browser supports it */}
+      {installPrompt && !installed && (
+        <div className="relative z-10 px-3 pb-2">
+          <button
+            onClick={() => installPrompt.prompt?.()}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-violet-300 hover:text-white bg-violet-600/15 hover:bg-violet-600/25 border border-violet-500/20 transition-all"
+          >
+            <Download className="h-3.5 w-3.5 shrink-0" />
+            Instalar aplicativo
+          </button>
         </div>
       )}
 

@@ -1,12 +1,16 @@
 {
-  "name": "RoteiroApp",
+  "name": "RoteiroApp — Organize suas viagens",
   "short_name": "RoteiroApp",
-  "description": "Planeje, organize e gerencie suas viagens com facilidade",
+  "description": "Planeje roteiros, controle o orçamento e organize tudo da sua viagem em um só lugar",
   "start_url": "/dashboard",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0E1520",
   "theme_color": "#1A5FCC",
   "orientation": "portrait-primary",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": ["travel", "lifestyle", "productivity"],
   "icons": [
     {
       "src": "/icon.svg",
@@ -21,7 +25,22 @@
       "purpose": "maskable"
     }
   ],
-  "categories": ["travel", "lifestyle", "productivity"],
-  "lang": "pt-BR",
-  "dir": "ltr"
+  "shortcuts": [
+    {
+      "name": "Nova Viagem",
+      "short_name": "Nova viagem",
+      "description": "Criar um novo roteiro de viagem",
+      "url": "/trips/new",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Minhas Viagens",
+      "short_name": "Viagens",
+      "description": "Ver todas as minhas viagens",
+      "url": "/dashboard",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
 }
