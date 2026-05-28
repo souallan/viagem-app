@@ -3,6 +3,7 @@ import crypto from "crypto";
 
 const OTP_TTL_MS = 10 * 60 * 1000; // 10 minutes
 const VERIFY_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+const RESET_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 function otpIdentifier(email: string) {
   return `otp:${email.toLowerCase()}`;
@@ -58,6 +59,27 @@ export async function createVerifyToken(email: string): Promise<string> {
   await prisma.verificationToken.create({ data: { identifier, token, expires } });
 
   return token;
+}
+
+export async function createResetToken(email: string): Promise<string> {
+  const identifier = `reset:${email.toLowerCase()}`;
+  const token = generateVerifyToken();
+  const expires = new Date(Date.now() + RESET_TTL_MS);
+  await prisma.verificationToken.deleteMany({ where: { identifier } });
+  await prisma.verificationToken.create({ data: { identifier, token, expires } });
+  return token;
+}
+
+export async function verifyResetToken(email: string, token: string): Promise<boolean> {
+  const identifier = `reset:${email.toLowerCase()}`;
+  const record = await prisma.verificationToken.findFirst({ where: { identifier, token } });
+  if (!record) return false;
+  if (record.expires < new Date()) {
+    await prisma.verificationToken.deleteMany({ where: { identifier } });
+    return false;
+  }
+  await prisma.verificationToken.deleteMany({ where: { identifier } });
+  return true;
 }
 
 export async function verifyEmailToken(email: string, token: string): Promise<boolean> {

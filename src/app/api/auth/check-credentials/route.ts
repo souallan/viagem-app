@@ -3,8 +3,18 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createOtp } from "@/lib/otp";
 import { sendOtpEmail } from "@/lib/email";
+import { rateLimit, getIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  // 10 attempts per IP per 15 minutes
+  const rl = rateLimit({ key: `login:${getIp(req)}`, limit: 10, windowMs: 15 * 60 * 1000 });
+  if (!rl.success) {
+    return NextResponse.json(
+      { error: "Muitas tentativas. Aguarde alguns minutos." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) } }
+    );
+  }
+
   try {
     const { email, password } = await req.json();
 

@@ -1,12 +1,19 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createVerifyToken } from "@/lib/otp";
 import { sendVerificationEmail } from "@/lib/email";
+import { rateLimit, getIp } from "@/lib/rate-limit";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  // 5 registrations per IP per hour
+  const rl = rateLimit({ key: `register:${getIp(request)}`, limit: 5, windowMs: 60 * 60 * 1000 });
+  if (!rl.success) {
+    return NextResponse.json({ error: "Muitas tentativas. Tente novamente em 1 hora." }, { status: 429 });
+  }
+
   try {
     const body = await request.json();
     const name: string = (body.name ?? "").trim();
