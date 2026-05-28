@@ -5,21 +5,36 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "RoteiroApp — Organize suas viagens",
-  description: "Planeje, organize e gerencie suas viagens com facilidade",
+  title: { default: "RoteiroApp — Planejador de Viagens", template: "%s | RoteiroApp" },
+  description: "Planeje roteiros, controle orçamento, organize documentos e compartilhe suas viagens. Gratuito e fácil de usar.",
+  keywords: ["planejador de viagens", "roteiro de viagem", "organizar viagem", "controle de gastos viagem", "lista de malas"],
+  authors: [{ name: "RoteiroApp", url: "https://roteiroapp.com" }],
+  creator: "RoteiroApp",
+  metadataBase: new URL("https://roteiroapp.com"),
+  alternates: { canonical: "/" },
   manifest: "/manifest.json",
   icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     apple: "/icon.svg",
   },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "RoteiroApp",
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "RoteiroApp" },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    url: "https://roteiroapp.com",
+    siteName: "RoteiroApp",
+    title: "RoteiroApp — Planejador de Viagens",
+    description: "Planeje roteiros, controle orçamento, organize documentos e compartilhe suas viagens. Gratuito e fácil de usar.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "RoteiroApp — Planejador de Viagens" }],
   },
-  themeColor: "#1A5FCC",
+  twitter: {
+    card: "summary_large_image",
+    title: "RoteiroApp — Planejador de Viagens",
+    description: "Planeje roteiros, controle orçamento, organize documentos e compartilhe suas viagens.",
+    images: ["/og-image.png"],
+    creator: "@roteiroapp",
+  },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
 };
 
 export default function RootLayout({
