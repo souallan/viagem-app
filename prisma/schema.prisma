@@ -313,6 +313,13 @@ model AuditLog {
   createdAt  DateTime @default(now())
 }
 
+model NewsletterSubscriber {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  confirmedAt DateTime?
+  createdAt  DateTime @default(now())
+}
+
 // Mood values: AMAZING | GREAT | GOOD | MIXED | CHALLENGING
 model Experience {
   id             String   @id @default(cuid())

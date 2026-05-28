@@ -49,7 +49,20 @@ interface Props {
 export function LandingClient({ stats }: Props) {
   const [lang, setLang]         = useState<LandingLang>("pt");
   const [activeTab, setActiveTab] = useState<PageTab>("features");
+  const [nlEmail, setNlEmail]   = useState("");
+  const [nlState, setNlState]   = useState<"idle" | "loading" | "success" | "error">("idle");
   const t = landingI18n[lang];
+
+  async function handleNewsletter(e: React.FormEvent) {
+    e.preventDefault();
+    setNlState("loading");
+    const res = await fetch("/api/newsletter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: nlEmail }),
+    });
+    setNlState(res.ok ? "success" : "error");
+  }
 
   const STATS_ITEMS = [
     { value: stats.trips > 0        ? `${stats.trips}+`        : "100%", label: stats.trips > 0        ? t.stats.trips        : t.stats.fallbackFree     },
@@ -379,6 +392,47 @@ export function LandingClient({ stats }: Props) {
               <Link href="/login" className="text-sm font-semibold text-slate-400 hover:text-white transition-colors">{t.cta.login}</Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── NEWSLETTER ── */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 pb-16">
+        <div className="rounded-3xl border border-white/8 p-8 md:p-12 text-center" style={{ background: "rgba(255,255,255,0.03)" }}>
+          <div className="w-12 h-12 rounded-2xl mx-auto mb-5 flex items-center justify-center" style={{ background: "linear-gradient(135deg,#6d28d9,#7c3aed)" }}>
+            <Star className="h-5 w-5 text-white" />
+          </div>
+          <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2">Dicas de viagem toda semana</h2>
+          <p className="text-slate-400 text-sm mb-8 max-w-lg mx-auto">
+            Receba roteiros exclusivos, promoções de passagens e dicas de destinos — direto na sua caixa de entrada. Grátis.
+          </p>
+          {nlState === "success" ? (
+            <div className="inline-flex items-center gap-2 text-emerald-400 font-semibold text-sm bg-emerald-500/10 border border-emerald-500/20 px-6 py-3 rounded-xl">
+              <CheckCircle className="h-4 w-4" /> Inscrito! Você receberá novidades em breve.
+            </div>
+          ) : (
+            <form onSubmit={handleNewsletter} className="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto">
+              <input
+                type="email"
+                required
+                value={nlEmail}
+                onChange={(e) => setNlEmail(e.target.value)}
+                placeholder="seu@email.com"
+                className="flex-1 w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder:text-slate-500 text-sm focus:outline-none focus:border-violet-500/50 focus:bg-white/8 transition-all"
+              />
+              <button
+                type="submit"
+                disabled={nlState === "loading"}
+                className="shrink-0 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:opacity-90 disabled:opacity-60"
+                style={{ background: "linear-gradient(135deg,#6d28d9,#7c3aed)" }}
+              >
+                {nlState === "loading" ? "..." : "Inscrever-se"}
+              </button>
+            </form>
+          )}
+          {nlState === "error" && (
+            <p className="text-red-400 text-xs mt-3">Erro ao inscrever. Tente novamente.</p>
+          )}
+          <p className="text-slate-700 text-xs mt-4">Sem spam. Cancele quando quiser.</p>
         </div>
       </section>
 
