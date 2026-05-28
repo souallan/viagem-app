@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getActivePlan, PLAN_LIMITS } from "@/lib/plans";
 
 export async function GET() {
   const session = await auth();
@@ -28,6 +29,24 @@ export async function POST(request: Request) {
   }
 
   try {
+    // Check plan limits
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { plan: true, planExpiresAt: true },
+    });
+    const activePlan = getActivePlan(user?.plan ?? "FREE", user?.planExpiresAt);
+    const limit = PLAN_LIMITS[activePlan].trips;
+
+    if (limit !== Infinity) {
+      const count = await prisma.trip.count({ where: { userId: session.user.id } });
+      if (count >= limit) {
+        return NextResponse.json(
+          { error: `Plano gratuito permite até ${limit} viagens. Faça upgrade para o Premium!`, code: "PLAN_LIMIT" },
+          { status: 403 }
+        );
+      }
+    }
+
     const body = await request.json();
     const { title, destination, description, startDate, endDate, currency, budget, status, coverImage } = body;
 

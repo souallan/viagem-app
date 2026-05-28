@@ -15,9 +15,14 @@ model User {
   password      String?
   image         String?
   // Role values: USER | ADMIN
-  role          String    @default("USER")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  role                 String    @default("USER")
+  // Plan values: FREE | PREMIUM
+  plan                 String    @default("FREE")
+  planExpiresAt        DateTime?
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
   accounts         Account[]
   sessions         Session[]
