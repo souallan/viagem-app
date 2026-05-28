@@ -103,6 +103,8 @@ Registered routes:
 - `/admin/users` — DELETE, GET, PATCH
 - `/auth/[...nextauth]` — 
 - `/auth/check-credentials` — POST
+- `/auth/forgot-password` — POST
+- `/auth/reset-password` — POST
 - `/auth/send-verification` — POST
 - `/auth/verify-email` — GET
 - `/community-routes/[id]/comments` — GET, POST
@@ -145,10 +147,12 @@ Registered routes:
 - `/experiences/[id]`
 - `/experiences/[id]/edit`
 - `/experiences/new`
+- `/forgot-password`
 - `/login`
 - `/privacy`
 - `/profile`
 - `/register`
+- `/reset-password`
 - `/routes`
 - `/routes/contribute`
 - `/share/[token]`
