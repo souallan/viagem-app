@@ -149,6 +149,7 @@ Registered routes:
 - `/experiences/new`
 - `/forgot-password`
 - `/login`
+- `/pricing`
 - `/privacy`
 - `/profile`
 - `/register`
