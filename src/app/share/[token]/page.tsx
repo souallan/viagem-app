@@ -1,7 +1,8 @@
 ﻿import { notFound } from "next/navigation";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatDate, tripStatusLabel } from "@/lib/utils";
-import { MapPin, Calendar, Plane, Hotel, Zap, Clock } from "lucide-react";
+import { MapPin, Calendar, Plane, Hotel, Zap, Clock, ArrowRight } from "lucide-react";
 
 export default async function PublicSharePage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
@@ -195,8 +196,23 @@ export default async function PublicSharePage({ params }: { params: Promise<{ to
           </section>
         )}
 
+        {/* CTA banner */}
+        <div className="rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 p-6 text-center text-white">
+          <div className="text-3xl mb-3">✈️</div>
+          <h3 className="text-lg font-black mb-1">Planeje sua viagem grátis</h3>
+          <p className="text-primary-200 text-sm mb-5">
+            Crie roteiros, controle gastos, organize documentos e compartilhe com quem quiser.
+          </p>
+          <Link
+            href="/register"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-primary-700 font-bold text-sm hover:bg-primary-50 transition-colors shadow-sm"
+          >
+            Criar conta grátis <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
         {/* Footer */}
-        <div className="text-center pt-4 border-t border-gray-200">
+        <div className="text-center pt-2 border-t border-gray-200">
           <p className="text-xs text-gray-400">
             Roteiro compartilhado via{" "}
             <span className="font-semibold text-primary-600">RoteiroApp</span>
