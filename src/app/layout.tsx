@@ -63,7 +63,7 @@ export default function RootLayout({
               `}
             </Script>
             <Suspense fallback={null}>
-              <GATracker gaId="${GA_ID}" />
+              <GATracker gaId={GA_ID} />
             </Suspense>
           </>
         )}
