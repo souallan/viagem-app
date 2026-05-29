@@ -5,8 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/login", "/register", "/privacy", "/terms"],
-        disallow: ["/dashboard", "/trips/", "/admin/", "/api/", "/profile"],
+        allow: ["/", "/login", "/register", "/privacy", "/terms", "/pricing", "/blog", "/blog/"],
+        disallow: ["/dashboard", "/trips/", "/admin/", "/api/", "/profile", "/experiences/", "/routes/", "/tips"],
       },
     ],
     sitemap: "https://roteiroapp.com/sitemap.xml",
