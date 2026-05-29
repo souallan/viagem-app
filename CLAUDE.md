@@ -100,6 +100,7 @@ Registered routes:
 - `/admin/audit` — GET
 - `/admin/backup` — GET
 - `/admin/content` — DELETE, GET
+- `/admin/newsletter` — DELETE, GET
 - `/admin/stats` — GET
 - `/admin/users` — DELETE, GET, PATCH
 - `/auth/[...nextauth]` — 
@@ -141,6 +142,7 @@ Registered routes:
 - `/`
 - `/admin`
 - `/admin/content`
+- `/admin/newsletter`
 - `/admin/settings`
 - `/admin/stats`
 - `/admin/users`
