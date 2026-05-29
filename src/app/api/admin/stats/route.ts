@@ -15,6 +15,7 @@ export async function GET() {
     totalTrips,
     totalExperiences,
     totalRoutes,
+    totalSubscribers,
     recentUsers,
     recentTrips,
     usersByMonth,
@@ -24,6 +25,7 @@ export async function GET() {
     prisma.trip.count(),
     prisma.experience.count(),
     prisma.communityRoute.count(),
+    prisma.newsletterSubscriber.count(),
     prisma.user.findMany({
       orderBy: { createdAt: "desc" },
       take: 5,
@@ -46,7 +48,7 @@ export async function GET() {
   ]);
 
   return NextResponse.json({
-    totals: { users: totalUsers, trips: totalTrips, experiences: totalExperiences, routes: totalRoutes },
+    totals: { users: totalUsers, trips: totalTrips, experiences: totalExperiences, routes: totalRoutes, subscribers: totalSubscribers },
     recentUsers,
     recentTrips,
     tripsByStatus,

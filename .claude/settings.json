@@ -4,7 +4,17 @@
       "Bash(git commit -m ' *)",
       "Bash(git pull *)",
       "Bash(git stash *)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "PowerShell($env:PATH = \"$env:USERPROFILE\\\\scoop\\\\shims;$env:USERPROFILE\\\\scoop\\\\apps\\\\nodejs-lts\\\\current;$env:PATH\"; cd \"d:\\\\Projetos\\\\Projetoclaudeviagem\"; npx tsc --noEmit 2>&1 | Select-Object -First 40)",
+      "PowerShell($env:PATH = \"$env:USERPROFILE\\\\scoop\\\\shims;$env:USERPROFILE\\\\scoop\\\\apps\\\\nodejs-lts\\\\current;$env:PATH\"; cd \"d:\\\\Projetos\\\\Projetoclaudeviagem\"; npx tsc --noEmit 2>&1 | Select-Object -First 30)",
+      "PowerShell($env:PATH = \"$env:USERPROFILE\\\\scoop\\\\shims;$env:USERPROFILE\\\\scoop\\\\apps\\\\nodejs-lts\\\\current;$env:PATH\"; $env:DATABASE_URL = \"file:./dev.db\"; cd \"d:\\\\Projetos\\\\Projetoclaudeviagem\"; npx prisma db push 2>&1 | Select-String \"NewsletterSubscriber|created|already|error\" -CaseSensitive:$false | Select-Object -First 10)",
+      "PowerShell($env:PATH = \"$env:USERPROFILE\\\\scoop\\\\shims;$env:USERPROFILE\\\\scoop\\\\apps\\\\nodejs-lts\\\\current;$env:PATH\"; $env:DATABASE_URL = \"file:./dev.db\"; cd \"d:\\\\Projetos\\\\Projetoclaudeviagem\"; npx prisma db push --force-reset 2>&1 | Select-Object -Last 5; npx prisma generate 2>&1 | Select-Object -Last 5)",
+      "Bash(mkdir -p \"d:/Projetos/Projetoclaudeviagem/src/app/blog/[slug]\")",
+      "PowerShell($env:PATH = \"$env:USERPROFILE\\\\scoop\\\\shims;$env:USERPROFILE\\\\scoop\\\\apps\\\\nodejs-lts\\\\current;$env:PATH\"; cd \"d:\\\\Projetos\\\\Projetoclaudeviagem\"; npx tsc --noEmit 2>&1 | Select-Object -First 20)",
+      "PowerShell($env:PATH = \"$env:USERPROFILE\\\\scoop\\\\shims;$env:USERPROFILE\\\\scoop\\\\apps\\\\nodejs-lts\\\\current;$env:PATH\"; cd \"d:\\\\Projetos\\\\Projetoclaudeviagem\"; npx tsc --noEmit 2>&1 | Select-Object -First 10)"
+    ],
+    "additionalDirectories": [
+      "d:\\Projetos\\Projetoclaudeviagem\\src\\app\\blog"
     ]
   }
 }

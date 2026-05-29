@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import {
   Users, Plane, BookOpen, Route, TrendingUp, Clock,
   Shield, CheckCircle2, MapPin, Zap, Target, Activity,
-  ArrowRight, Download,
+  ArrowRight, Download, Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 interface Stats {
-  totals: { users: number; trips: number; experiences: number; routes: number };
+  totals: { users: number; trips: number; experiences: number; routes: number; subscribers: number };
   recentUsers: { id: string; name: string | null; email: string; role: string; createdAt: string }[];
   recentTrips: { id: string; title: string; destination: string; status: string; createdAt: string; owner: { name: string | null; email: string } }[];
   tripsByStatus: { status: string; _count: { id: number } }[];
@@ -133,11 +133,12 @@ export default function AdminDashboard() {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         <KPI label="Usuários" value={totals.users} icon={Users} color="bg-blue-600/20 text-blue-400" sub="cadastrados" />
         <KPI label="Viagens" value={totals.trips} icon={Plane} color="bg-violet-600/20 text-violet-400" sub="criadas" />
         <KPI label="Relatos" value={totals.experiences} icon={BookOpen} color="bg-pink-600/20 text-pink-400" sub="publicados" />
         <KPI label="Roteiros" value={totals.routes} icon={Route} color="bg-orange-600/20 text-orange-400" sub="comunidade" />
+        <KPI label="Newsletter" value={totals.subscribers ?? 0} icon={Mail} color="bg-teal-600/20 text-teal-400" sub="inscritos" />
       </div>
 
       {/* Behavioral snapshot */}
