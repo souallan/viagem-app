@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import { Suspense } from "react";
 import { GATracker } from "@/components/analytics/ga-tracker";
 import "./globals.css";
@@ -47,25 +46,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body className={inter.className}>
+      <head>
         {GA_ID && (
           <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-              strategy="afterInteractive"
+            {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`,
+              }}
             />
-            <Script id="ga-init" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${GA_ID}', { page_path: window.location.pathname });
-              `}
-            </Script>
-            <Suspense fallback={null}>
-              <GATracker gaId={GA_ID} />
-            </Suspense>
           </>
+        )}
+      </head>
+      <body className={inter.className}>
+        {GA_ID && (
+          <Suspense fallback={null}>
+            <GATracker gaId={GA_ID} />
+          </Suspense>
         )}
         {children}
         <script dangerouslySetInnerHTML={{ __html: `
