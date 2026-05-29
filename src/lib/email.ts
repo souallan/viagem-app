@@ -1,11 +1,15 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = "RoteiroApp <noreply@roteiroapp.com>";
 const APP_URL = process.env.NEXTAUTH_URL ?? "https://roteiroapp.com";
 
+function getResend() {
+  if (!process.env.RESEND_API_KEY) throw new Error("RESEND_API_KEY not set");
+  return new Resend(process.env.RESEND_API_KEY);
+}
+
 export async function sendOtpEmail(email: string, otp: string, name?: string | null) {
-  return resend.emails.send({
+  return getResend().emails.send({
     from: FROM,
     to: email,
     subject: "Seu código de acesso — RoteiroApp",
@@ -56,7 +60,7 @@ export async function sendOtpEmail(email: string, otp: string, name?: string | n
 
 export async function sendPasswordResetEmail(email: string, token: string, name?: string | null) {
   const url = `${APP_URL}/reset-password?token=${token}&email=${encodeURIComponent(email)}`;
-  return resend.emails.send({
+  return getResend().emails.send({
     from: FROM,
     to: email,
     subject: "Redefinir sua senha — RoteiroApp",
@@ -107,7 +111,7 @@ export async function sendPasswordResetEmail(email: string, token: string, name?
 
 export async function sendVerificationEmail(email: string, token: string, name?: string | null) {
   const url = `${APP_URL}/verify-email?token=${token}&email=${encodeURIComponent(email)}`;
-  return resend.emails.send({
+  return getResend().emails.send({
     from: FROM,
     to: email,
     subject: "Confirme seu email — RoteiroApp",
