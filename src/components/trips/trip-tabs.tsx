@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
 import {
   Globe, CalendarDays, BedDouble, Train, Wallet, Package,
-  ClipboardCheck, BookOpen, Map, TrendingUp, ArrowLeftRight, FileText,
+  ClipboardCheck, BookOpen, Map, TrendingUp, ArrowLeftRight, FileText, Lock,
 } from "lucide-react";
 
 export function TripTabs({ tripId }: { tripId: string }) {
@@ -21,6 +21,7 @@ export function TripTabs({ tripId }: { tripId: string }) {
     { href: "/budget",        label: t.tabs.budget,         Icon: Wallet         },
     { href: "/packing",       label: t.tabs.packing,        Icon: Package        },
     { href: "/prep",          label: t.tabs.prep,           Icon: ClipboardCheck },
+    { href: "/documents",     label: t.tabs.documents,      Icon: Lock           },
     { href: "/journal",       label: t.tabs.journal,        Icon: BookOpen       },
     { href: "/map",           label: t.tabs.map,            Icon: Map            },
     { href: "/compare",       label: t.tabs.compare,        Icon: TrendingUp     },
