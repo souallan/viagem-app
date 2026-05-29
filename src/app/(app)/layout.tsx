@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Sidebar } from "@/components/layout/sidebar";
+import { AppShell } from "@/components/layout/app-shell";
 import { LanguageProvider } from "@/contexts/language-context";
 import { CookieBanner } from "@/components/lgpd/cookie-banner";
 import { EmailVerificationBanner } from "@/components/layout/email-verification-banner";
@@ -21,13 +21,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <LanguageProvider>
-      <div className="flex min-h-screen bg-background">
-        <Sidebar isAdmin={isAdmin} />
-        <div className="flex-1 ml-64 flex flex-col min-h-screen">
-          {!emailVerified && <EmailVerificationBanner email={user?.email ?? ""} />}
-          <main className="flex-1 p-8">{children}</main>
-        </div>
-      </div>
+      <AppShell isAdmin={isAdmin}>
+        {!emailVerified && <EmailVerificationBanner email={user?.email ?? ""} />}
+        <main className="flex-1 p-4 sm:p-8">{children}</main>
+      </AppShell>
       <CookieBanner />
     </LanguageProvider>
   );

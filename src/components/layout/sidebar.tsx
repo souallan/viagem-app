@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Route, Plane, Lightbulb, Globe, BookOpen, Mail, Instagram, MessageCircle, Shield, UserCircle2, Settings, Lock, Download } from "lucide-react";
+import { LayoutDashboard, Route, Plane, Lightbulb, Globe, BookOpen, Mail, Instagram, MessageCircle, Shield, UserCircle2, Settings, Lock, Download, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
 import { SITE_CONFIG } from "@/lib/site-config";
@@ -15,7 +15,7 @@ const LANGS: { code: Lang; label: string; flag: string }[] = [
   { code: "en", label: "EN", flag: "🇬🇧" },
 ];
 
-export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
+export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClose?: () => void }) {
   const pathname = usePathname();
   const { t, lang, setLang } = useLanguage();
   const [installPrompt, setInstallPrompt] = useState<Event & { prompt?: () => Promise<void> } | null>(null);
@@ -59,8 +59,8 @@ export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-500/40 to-transparent" />
 
       {/* Logo */}
-      <div className="relative z-10 px-5 pt-5 pb-4 border-b border-white/6">
-        <Link href="/dashboard" className="flex items-center gap-3 group">
+      <div className="relative z-10 px-5 pt-5 pb-4 border-b border-white/6 flex items-center justify-between">
+        <Link href="/dashboard" onClick={onClose} className="flex items-center gap-3 group">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
             style={{
@@ -75,6 +75,15 @@ export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             <p className="text-[10px] text-slate-600 leading-tight mt-0.5 font-medium tracking-wide uppercase">Travel Planner</p>
           </div>
         </Link>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:text-white hover:bg-white/8 transition-colors"
+            aria-label="Fechar menu"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
       {/* Nav */}
@@ -88,6 +97,7 @@ export function Sidebar({ isAdmin = false }: { isAdmin?: boolean }) {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onClose}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
                 isActive
