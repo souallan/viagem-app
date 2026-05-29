@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { Plus, Globe, Plane, Calendar, TrendingUp, MapPin } from "lucide-react";
+import { Plus, Globe, Plane, Calendar, TrendingUp, MapPin, Clock, ArrowRight, FileWarning } from "lucide-react";
 import { TripCard } from "@/components/trips/trip-card";
 import { useLanguage } from "@/contexts/language-context";
 
@@ -17,6 +17,93 @@ interface Trip {
   currency: string;
   budget: number | null;
   _count: { activities: number; expenses: number };
+}
+
+function daysUntil(dateStr: string): number {
+  const target = new Date(dateStr + "T12:00:00");
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return Math.round((target.getTime() - now.getTime()) / 86400000);
+}
+
+function CountdownBanner({ trip }: { trip: Trip }) {
+  const days = trip.startDate ? daysUntil(trip.startDate) : null;
+  if (days === null) return null;
+
+  const isToday    = days === 0;
+  const isTomorrow = days === 1;
+  const isThisWeek = days <= 7;
+
+  const label = isToday    ? "começa hoje"
+              : isTomorrow ? "começa amanhã"
+              : `começa em ${days} dias`;
+
+  const gradient = isToday || isTomorrow
+    ? "from-emerald-600 to-teal-700"
+    : isThisWeek
+    ? "from-sky-600 to-blue-700"
+    : "from-violet-600 to-purple-700";
+
+  const pulse = isToday || isTomorrow;
+
+  return (
+    <Link
+      href={`/trips/${trip.id}`}
+      className={`relative flex items-center gap-4 rounded-2xl bg-gradient-to-r ${gradient} p-4 sm:p-5 text-white overflow-hidden hover:brightness-110 transition-all group`}
+    >
+      {/* Dot pattern */}
+      <div
+        className="absolute inset-0 opacity-10 pointer-events-none"
+        style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "20px 20px" }}
+      />
+
+      <div className={`relative shrink-0 w-14 h-14 rounded-2xl bg-white/20 flex flex-col items-center justify-center text-white ${pulse ? "animate-pulse" : ""}`}>
+        {isToday ? (
+          <Plane className="h-7 w-7" />
+        ) : (
+          <>
+            <span className="text-2xl font-black leading-none">{days}</span>
+            <span className="text-[10px] font-semibold opacity-80 uppercase tracking-wide">dias</span>
+          </>
+        )}
+      </div>
+
+      <div className="relative flex-1 min-w-0">
+        <p className="text-white/75 text-xs font-semibold uppercase tracking-widest mb-0.5">
+          Próxima viagem · {label}
+        </p>
+        <h3 className="text-lg font-black leading-tight text-white truncate">{trip.title}</h3>
+        <p className="text-white/70 text-sm flex items-center gap-1.5 mt-0.5">
+          <MapPin className="h-3.5 w-3.5 shrink-0" />
+          {trip.destination}
+        </p>
+      </div>
+
+      <ArrowRight className="relative h-5 w-5 text-white/60 group-hover:text-white group-hover:translate-x-1 transition-all shrink-0" />
+    </Link>
+  );
+}
+
+function DocumentAlertBanner({ trips }: { trips: Trip[] }) {
+  const tripsWithDocs = trips.filter((t) =>
+    (t.status === "PLANNING" || t.status === "CONFIRMED" || t.status === "IN_PROGRESS") &&
+    t.startDate
+  );
+
+  if (tripsWithDocs.length === 0) return null;
+
+  return (
+    <Link
+      href={`/trips/${tripsWithDocs[0].id}/documents`}
+      className="flex items-center gap-3 px-4 py-3 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 transition-colors text-sm"
+    >
+      <FileWarning className="h-4 w-4 text-amber-500 shrink-0" />
+      <span className="text-amber-800 font-medium flex-1">
+        Verifique a validade dos seus documentos antes de viajar
+      </span>
+      <ArrowRight className="h-4 w-4 text-amber-400 shrink-0" />
+    </Link>
+  );
 }
 
 export default function DashboardPage() {
@@ -36,6 +123,21 @@ export default function DashboardPage() {
   const past     = trips.filter((t) => t.status === "COMPLETED" || t.status === "CANCELLED");
   const hasTrips = trips.length > 0;
 
+  const nextTrip = useMemo(() => {
+    const candidates = [...ongoing, ...upcoming].filter((t) => t.startDate);
+    if (candidates.length === 0) return null;
+    const withDays = candidates
+      .map((t) => ({ trip: t, days: daysUntil(t.startDate!) }))
+      .filter(({ days }) => days >= 0 && days <= 30)
+      .sort((a, b) => a.days - b.days);
+    return withDays[0]?.trip ?? null;
+  }, [ongoing, upcoming]);
+
+  const showDocAlert = useMemo(() =>
+    [...ongoing, ...upcoming].some((t) => t.startDate && daysUntil(t.startDate) <= 60 && daysUntil(t.startDate) >= 0),
+    [ongoing, upcoming]
+  );
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -45,7 +147,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-10 pb-10">
+    <div className="space-y-6 pb-10">
 
       {/* ── Hero Banner ── */}
       <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-8 min-h-[180px] flex items-center gap-6">
@@ -70,9 +172,9 @@ export default function DashboardPage() {
         {/* Stats */}
         <div className="relative z-10 hidden md:flex gap-3">
           {[
-            { icon: Globe,      label: "Total",                     value: trips.length    },
-            { icon: TrendingUp, label: t.dashboard.ongoing,         value: ongoing.length  },
-            { icon: Calendar,   label: t.dashboard.upcoming,        value: upcoming.length },
+            { icon: Globe,      label: "Total",              value: trips.length    },
+            { icon: TrendingUp, label: t.dashboard.ongoing,  value: ongoing.length  },
+            { icon: Calendar,   label: t.dashboard.upcoming, value: upcoming.length },
           ].map(({ icon: Icon, label, value }) => (
             <div key={label} className="travel-glass rounded-xl px-5 py-4 text-center min-w-[88px]">
               <Icon className="h-4 w-4 text-sky-400 mx-auto mb-1" aria-hidden="true" />
@@ -89,6 +191,12 @@ export default function DashboardPage() {
           <Plus className="h-4 w-4" aria-hidden="true" /> {t.dashboard.newTrip}
         </Link>
       </div>
+
+      {/* ── Countdown ── */}
+      {nextTrip && <CountdownBanner trip={nextTrip} />}
+
+      {/* ── Document alert ── */}
+      {showDocAlert && !nextTrip && <DocumentAlertBanner trips={[...ongoing, ...upcoming]} />}
 
       {/* ── Empty state ── */}
       {!hasTrips && (
