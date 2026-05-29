@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { Plus, Globe, Plane, Calendar, TrendingUp, MapPin, Clock, ArrowRight, FileWarning } from "lucide-react";
+import { Plus, Globe, Plane, Calendar, TrendingUp, MapPin, Clock, ArrowRight, FileWarning, Search } from "lucide-react";
 import { TripCard } from "@/components/trips/trip-card";
 import { useLanguage } from "@/contexts/language-context";
 
@@ -110,6 +110,7 @@ export default function DashboardPage() {
   const { t } = useLanguage();
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetch("/api/trips")
@@ -118,9 +119,17 @@ export default function DashboardPage() {
       .catch(() => setLoading(false));
   }, []);
 
-  const ongoing  = trips.filter((t) => t.status === "IN_PROGRESS");
-  const upcoming = trips.filter((t) => t.status === "PLANNING" || t.status === "CONFIRMED");
-  const past     = trips.filter((t) => t.status === "COMPLETED" || t.status === "CANCELLED");
+  const filtered = useMemo(() => {
+    if (!search.trim()) return trips;
+    const q = search.toLowerCase();
+    return trips.filter((t) =>
+      t.title.toLowerCase().includes(q) || t.destination.toLowerCase().includes(q)
+    );
+  }, [trips, search]);
+
+  const ongoing  = filtered.filter((t) => t.status === "IN_PROGRESS");
+  const upcoming = filtered.filter((t) => t.status === "PLANNING" || t.status === "CONFIRMED");
+  const past     = filtered.filter((t) => t.status === "COMPLETED" || t.status === "CANCELLED");
   const hasTrips = trips.length > 0;
 
   const nextTrip = useMemo(() => {
@@ -192,11 +201,34 @@ export default function DashboardPage() {
         </Link>
       </div>
 
+      {/* ── Search ── */}
+      {trips.length >= 4 && (
+        <div className="relative">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar por nome ou destino..."
+            className="w-full h-10 rounded-xl border border-gray-200 bg-white pl-10 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-400/15 transition-all"
+          />
+          {search && (
+            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none">×</button>
+          )}
+        </div>
+      )}
+
       {/* ── Countdown ── */}
-      {nextTrip && <CountdownBanner trip={nextTrip} />}
+      {!search && nextTrip && <CountdownBanner trip={nextTrip} />}
 
       {/* ── Document alert ── */}
-      {showDocAlert && !nextTrip && <DocumentAlertBanner trips={[...ongoing, ...upcoming]} />}
+      {!search && showDocAlert && !nextTrip && <DocumentAlertBanner trips={[...ongoing, ...upcoming]} />}
+
+      {/* ── Search results label ── */}
+      {search && (
+        <p className="text-sm text-gray-500">
+          {ongoing.length + upcoming.length + past.length} resultado{(ongoing.length + upcoming.length + past.length) !== 1 ? "s" : ""} para <span className="font-semibold text-gray-900">"{search}"</span>
+        </p>
+      )}
 
       {/* ── Empty state ── */}
       {!hasTrips && (
