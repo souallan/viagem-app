@@ -48,7 +48,7 @@ const TEMPLATES: { title: string; category: string }[] = [
   { title: "Confirmar transfer/traslado", category: "TRANSPORTE" },
   { title: "Fazer check-in online", category: "TRANSPORTE" },
   { title: "Verificar bagagem permitida", category: "BAGAGEM" },
-  { title: "Adapador de tomada", category: "BAGAGEM" },
+  { title: "Adaptador de tomada", category: "BAGAGEM" },
   { title: "Carregar eletrônicos", category: "BAGAGEM" },
 ];
 

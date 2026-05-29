@@ -28,13 +28,11 @@ export const metadata: Metadata = {
     siteName: "RoteiroApp",
     title: "RoteiroApp — Planejador de Viagens",
     description: "Planeje roteiros, controle orçamento, organize documentos e compartilhe suas viagens. Gratuito e fácil de usar.",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "RoteiroApp — Planejador de Viagens" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "RoteiroApp — Planejador de Viagens",
     description: "Planeje roteiros, controle orçamento, organize documentos e compartilhe suas viagens.",
-    images: ["/og-image.png"],
     creator: "@roteiroapp",
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
