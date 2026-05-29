@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { CheckCircle2 } from "lucide-react";
 
 // 2FA via OTP temporariamente desativado (Resend domain pendente).
 // Para reativar: restaurar fluxo de 2 etapas com check-credentials + OTP input.
@@ -18,8 +19,12 @@ const autofillStyle: React.CSSProperties = {
   caretColor: "white",
 };
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const justRegistered = searchParams.get("registered") === "1";
+  const passwordReset   = searchParams.get("reset") === "1";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -52,6 +57,24 @@ export default function LoginPage() {
         <h1 className="text-xl font-bold text-white mb-1">Bem-vindo de volta</h1>
         <p className="text-sm text-slate-400">Entre na sua conta para continuar planejando</p>
       </div>
+
+      {justRegistered && (
+        <div className="flex items-start gap-2.5 mb-5 px-3.5 py-3 rounded-xl bg-green-500/15 border border-green-500/25 text-green-300">
+          <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" />
+          <p className="text-sm font-medium">
+            Conta criada com sucesso! Entre com seu email e senha.
+          </p>
+        </div>
+      )}
+
+      {passwordReset && (
+        <div className="flex items-start gap-2.5 mb-5 px-3.5 py-3 rounded-xl bg-green-500/15 border border-green-500/25 text-green-300">
+          <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0" />
+          <p className="text-sm font-medium">
+            Senha redefinida com sucesso! Entre com sua nova senha.
+          </p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
@@ -105,5 +128,13 @@ export default function LoginPage() {
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="h-64" />}>
+      <LoginForm />
+    </Suspense>
   );
 }

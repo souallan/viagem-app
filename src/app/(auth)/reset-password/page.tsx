@@ -44,7 +44,7 @@ function ResetPasswordForm() {
         </div>
         <h1 className="text-xl font-bold text-white mb-2">Senha redefinida!</h1>
         <p className="text-sm text-slate-400 mb-6">Sua senha foi alterada. Faça login com a nova senha.</p>
-        <Button onClick={() => router.push("/login")} className="w-full h-11">
+        <Button onClick={() => router.push("/login?reset=1")} className="w-full h-11">
           Ir para o login
         </Button>
       </div>
