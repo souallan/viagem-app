@@ -1,10 +1,10 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Users, FileText, BarChart3, Shield,
-  ArrowLeft, Plane, Settings
+  ArrowLeft, Plane, Settings, Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +13,7 @@ const NAV = [
   { href: "/admin/users", label: "Usuários", icon: Users },
   { href: "/admin/content", label: "Conteúdo", icon: FileText },
   { href: "/admin/stats", label: "Estatísticas", icon: BarChart3 },
+  { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
   { href: "/admin/settings", label: "Configurações", icon: Settings },
 ];
 
