@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { Plus, Globe, Plane, Calendar, TrendingUp, MapPin, Clock, ArrowRight, FileWarning, Search } from "lucide-react";
+import { Plus, Globe, Plane, Calendar, TrendingUp, MapPin, ArrowRight, FileWarning, Search } from "lucide-react";
 import { TripCard } from "@/components/trips/trip-card";
 import { useLanguage } from "@/contexts/language-context";
 
