@@ -29,7 +29,7 @@ function MockSidebar({ active }: { active: string }) {
       </div>
       <div className="px-3 py-2 border-b border-gray-50">
         <p className="text-[8px] text-gray-400 font-semibold uppercase tracking-wide">Viagem ativa</p>
-        <p className="text-[10px] font-bold text-gray-700 mt-0.5 truncate">Roma · Jul 2026</p>
+        <p className="text-[10px] font-bold text-gray-700 mt-0.5 truncate">Lisboa · Jul 2026</p>
       </div>
       <nav className="flex-1 py-2 px-2 space-y-0.5">
         {nav.map(({ id, icon: Icon, label }) => (
@@ -55,9 +55,9 @@ function MockSidebar({ active }: { active: string }) {
 
 function DashboardScreen() {
   const trips = [
-    { dest: "Roma, Itália",       dates: "15–28 Jul 2026",  status: "Em andamento", pct: 68, bg: "linear-gradient(135deg,#1A3A5C,#2D6A9F)", budget: "€ 842 / € 1.500",  star: 0 },
-    { dest: "Tóquio, Japão",      dates: "4–18 Nov 2026",   status: "Planejando",   pct: 28, bg: "linear-gradient(135deg,#1C2A3B,#3B5080)", budget: "¥ 28.000 / ¥ 90.000", star: 0 },
-    { dest: "Lisboa, Portugal",   dates: "10–19 Fev 2027",  status: "Planejando",   pct: 10, bg: "linear-gradient(135deg,#2A1C3B,#5C3A7A)", budget: "€ 150 / € 1.200",  star: 0 },
+    { dest: "Lisboa, Portugal",   dates: "12–21 Jul 2026",  status: "Em andamento", pct: 72, bg: "linear-gradient(135deg,#1A3A5C,#2D6A9F)", budget: "€ 1.240 / € 1.800", star: 0 },
+    { dest: "Buenos Aires, ARG",  dates: "8–18 Out 2026",   status: "Planejando",   pct: 35, bg: "linear-gradient(135deg,#1C2A3B,#3B5080)", budget: "R$ 2.100 / R$ 6.000", star: 0 },
+    { dest: "Amsterdã, Holanda",  dates: "5–14 Mar 2027",   status: "Planejando",   pct: 8,  bg: "linear-gradient(135deg,#2A1C3B,#5C3A7A)", budget: "€ 80 / € 2.200",   star: 0 },
   ];
 
   return (
@@ -129,11 +129,11 @@ function DashboardScreen() {
 
 function ItineraryScreen() {
   const acts = [
-    { time: "09:00", label: "Coliseu",              sub: "Via Sacra s/n, Roma",      cost: "€ 18",   emoji: "🏛️", color: "#3B82F6", tip: "⚠️ Comprar ingresso 30 dias antes — esgota rápido!" },
-    { time: "11:30", label: "Foro Romano",           sub: "Perto do Coliseu",          cost: "incluso", emoji: "🏛️", color: "#3B82F6" },
-    { time: "13:00", label: "Trattoria da Luigi",    sub: "Piazza Navona, 15",         cost: "€ 24",   emoji: "🍝", color: "#F59E0B" },
-    { time: "15:30", label: "Fontana di Trevi",      sub: "Piazza di Trevi",           cost: "grátis", emoji: "💧", color: "#06B6D4", tip: "⭐ Ir antes das 7h — quase vazia de manhã cedo!" },
-    { time: "19:00", label: "Hotel Piazza Venezia",  sub: "Check-in · Piazza Venezia", cost: "€ 140", emoji: "🏨", color: "#8B5CF6" },
+    { time: "09:30", label: "Museu do Azulejo",      sub: "Rua da Madre de Deus, 4",   cost: "€ 5",    emoji: "🎨", color: "#3B82F6", tip: "⭐ Chegar 9h — sem fila e luz natural perfeita!" },
+    { time: "11:30", label: "Feira da Ladra",         sub: "Campo de Santa Clara",       cost: "grátis", emoji: "🛍️", color: "#10B981", tip: "⚠️ Só terças e sábados — checar antes!" },
+    { time: "13:30", label: "Tasca do Chico",         sub: "R. do Diário de Notícias 39",cost: "€ 18",   emoji: "🍽️", color: "#F59E0B" },
+    { time: "16:00", label: "Miradouro da Graça",     sub: "Largo da Graça, Lisboa",     cost: "grátis", emoji: "🌅", color: "#06B6D4", tip: "⭐ Melhor pôr do sol da cidade — menos turistas que Portas do Sol!" },
+    { time: "20:00", label: "Hotel LX Boutique",      sub: "Check-in · Av. Ribeira das Naus", cost: "€ 110", emoji: "🏨", color: "#8B5CF6" },
   ];
 
   return (
@@ -160,7 +160,7 @@ function ItineraryScreen() {
         </div>
         <div className="flex-1">
           <p className="text-xs font-bold text-gray-900">Terça-feira, 15 de julho de 2026</p>
-          <p className="text-[8px] text-gray-400 mt-0.5">Roma, Itália</p>
+          <p className="text-[8px] text-gray-400 mt-0.5">Lisboa, Portugal</p>
         </div>
         <span className="text-[8px] text-gray-400 bg-gray-100 px-2 py-1 rounded-full">5 atividades</span>
         <span className="text-[8px] font-bold text-green-700 bg-green-50 border border-green-100 px-2 py-1 rounded-full">€ 206</span>
@@ -218,8 +218,8 @@ function BudgetScreen() {
         <div className="flex justify-between items-start mb-2.5">
           <div>
             <p className="text-[8px] text-gray-400 font-semibold uppercase tracking-wide">Total gasto</p>
-            <p className="text-xl font-black text-gray-900">€ 842</p>
-            <p className="text-[8px] text-gray-400">de € 1.500 planejado · 7 dias</p>
+            <p className="text-xl font-black text-gray-900">€ 1.240</p>
+            <p className="text-[8px] text-gray-400">de € 1.800 planejado · 9 dias</p>
           </div>
           <div className="text-right">
             <p className="text-[8px] text-gray-400 mb-0.5">Restante</p>
@@ -309,7 +309,7 @@ function PackingScreen() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-sm font-bold text-gray-900">Lista de Malas</h2>
-          <p className="text-[9px] text-gray-400">{packed}/{allItems.length} itens · {pct}% empacotado · 12 dias</p>
+          <p className="text-[9px] text-gray-400">{packed}/{allItems.length} itens · {pct}% empacotado · 9 dias</p>
         </div>
         <div className="flex items-center gap-1.5">
           <button className="flex items-center gap-1 text-[8px] font-bold px-2 py-1.5 rounded-lg border border-blue-200 text-blue-700 bg-blue-50">✨ Gerar lista</button>
@@ -328,10 +328,10 @@ function PackingScreen() {
       </div>
 
       <div className="bg-blue-50 border border-blue-100 rounded-xl p-2.5 flex items-center gap-2.5">
-        <span className="text-lg">🇪🇺</span>
+        <span className="text-lg">🇵🇹</span>
         <div>
-          <p className="text-[9px] font-bold text-blue-900">Lista personalizada para Europa detectada</p>
-          <p className="text-[8px] text-blue-600 mt-0.5">2 perfis: Europa + 12 dias de viagem · 8 sugestões</p>
+          <p className="text-[9px] font-bold text-blue-900">Lista personalizada para Portugal detectada</p>
+          <p className="text-[8px] text-blue-600 mt-0.5">2 perfis: Europa + 9 dias · tomada tipo F · 7 sugestões</p>
         </div>
       </div>
 
