@@ -18,6 +18,9 @@ model User {
   country       String?
   currency      String?   @default("BRL")
   bio           String?
+  // Referral
+  referralCode  String?   @unique
+  referredBy    String?
   // Role values: USER | ADMIN
   role                 String    @default("USER")
   // Plan values: FREE | PREMIUM

@@ -6,6 +6,7 @@ import {
   User, Mail, Lock, Camera, Save, LogOut,
   Plane, BookOpen, Route, CheckCircle2, AlertCircle, Pencil,
   Download, Trash2, ShieldAlert, Globe, DollarSign, FileText,
+  Share2, Copy, Check, Users,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -86,6 +87,10 @@ export default function ProfilePage() {
   const [pwSaving, setPwSaving] = useState(false);
   const [pwMsg, setPwMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
 
+  // Referral state
+  const [referral, setReferral] = useState<{ code: string; referredCount: number } | null>(null);
+  const [copied, setCopied] = useState(false);
+
   // LGPD state
   const [deleteConfirm, setDeleteConfirm] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -102,7 +107,10 @@ export default function ProfilePage() {
     setLoading(false);
   }
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    fetch("/api/referral").then(r => r.ok ? r.json() : null).then(d => { if (d) setReferral(d); });
+  }, []);
 
   async function handleProfileSave(e: React.FormEvent) {
     e.preventDefault();
@@ -446,6 +454,47 @@ export default function ProfilePage() {
           Sair da conta
         </Button>
       </div>
+
+      {/* ── Convite de amigos ── */}
+      {referral && (
+        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-4">
+          <h2 className="font-bold text-gray-800 flex items-center gap-2">
+            <Share2 className="h-4 w-4 text-blue-500" />
+            Indique amigos
+          </h2>
+          <p className="text-sm text-gray-500 -mt-1">
+            Compartilhe seu link e veja quem entrou no RoteiroApp pelo seu convite.
+          </p>
+
+          <div className="flex items-center gap-2 p-3 rounded-2xl bg-blue-50 border border-blue-100">
+            <code className="flex-1 text-sm font-mono text-blue-700 truncate">
+              {typeof window !== "undefined" ? `${window.location.origin}/register?ref=${referral.code}` : `/register?ref=${referral.code}`}
+            </code>
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}/register?ref=${referral.code}`;
+                navigator.clipboard.writeText(url).then(() => {
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                });
+              }}
+              className="shrink-0 flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+            >
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              {copied ? "Copiado!" : "Copiar"}
+            </button>
+          </div>
+
+          <div className="flex items-center gap-3 pt-1">
+            <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gray-50 border border-gray-100">
+              <Users className="h-4 w-4 text-gray-400" />
+              <span className="text-sm font-bold text-gray-800">{referral.referredCount}</span>
+              <span className="text-sm text-gray-500">{referral.referredCount === 1 ? "amigo convidado" : "amigos convidados"}</span>
+            </div>
+            <div className="text-xs text-gray-400">Código: <span className="font-bold font-mono text-gray-600">{referral.code}</span></div>
+          </div>
+        </div>
+      )}
 
       {/* ── LGPD — Privacidade e dados ── */}
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-6">

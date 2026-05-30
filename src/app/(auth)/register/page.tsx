@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { darkInputClass, autofillStyle } from "@/app/(auth)/_auth-input";
@@ -20,12 +20,19 @@ function getPasswordStrength(pw: string): { level: 0 | 1 | 2 | 3; label: string;
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [refCode, setRefCode] = useState("");
+
+  useEffect(() => {
+    const ref = searchParams.get("ref");
+    if (ref) setRefCode(ref.toUpperCase());
+  }, [searchParams]);
 
   const pwStrength = getPasswordStrength(password);
 
@@ -39,7 +46,7 @@ export default function RegisterPage() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, ref: refCode || undefined }),
       });
 
       const data = await res.json();
@@ -63,6 +70,13 @@ export default function RegisterPage() {
         <h1 className="text-xl font-bold text-white mb-1">Crie sua conta</h1>
         <p className="text-sm text-slate-400">Comece a organizar suas viagens gratuitamente</p>
       </div>
+
+      {refCode && (
+        <div className="mb-4 flex items-center gap-2 px-3 py-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-sm text-blue-300">
+          <span>🎉</span>
+          <span>Você foi convidado por um amigo! Código <span className="font-bold">{refCode}</span> aplicado.</span>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
