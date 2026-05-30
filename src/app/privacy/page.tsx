@@ -95,22 +95,23 @@ export default function PublicPrivacyPage() {
         <Section title="4. Compartilhamento de dados">
           <p>Seus dados podem ser acessados por:</p>
           <ul className="space-y-2 list-disc list-inside mt-2">
-            <li><strong>Railway (infraestrutura):</strong> hospedagem e banco de dados PostgreSQL na nuvem. Dados armazenados com criptografia em repouso.</li>
-            <li><strong>Google Analytics 4 (analytics):</strong> coletamos dados anônimos de uso (páginas visitadas, tempo de sessão, eventos de navegação) para entender como o app é utilizado. Não são coletados dados pessoais identificáveis. Baseado no legítimo interesse conforme LGPD art. 7º, IX. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Política de Privacidade do Google</a>.</li>
-            <li><strong>Resend (email transacional):</strong> endereço de email utilizado para envio de verificação de conta e recuperação de senha. Não utilizado para marketing sem consentimento.</li>
-            <li><strong>Administradores do RoteiroApp:</strong> acesso restrito ao painel admin para fins de moderação e suporte.</li>
+            <li><strong>Provedor de infraestrutura em nuvem:</strong> hospedagem do aplicativo e banco de dados. Dados armazenados com criptografia em repouso e em trânsito.</li>
+            <li><strong>Google Analytics 4 (analytics):</strong> coletamos dados anônimos de uso (páginas visitadas, tempo de sessão, eventos de navegação) para entender como o app é utilizado. Nenhum dado pessoal identificável é transmitido. Baseado no legítimo interesse conforme LGPD art. 7º, IX. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Política de Privacidade do Google</a>.</li>
+            <li><strong>Serviço de e-mail transacional:</strong> seu endereço de e-mail é utilizado exclusivamente para envio de verificação de conta e recuperação de senha. Não utilizado para marketing sem consentimento.</li>
+            <li><strong>Administradores do RoteiroApp:</strong> acesso restrito ao painel de gestão para fins de moderação, suporte e conformidade.</li>
           </ul>
+          <p className="mt-3 text-xs text-gray-500">Não vendemos, alugamos nem compartilhamos seus dados com anunciantes ou terceiros para fins comerciais.</p>
         </Section>
 
         <Section title="5. Cookies e rastreamento">
-          <p>Utilizamos os seguintes cookies e tecnologias de rastreamento:</p>
+          <p>Utilizamos os seguintes tipos de cookies e tecnologias de rastreamento:</p>
           <Table
-            headers={["Cookie / Tecnologia", "Tipo", "Duração", "Finalidade"]}
+            headers={["Tipo", "Duração", "Finalidade"]}
             rows={[
-              ["next-auth.session-token", "HTTP-only", "30 dias", "Sessão autenticada (JWT)"],
-              ["next-auth.csrf-token", "HTTP-only", "Sessão", "Proteção contra CSRF"],
-              ["lgpd-consent", "LocalStorage", "1 ano", "Registro do consentimento desta política"],
-              ["_ga, _ga_*", "Analytics", "2 anos", "Google Analytics 4 — dados de uso anônimos"],
+              ["Cookie de sessão autenticada", "30 dias", "Mantém você conectado à sua conta"],
+              ["Cookie de segurança (CSRF)", "Sessão", "Proteção contra ataques de falsificação de requisição"],
+              ["Preferências (LocalStorage)", "1 ano", "Registro do consentimento e preferências de idioma"],
+              ["Cookies de análise (_ga, _ga_*)", "2 anos", "Google Analytics 4 — dados de uso anônimos"],
             ]}
           />
           <p className="mt-3 text-sm text-gray-600">
@@ -123,12 +124,12 @@ export default function PublicPrivacyPage() {
 
         <Section title="6. Segurança">
           <ul className="space-y-2 list-disc list-inside">
-            <li>Senhas armazenadas com hash bcrypt (12 rounds)</li>
-            <li>Conexão exclusiva via HTTPS (TLS)</li>
-            <li>Headers de segurança: HSTS, X-Frame-Options, CSP, X-Content-Type-Options</li>
-            <li>Rate limiting nas rotas de autenticação (10 req/min por IP)</li>
-            <li>Audit log de ações administrativas sensíveis</li>
-            <li>Banco de dados acessível apenas via rede privada do Railway</li>
+            <li>Senhas armazenadas com hash criptográfico seguro — nunca em texto puro</li>
+            <li>Comunicação exclusiva via HTTPS com certificado TLS válido</li>
+            <li>Cabeçalhos de segurança HTTP configurados (proteção contra XSS, clickjacking e injeção de conteúdo)</li>
+            <li>Mecanismos de limitação de taxa nas rotas de autenticação para prevenir ataques de força bruta</li>
+            <li>Log de auditoria de ações administrativas sensíveis</li>
+            <li>Banco de dados acessível apenas via rede privada, sem exposição direta à internet</li>
           </ul>
         </Section>
 
