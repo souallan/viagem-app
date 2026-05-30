@@ -206,6 +206,8 @@ function AccommodationCalendar({
       </div>
 
       {/* ── Day-of-week headers ── */}
+      <div className="overflow-x-auto -mx-0">
+      <div className="min-w-[320px]">
       <div className="grid grid-cols-7 border-b border-sky-100/80 bg-white/50">
         {Array.from({ length: 7 }, (_, i) =>
           new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(2024, 0, 7 + i))
@@ -309,6 +311,8 @@ function AccommodationCalendar({
             })}
           </div>
         ))}
+      </div>
+      </div>
       </div>
 
       {/* ── Legend ── */}

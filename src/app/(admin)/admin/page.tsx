@@ -83,7 +83,7 @@ export default function AdminDashboard() {
     return (
       <div className="space-y-6 animate-pulse">
         <div className="h-8 w-48 rounded-xl bg-white/5" />
-        <div className="grid grid-cols-4 gap-4">{[...Array(4)].map((_, i) => <div key={i} className="h-32 rounded-2xl bg-white/5" />)}</div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">{[...Array(4)].map((_, i) => <div key={i} className="h-32 rounded-2xl bg-white/5" />)}</div>
         <div className="grid grid-cols-2 gap-5">{[...Array(2)].map((_, i) => <div key={i} className="h-48 rounded-2xl bg-white/5" />)}</div>
       </div>
     );
@@ -142,7 +142,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Behavioral snapshot */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="rounded-2xl border border-white/6 p-4" style={{ background: "rgba(255,255,255,0.03)" }}>
           <p className="text-[9px] text-slate-600 uppercase tracking-widest font-bold mb-1 flex items-center gap-1">
             <Activity className="h-2.5 w-2.5" /> Engajamento

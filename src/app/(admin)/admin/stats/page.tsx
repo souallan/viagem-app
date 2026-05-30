@@ -161,7 +161,7 @@ export default function AdminStatsPage() {
       </div>
 
       {/* ── KPIs rápidos ── */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: "Usuários", value: totals.users, icon: Users, color: "#3B82F6" },
           { label: "Viagens", value: totals.trips, icon: Plane, color: "#8B5CF6" },
@@ -360,7 +360,7 @@ export default function AdminStatsPage() {
       </div>
 
       {/* ── Conteúdo: Tags + Avaliações + Humores ── */}
-      <div className="grid grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <Card>
           <SectionTitle icon={FileText} label="Tags mais usadas" color="bg-purple-600/60" />
           <div className="flex flex-wrap gap-1.5">

@@ -169,7 +169,7 @@ export function LandingClient({ stats }: Props) {
 
       {/* ── STATS ── */}
       <section className="relative z-10 border-y border-white/5" style={{ background: "rgba(255,255,255,0.02)" }}>
-        <div className="max-w-4xl mx-auto px-6 py-8 grid grid-cols-3 divide-x divide-white/5 text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-3 divide-x divide-white/5 text-center">
           {STATS_ITEMS.map((s, i) => (
             <div key={i} className="px-6">
               <div className="text-3xl md:text-4xl font-black mb-1" style={{ background: "linear-gradient(90deg,#5585FA,#38BDF8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -304,6 +304,8 @@ export function LandingClient({ stats }: Props) {
                   </h2>
                 </div>
                 <div className="rounded-2xl border border-white/8 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
+                  <div className="overflow-x-auto">
+                  <div className="min-w-[340px]">
                   <div className="grid grid-cols-4 border-b border-white/6">
                     <div className="p-4 text-[11px] text-slate-600 font-semibold">
                       {lang === "pt" ? "Funcionalidade" : lang === "en" ? "Feature" : "Funcionalidad"}
@@ -325,6 +327,8 @@ export function LandingClient({ stats }: Props) {
                       ))}
                     </div>
                   ))}
+                  </div>
+                  </div>
                 </div>
               </div>
             </section>

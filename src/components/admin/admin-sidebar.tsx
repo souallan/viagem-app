@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Users, FileText, BarChart3, Shield,
-  ArrowLeft, Plane, Settings, Mail,
+  ArrowLeft, Plane, Settings, Mail, X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,7 @@ const NAV = [
   { href: "/admin/settings", label: "Configurações", icon: Settings },
 ];
 
-export function AdminSidebar() {
+export function AdminSidebar({ onClose }: { onClose?: () => void } = {}) {
   const pathname = usePathname();
 
   return (
@@ -29,7 +29,7 @@ export function AdminSidebar() {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/40 to-transparent" />
 
       {/* Logo */}
-      <div className="px-5 pt-5 pb-4 border-b border-white/6">
+      <div className="px-5 pt-5 pb-4 border-b border-white/6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
@@ -42,6 +42,11 @@ export function AdminSidebar() {
             <p className="text-[10px] text-slate-600 leading-tight mt-0.5 font-medium tracking-wide uppercase">RoteiroApp</p>
           </div>
         </div>
+        {onClose && (
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-600 hover:text-white hover:bg-white/8 transition-colors">
+            <X className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
       {/* Nav */}
@@ -53,6 +58,7 @@ export function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={onClose}
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
                 isActive
