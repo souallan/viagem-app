@@ -116,6 +116,8 @@ const config: Config = {
         "coral-sm":   "0 2px 6px rgba(26, 95, 204, 0.20)",
         "coral-md":   "0 4px 14px rgba(26, 95, 204, 0.28)",
         "coral-lg":   "0 8px 28px rgba(26, 95, 204, 0.32)",
+        // Landing page showcase
+        "showcase":   "0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06)",
       },
       keyframes: {
         "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" } },

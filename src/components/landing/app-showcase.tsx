@@ -22,7 +22,7 @@ function MockSidebar({ active }: { active: string }) {
   return (
     <div className="w-44 border-r border-gray-100 bg-white shrink-0 flex flex-col">
       <div className="px-3 py-2.5 border-b border-gray-100 flex items-center gap-2">
-        <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg,#1A5FCC,#2570E8)" }}>
+        <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 bg-cta-blue">
           <Plane className="h-3 w-3 text-white" />
         </div>
         <span className="text-xs font-bold text-gray-900">RoteiroApp</span>
@@ -67,7 +67,7 @@ function DashboardScreen() {
           <h2 className="text-sm font-bold text-gray-900">Minhas Viagens</h2>
           <p className="text-[9px] text-gray-400">3 viagens · 1 em andamento</p>
         </div>
-        <button className="flex items-center gap-1 text-[9px] font-bold px-2.5 py-1.5 rounded-lg text-white shadow-sm" style={{ background: "linear-gradient(135deg,#1A5FCC,#2570E8)" }}>
+        <button className="flex items-center gap-1 text-[9px] font-bold px-2.5 py-1.5 rounded-lg text-white shadow-sm bg-cta-blue">
           <Plus className="h-2.5 w-2.5" /> Nova viagem
         </button>
       </div>
@@ -129,11 +129,11 @@ function DashboardScreen() {
 
 function ItineraryScreen() {
   const acts = [
-    { time: "09:00", label: "Coliseu",              sub: "Via Sacra s/n, Roma",   cost: "€ 18",   emoji: "🏛️", color: "#3B82F6" },
-    { time: "11:30", label: "Foro Romano",           sub: "Perto do Coliseu",       cost: "incluso", emoji: "🏛️", color: "#3B82F6" },
-    { time: "13:00", label: "Trattoria da Luigi",    sub: "Piazza Navona, 15",      cost: "€ 24",   emoji: "🍝", color: "#F59E0B" },
-    { time: "15:30", label: "Fontana di Trevi",      sub: "Piazza di Trevi",        cost: "grátis", emoji: "💧", color: "#06B6D4" },
-    { time: "19:00", label: "Hotel Piazza Venezia",  sub: "Check-in · Piazza Venezia",cost: "€ 140", emoji: "🏨", color: "#8B5CF6" },
+    { time: "09:00", label: "Coliseu",              sub: "Via Sacra s/n, Roma",      cost: "€ 18",   emoji: "🏛️", color: "#3B82F6", tip: "⚠️ Comprar ingresso 30 dias antes — esgota rápido!" },
+    { time: "11:30", label: "Foro Romano",           sub: "Perto do Coliseu",          cost: "incluso", emoji: "🏛️", color: "#3B82F6" },
+    { time: "13:00", label: "Trattoria da Luigi",    sub: "Piazza Navona, 15",         cost: "€ 24",   emoji: "🍝", color: "#F59E0B" },
+    { time: "15:30", label: "Fontana di Trevi",      sub: "Piazza di Trevi",           cost: "grátis", emoji: "💧", color: "#06B6D4", tip: "⭐ Ir antes das 7h — quase vazia de manhã cedo!" },
+    { time: "19:00", label: "Hotel Piazza Venezia",  sub: "Check-in · Piazza Venezia", cost: "€ 140", emoji: "🏨", color: "#8B5CF6" },
   ];
 
   return (
@@ -148,13 +148,13 @@ function ItineraryScreen() {
             <button className="text-[8px] px-2 py-1 rounded-md bg-white text-gray-900 font-bold shadow-sm">Timeline</button>
             <button className="text-[8px] px-2 py-1 text-gray-500">Por Período</button>
           </div>
-          <button className="text-[9px] font-bold px-2.5 py-1.5 rounded-lg text-white shadow-sm" style={{ background: "#1A5FCC" }}>+ Adicionar</button>
+          <button className="text-[9px] font-bold px-2.5 py-1.5 rounded-lg text-white shadow-sm bg-blue-700">+ Adicionar</button>
         </div>
       </div>
 
       {/* Day header */}
       <div className="flex items-center gap-3 bg-white rounded-xl border border-gray-100 shadow-sm px-3 py-2.5">
-        <div className="w-10 h-10 rounded-xl flex flex-col items-center justify-center text-white shrink-0" style={{ background: "linear-gradient(135deg,#1A5FCC,#2570E8)" }}>
+        <div className="w-10 h-10 rounded-xl flex flex-col items-center justify-center text-white shrink-0 bg-cta-blue">
           <span className="text-[7px] font-bold uppercase opacity-80">DIA</span>
           <span className="text-base font-black leading-none">3</span>
         </div>
@@ -176,6 +176,11 @@ function ItineraryScreen() {
             <div className="flex-1 min-w-0 py-2">
               <p className="text-[10px] font-bold text-gray-900 leading-tight">{a.label}</p>
               <p className="text-[8px] text-gray-400 truncate">{a.sub}</p>
+              {"tip" in a && a.tip && (
+                <p className={`text-[7px] mt-0.5 font-semibold ${String(a.tip).startsWith("⚠️") ? "text-amber-600" : "text-blue-500"}`}>
+                  {String(a.tip)}
+                </p>
+              )}
             </div>
             <span className="text-[9px] font-semibold text-green-700 pr-3 shrink-0">{a.cost}</span>
           </div>
@@ -205,7 +210,7 @@ function BudgetScreen() {
     <div className="flex-1 bg-gray-50 p-4 overflow-hidden flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-bold text-gray-900">Orçamento</h2>
-        <button className="text-[9px] font-bold px-2.5 py-1.5 rounded-lg text-white shadow-sm" style={{ background: "#1A5FCC" }}>+ Despesa</button>
+        <button className="text-[9px] font-bold px-2.5 py-1.5 rounded-lg text-white shadow-sm bg-blue-700">+ Despesa</button>
       </div>
 
       {/* Overview card */}
@@ -289,6 +294,10 @@ function PackingScreen() {
       { name: "Roupas em camadas", done: true },
       { name: "Tênis para caminhar", done: false },
     ]},
+    { label: "Saúde", icon: "💊", items: [
+      { name: "Remédios para emergência", done: false },
+      { name: "Protetor solar FPS 50", done: true },
+    ]},
   ];
 
   const allItems = categories.flatMap((c) => c.items);
@@ -304,7 +313,7 @@ function PackingScreen() {
         </div>
         <div className="flex items-center gap-1.5">
           <button className="flex items-center gap-1 text-[8px] font-bold px-2 py-1.5 rounded-lg border border-blue-200 text-blue-700 bg-blue-50">✨ Gerar lista</button>
-          <button className="text-[9px] font-bold px-2.5 py-1.5 rounded-lg text-white shadow-sm" style={{ background: "#1A5FCC" }}>+ Item</button>
+          <button className="text-[9px] font-bold px-2.5 py-1.5 rounded-lg text-white shadow-sm bg-blue-700">+ Item</button>
         </div>
       </div>
 
@@ -381,7 +390,7 @@ function DocumentsScreen() {
             <p className="text-[9px] text-gray-400">4 documentos armazenados com segurança</p>
           </div>
         </div>
-        <button className="text-[9px] font-bold px-2.5 py-1.5 rounded-lg text-white shadow-sm" style={{ background: "#1A5FCC" }}>+ Adicionar</button>
+        <button className="text-[9px] font-bold px-2.5 py-1.5 rounded-lg text-white shadow-sm bg-blue-700">+ Adicionar</button>
       </div>
 
       {/* Alert banner */}
@@ -496,11 +505,10 @@ export function AppShowcase({ t }: { t: ShowcaseT }) {
 
       {/* Browser window */}
       <div
-        className="rounded-2xl overflow-hidden border border-white/10"
-        style={{ boxShadow: "0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06)" }}
+        className="rounded-2xl overflow-hidden border border-white/10 shadow-showcase"
       >
         {/* Browser chrome */}
-        <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-gray-200" style={{ background: "#e8eaed" }}>
+        <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-gray-200 bg-[#e8eaed]">
           <div className="w-3 h-3 rounded-full bg-red-400/80" />
           <div className="w-3 h-3 rounded-full bg-yellow-400/80" />
           <div className="w-3 h-3 rounded-full bg-green-400/80" />
@@ -511,7 +519,7 @@ export function AppShowcase({ t }: { t: ShowcaseT }) {
         </div>
 
         {/* App content */}
-        <div className="flex" style={{ height: 440, background: "#f8fafc" }}>
+        <div className="flex h-[440px] bg-slate-50">
           <MockSidebar active={active} />
           <ActiveScreen />
         </div>

@@ -65,9 +65,9 @@ export function LandingClient({ stats }: Props) {
   }
 
   const STATS_ITEMS = [
-    { value: stats.trips > 0        ? `${stats.trips.toLocaleString("pt-BR")}+`        : "10.240+", label: stats.trips > 0        ? t.stats.trips        : t.stats.fallbackFeatures },
-    { value: stats.users > 0        ? `${stats.users.toLocaleString("pt-BR")}+`        : "100%",    label: stats.users > 0        ? t.stats.users        : t.stats.fallbackFree     },
-    { value: stats.destinations > 0 ? `${stats.destinations.toLocaleString("pt-BR")}+` : "3",       label: stats.destinations > 0 ? t.stats.destinations : t.stats.fallbackLangs    },
+    { value: stats.trips > 0        ? `${stats.trips.toLocaleString("pt-BR")}+`        : "15.000+", label: stats.trips > 0        ? t.stats.trips        : t.stats.fallbackFeatures },
+    { value: stats.users > 0        ? `${stats.users.toLocaleString("pt-BR")}+`        : "R$ 0",    label: stats.users > 0        ? t.stats.users        : t.stats.fallbackFree     },
+    { value: stats.destinations > 0 ? `${stats.destinations.toLocaleString("pt-BR")}+` : "Global",  label: stats.destinations > 0 ? t.stats.destinations : t.stats.fallbackLangs    },
   ];
 
   return (
