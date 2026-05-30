@@ -77,6 +77,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `CommunityActivity` | |
 | `AuditLog` | |
 | `NewsletterSubscriber` | |
+| `Post` | |
+| `SiteAnnouncement` | |
 | `Experience` | |
 
 **SQLite does not support Prisma enums.** All enum-like fields are stored as `String`.
@@ -97,13 +99,17 @@ if (!trip) return 404;
 
 Registered routes:
 - `/admin/analytics` — GET
+- `/admin/announcements` — DELETE, GET, PATCH, POST
 - `/admin/audit` — GET
 - `/admin/backup` — GET
+- `/admin/comments` — DELETE, GET
 - `/admin/content` — DELETE, GET
 - `/admin/newsletter` — DELETE, GET
+- `/admin/posts` — DELETE, GET, PATCH, POST
 - `/admin/referrals` — GET
 - `/admin/stats` — GET
 - `/admin/users` — DELETE, GET, PATCH
+- `/announcement` — GET
 - `/auth/[...nextauth]` — 
 - `/auth/check-credentials` — POST
 - `/auth/forgot-password` — POST
@@ -118,6 +124,8 @@ Registered routes:
 - `/experiences` — GET, POST
 - `/health` — GET
 - `/newsletter` — POST
+- `/posts/[slug]` — GET
+- `/posts` — GET
 - `/public-stats` — GET
 - `/referral` — GET
 - `/register` — POST
@@ -145,9 +153,12 @@ Registered routes:
 
 - `/`
 - `/backoffice`
+- `/backoffice/announcements`
 - `/backoffice/audit`
+- `/backoffice/comments`
 - `/backoffice/content`
 - `/backoffice/newsletter`
+- `/backoffice/posts`
 - `/backoffice/referrals`
 - `/backoffice/settings`
 - `/backoffice/stats`
@@ -162,6 +173,8 @@ Registered routes:
 - `/forgot-password`
 - `/login`
 - `/offline`
+- `/posts`
+- `/posts/[slug]`
 - `/pricing`
 - `/privacy`
 - `/profile`
