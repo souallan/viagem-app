@@ -121,6 +121,7 @@ Registered routes:
 - `/public-stats` — GET
 - `/referral` — GET
 - `/register` — POST
+- `/setup-admin` — GET
 - `/share/[token]` — GET
 - `/tips/community` — GET
 - `/tips/external` — GET
