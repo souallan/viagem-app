@@ -118,6 +118,10 @@ const config: Config = {
         "coral-lg":   "0 8px 28px rgba(26, 95, 204, 0.32)",
         // Landing page showcase
         "showcase":   "0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06)",
+        // Bento feature card glow on hover
+        "feature-blue":    "0 0 0 1px rgba(59,130,246,0.2),  0 8px 24px rgba(59,130,246,0.08)",
+        "feature-emerald": "0 0 0 1px rgba(52,211,153,0.2),  0 8px 24px rgba(52,211,153,0.08)",
+        "feature-violet":  "0 0 0 1px rgba(167,139,250,0.2), 0 8px 24px rgba(167,139,250,0.08)",
       },
       keyframes: {
         "accordion-down": { from: { height: "0" }, to: { height: "var(--radix-accordion-content-height)" } },

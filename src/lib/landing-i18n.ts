@@ -31,15 +31,15 @@ export const landingI18n = {
     },
     features: {
       sectionLabel: "Funcionalidades",
-      title1: "Tudo que sua viagem precisa,",
-      title2: "num único lugar",
+      title1: "Cada detalhe da viagem,",
+      title2: "sem planilha, sem caos",
       items: [
-        { title: "Roteiro dia a dia",          desc: "Monte atividades com horário, local e mapa — manhã, tarde e noite organizados automaticamente." },
-        { title: "Controle total de gastos",   desc: "Registre despesas por categoria, divida entre participantes e acompanhe o câmbio em tempo real." },
-        { title: "Lista de malas inteligente", desc: "Gere a lista por destino e clima. Sugestões de compra na Amazon por categoria incluídas." },
-        { title: "Roteiros da comunidade",     desc: "Explore roteiros criados por viajantes reais e clone para a sua viagem em um clique." },
-        { title: "Diário e relatos",           desc: "Registre momentos durante a viagem e publique relatos para inspirar outros viajantes." },
-        { title: "Documentos e alertas",       desc: "Guarde passaporte, vistos e seguros. Alertas automáticos de vencimento para nunca ser pego de surpresa." },
+        { title: "Roteiro dia a dia",          desc: "Manhã, tarde e noite organizados com horário, local e custo — sem post-it perdido, sem aba esquecida aberta no navegador." },
+        { title: "Controle total de gastos",   desc: "Veja para onde o dinheiro vai em tempo real. Divida entre o grupo, acompanhe o câmbio e viaje sem aquela angústia de 'será que vai dar?'." },
+        { title: "Lista de malas inteligente", desc: "Gere a lista certa para o destino e clima, com sugestões de compra incluídas. Nunca mais a sensação de 'esqueci algo importante'." },
+        { title: "Roteiros da comunidade",     desc: "Explore roteiros reais de quem já foi. Clone em um clique e adapte às suas datas — em vez de começar do zero toda vez." },
+        { title: "Diário e relatos",           desc: "Registre os momentos que importam durante a viagem. Publique relatos e inspire quem ainda está planejando ir." },
+        { title: "Documentos e alertas",       desc: "Passaporte, visto, seguro — tudo num cofre digital com alertas de vencimento. Sem surpresa na fila do aeroporto." },
       ],
     },
     showcase: {

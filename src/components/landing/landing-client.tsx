@@ -12,13 +12,17 @@ import { AppShowcase } from "@/components/landing/app-showcase";
 
 const FEATURE_ICONS = [Map, Wallet, Package, Route, BookOpen, Shield];
 const FEATURE_COLORS = [
-  { color: "from-blue-500/20 to-blue-600/5",       iconColor: "text-blue-400"    },
-  { color: "from-emerald-500/20 to-emerald-600/5",  iconColor: "text-emerald-400" },
-  { color: "from-violet-500/20 to-violet-600/5",    iconColor: "text-violet-400"  },
-  { color: "from-orange-500/20 to-orange-600/5",    iconColor: "text-orange-400"  },
-  { color: "from-pink-500/20 to-pink-600/5",        iconColor: "text-pink-400"    },
-  { color: "from-yellow-500/20 to-yellow-600/5",    iconColor: "text-yellow-400"  },
+  { color: "from-blue-500/20 to-blue-600/5",       iconColor: "text-blue-400",    hover: "hover:shadow-feature-blue"    },
+  { color: "from-emerald-500/20 to-emerald-600/5",  iconColor: "text-emerald-400", hover: "hover:shadow-feature-emerald" },
+  { color: "from-violet-500/20 to-violet-600/5",    iconColor: "text-violet-400",  hover: "hover:shadow-feature-violet"  },
+  { color: "from-orange-500/20 to-orange-600/5",    iconColor: "text-orange-400",  hover: "hover:shadow-feature-blue"    },
+  { color: "from-pink-500/20 to-pink-600/5",        iconColor: "text-pink-400",    hover: "hover:shadow-feature-violet"  },
+  { color: "from-yellow-500/20 to-yellow-600/5",    iconColor: "text-yellow-400",  hover: "hover:shadow-feature-emerald" },
 ];
+// Bento layout: render in this order so col-span-2 cards land naturally in 3-col grid
+// Row 1: [0 span-2][5 span-1] — Row 2: [3 span-1][1 span-2] — Row 3: [4 span-1][2 span-2]
+const BENTO_ORDER = [0, 5, 3, 1, 4, 2];
+const BENTO_BIG = new Set([0, 1, 2]); // feature indices that get the large treatment
 const STEP_ICONS = [Plane, Map, TrendingUp];
 const COMMUNITY_ICONS = [BookOpen, Route, Lightbulb, Users, Globe];
 const COMMUNITY_COLORS = ["text-pink-400", "text-orange-400", "text-yellow-400", "text-blue-400", "text-teal-400"];
@@ -234,17 +238,30 @@ export function LandingClient({ stats }: Props) {
                 <span className="text-slate-500 font-medium">{t.features.title2}</span>
               </h2>
             </div>
+
+            {/* Bento grid: big cards for Roteiro (0), Gastos (1) e Malas (2) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {t.features.items.map((f, i) => {
-                const Icon = FEATURE_ICONS[i];
-                const { color, iconColor } = FEATURE_COLORS[i];
+              {BENTO_ORDER.map((fi) => {
+                const f = t.features.items[fi];
+                const Icon = FEATURE_ICONS[fi];
+                const { color, iconColor, hover } = FEATURE_COLORS[fi];
+                const isBig = BENTO_BIG.has(fi);
                 return (
-                  <div key={f.title} className="group rounded-2xl border border-white/6 p-6 hover:border-white/12 transition-all duration-300 bg-white/[0.03]">
-                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon className={`h-5 w-5 ${iconColor}`} aria-hidden="true" />
+                  <div
+                    key={f.title}
+                    className={`group rounded-2xl border border-white/6 bg-white/[0.03] transition-all duration-300 hover:border-white/12 ${hover} ${
+                      isBig ? "lg:col-span-2 p-7 sm:flex gap-5 items-start" : "p-6"
+                    }`}
+                  >
+                    <div className={`rounded-xl bg-gradient-to-br ${color} flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300 ${
+                      isBig ? "w-12 h-12 mb-0" : "w-10 h-10 mb-4"
+                    } ${isBig ? "mb-4 sm:mb-0" : ""}`}>
+                      <Icon className={`${isBig ? "h-6 w-6" : "h-5 w-5"} ${iconColor}`} aria-hidden="true" />
                     </div>
-                    <h3 className="font-bold text-white mb-2">{f.title}</h3>
-                    <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
+                    <div>
+                      <h3 className={`font-bold text-white mb-2 ${isBig ? "text-lg" : ""}`}>{f.title}</h3>
+                      <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
+                    </div>
                   </div>
                 );
               })}
@@ -403,47 +420,54 @@ export function LandingClient({ stats }: Props) {
 
       </div>
 
-      {/* ── CTA ── */}
+      {/* ── CTA — rei absoluto do fechamento ── */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-20">
-        <div className="rounded-3xl p-10 md:p-14 text-center border border-blue-500/20 relative overflow-hidden bg-cta-section">
+        <div className="rounded-3xl p-10 md:p-16 text-center border border-blue-500/20 relative overflow-hidden bg-cta-section">
           <div className="absolute inset-0 pointer-events-none bg-gradient-radial from-blue-600/10 to-transparent" aria-hidden="true" />
+          {/* Soft top accent */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-px bg-gradient-to-r from-transparent via-blue-400/40 to-transparent" aria-hidden="true" />
           <div className="relative z-10">
-            <div className="w-14 h-14 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-cta-blue shadow-primary-lg">
-              <Plane className="h-6 w-6 text-white" aria-hidden="true" />
+            <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-cta-blue shadow-primary-lg ring-4 ring-blue-500/10">
+              <Plane className="h-7 w-7 text-white" aria-hidden="true" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-4">{t.cta.title}</h2>
-            <p className="text-slate-400 text-base mb-8 max-w-xl mx-auto">{t.cta.subtitle}</p>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 leading-tight">{t.cta.title}</h2>
+            <p className="text-slate-400 text-base mb-10 max-w-lg mx-auto leading-relaxed">{t.cta.subtitle}</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/register"
-                className="flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-base transition-all hover:opacity-90 hover:scale-[1.02] bg-cta-blue shadow-primary-lg"
+                className="flex items-center gap-2 px-10 py-4 rounded-xl font-black text-base transition-all hover:opacity-90 hover:scale-[1.03] active:scale-[0.98] bg-cta-blue shadow-primary-lg"
               >
                 {t.cta.button} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
-              <Link href="/login" className="text-sm font-semibold text-slate-400 hover:text-white transition-colors">
+              <Link href="/login" className="text-sm font-semibold text-slate-500 hover:text-slate-300 transition-colors">
                 {t.cta.login}
               </Link>
             </div>
+            <p className="text-slate-700 text-xs mt-6">
+              {lang === "pt" ? "Sem cartão de crédito · Cancele quando quiser · Dados protegidos (LGPD)" :
+               lang === "en" ? "No credit card · Cancel anytime · Data protected" :
+               "Sin tarjeta de crédito · Cancela cuando quieras · Datos protegidos"}
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ── NEWSLETTER ── */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 pb-16">
-        <div className="rounded-3xl border border-white/8 p-8 md:p-12 text-center bg-white/[0.03]">
-          <div className="w-12 h-12 rounded-2xl mx-auto mb-5 flex items-center justify-center bg-cta-violet">
-            <Star className="h-5 w-5 text-white" aria-hidden="true" />
-          </div>
-          <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2">Dicas de viagem toda semana</h2>
-          <p className="text-slate-400 text-sm mb-8 max-w-lg mx-auto">
-            Receba roteiros exclusivos, promoções de passagens e dicas de destinos — direto na sua caixa de entrada. Grátis.
-          </p>
-          {nlState === "success" ? (
-            <div className="inline-flex items-center gap-2 text-emerald-400 font-semibold text-sm bg-emerald-500/10 border border-emerald-500/20 px-6 py-3 rounded-xl">
-              <CheckCircle className="h-4 w-4" aria-hidden="true" /> Inscrito! Você receberá novidades em breve.
+      {/* ── NEWSLETTER — strip sutil, não compete com o CTA ── */}
+      <section className="relative z-10 border-t border-white/5 bg-white/[0.015]">
+        <div className="max-w-6xl mx-auto px-6 md:px-14 py-6 flex flex-col sm:flex-row items-center gap-4">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <Star className="h-4 w-4 text-violet-400 shrink-0" aria-hidden="true" />
+            <div>
+              <p className="text-sm font-semibold text-slate-300 leading-none">Dicas de viagem toda semana</p>
+              <p className="text-xs text-slate-600 mt-0.5">Roteiros, promoções e destinos na sua caixa de entrada.</p>
             </div>
+          </div>
+          {nlState === "success" ? (
+            <span className="flex items-center gap-1.5 text-emerald-400 text-sm font-semibold shrink-0">
+              <CheckCircle className="h-4 w-4" aria-hidden="true" /> Inscrito!
+            </span>
           ) : (
-            <form onSubmit={handleNewsletter} className="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto">
+            <form onSubmit={handleNewsletter} className="flex items-center gap-2 w-full sm:w-auto shrink-0">
               <input
                 type="email"
                 required
@@ -451,21 +475,20 @@ export function LandingClient({ stats }: Props) {
                 onChange={(e) => setNlEmail(e.target.value)}
                 placeholder="seu@email.com"
                 aria-label="Seu endereço de email"
-                className="flex-1 w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder:text-slate-500 text-sm focus:outline-none focus:border-violet-500/50 focus:bg-white/[0.08] transition-all"
+                className="px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white placeholder:text-slate-600 text-sm focus:outline-none focus:border-violet-500/40 transition-all w-full sm:w-48"
               />
               <button
                 type="submit"
                 disabled={nlState === "loading"}
-                className="shrink-0 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:opacity-90 disabled:opacity-60 bg-cta-violet"
+                className="shrink-0 px-4 py-2 rounded-lg font-bold text-xs text-white transition-all hover:opacity-90 disabled:opacity-60 bg-cta-violet"
               >
-                {nlState === "loading" ? "..." : "Inscrever-se"}
+                {nlState === "loading" ? "..." : "Inscrever"}
               </button>
             </form>
           )}
           {nlState === "error" && (
-            <p className="text-red-400 text-xs mt-3">Erro ao inscrever. Tente novamente.</p>
+            <p className="text-red-400 text-[10px] sm:ml-2">Erro. Tente novamente.</p>
           )}
-          <p className="text-slate-700 text-xs mt-4">Sem spam. Cancele quando quiser.</p>
         </div>
       </section>
 
