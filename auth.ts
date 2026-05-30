@@ -2,10 +2,7 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
-import bcrypt from "bcryptjs";
-
-// 2FA via OTP temporariamente desativado (Resend domain pendente).
-// Para reativar: trocar authorize para usar verifyOtp + login/page.tsx de 2 etapas.
+import { verifyOtp } from "@/lib/otp";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -19,26 +16,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Credentials({
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Senha", type: "password" },
+        otp:   { label: "Código", type: "text" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials?.email || !credentials?.otp) return null;
 
         const email = String(credentials.email).trim().toLowerCase();
-        const password = String(credentials.password);
+        const otp   = String(credentials.otp).trim();
 
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user?.password) return null;
-
-        const valid = await bcrypt.compare(password, user.password);
+        const valid = await verifyOtp(email, otp);
         if (!valid) return null;
 
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user) return null;
+
         return {
-          id: user.id,
+          id:    user.id,
           email: user.email,
-          name: user.name,
+          name:  user.name,
           image: user.image,
-          role: user.role,
+          role:  user.role,
         };
       },
     }),
@@ -46,7 +43,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.id   = user.id;
         token.role = (user as { role?: string }).role ?? "USER";
       }
       return token;
