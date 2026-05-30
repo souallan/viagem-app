@@ -101,6 +101,7 @@ Registered routes:
 - `/admin/backup` — GET
 - `/admin/content` — DELETE, GET
 - `/admin/newsletter` — DELETE, GET
+- `/admin/referrals` — GET
 - `/admin/stats` — GET
 - `/admin/users` — DELETE, GET, PATCH
 - `/auth/[...nextauth]` — 
@@ -142,12 +143,14 @@ Registered routes:
 ### Pages
 
 - `/`
-- `/admin`
-- `/admin/content`
-- `/admin/newsletter`
-- `/admin/settings`
-- `/admin/stats`
-- `/admin/users`
+- `/backoffice`
+- `/backoffice/audit`
+- `/backoffice/content`
+- `/backoffice/newsletter`
+- `/backoffice/referrals`
+- `/backoffice/settings`
+- `/backoffice/stats`
+- `/backoffice/users`
 - `/blog`
 - `/blog/[slug]`
 - `/dashboard`
