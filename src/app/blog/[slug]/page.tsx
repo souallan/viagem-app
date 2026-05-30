@@ -402,8 +402,20 @@ export default async function BlogArticlePage({ params }: Props) {
 
   const related = ARTICLES.filter((a) => a.slug !== slug).slice(0, 2);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.excerpt,
+    datePublished: article.date,
+    author: { "@type": "Organization", name: "RoteiroApp", url: "https://roteiroapp.com" },
+    publisher: { "@type": "Organization", name: "RoteiroApp", logo: { "@type": "ImageObject", url: "https://roteiroapp.com/icon.svg" } },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `https://roteiroapp.com/blog/${article.slug}` },
+  };
+
   return (
     <div className="min-h-screen bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="max-w-2xl mx-auto px-4 py-12">
 
         <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 transition-colors mb-8">

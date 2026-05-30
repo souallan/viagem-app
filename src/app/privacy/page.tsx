@@ -96,21 +96,29 @@ export default function PublicPrivacyPage() {
           <p>Seus dados podem ser acessados por:</p>
           <ul className="space-y-2 list-disc list-inside mt-2">
             <li><strong>Railway (infraestrutura):</strong> hospedagem e banco de dados PostgreSQL na nuvem. Dados armazenados com criptografia em repouso.</li>
+            <li><strong>Google Analytics 4 (analytics):</strong> coletamos dados anônimos de uso (páginas visitadas, tempo de sessão, eventos de navegação) para entender como o app é utilizado. Não são coletados dados pessoais identificáveis. Baseado no legítimo interesse conforme LGPD art. 7º, IX. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Política de Privacidade do Google</a>.</li>
+            <li><strong>Resend (email transacional):</strong> endereço de email utilizado para envio de verificação de conta e recuperação de senha. Não utilizado para marketing sem consentimento.</li>
             <li><strong>Administradores do RoteiroApp:</strong> acesso restrito ao painel admin para fins de moderação e suporte.</li>
           </ul>
         </Section>
 
-        <Section title="5. Cookies">
-          <p>Utilizamos apenas cookies estritamente necessários:</p>
+        <Section title="5. Cookies e rastreamento">
+          <p>Utilizamos os seguintes cookies e tecnologias de rastreamento:</p>
           <Table
-            headers={["Cookie", "Tipo", "Duração", "Finalidade"]}
+            headers={["Cookie / Tecnologia", "Tipo", "Duração", "Finalidade"]}
             rows={[
               ["next-auth.session-token", "HTTP-only", "30 dias", "Sessão autenticada (JWT)"],
               ["next-auth.csrf-token", "HTTP-only", "Sessão", "Proteção contra CSRF"],
               ["lgpd-consent", "LocalStorage", "1 ano", "Registro do consentimento desta política"],
+              ["_ga, _ga_*", "Analytics", "2 anos", "Google Analytics 4 — dados de uso anônimos"],
             ]}
           />
-          <p className="mt-3">Não utilizamos cookies de rastreamento, analytics ou publicidade de terceiros.</p>
+          <p className="mt-3 text-sm text-gray-600">
+            Para optar por não ser rastreado pelo Google Analytics, você pode instalar o{" "}
+            <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+              complemento de recusa do Google Analytics
+            </a>.
+          </p>
         </Section>
 
         <Section title="6. Segurança">

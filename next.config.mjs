@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+import { withSentryConfig } from "@sentry/nextjs";
 
 const securityHeaders = [
   { key: "X-Frame-Options",           value: "DENY" },
@@ -14,7 +15,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://images.unsplash.com https://res.cloudinary.com https://www.google-analytics.com",
       "font-src 'self'",
-      "connect-src 'self' https://api.frankfurter.app https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
+      "connect-src 'self' https://api.frankfurter.app https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://o*.ingest.sentry.io",
       "frame-ancestors 'none'",
     ].join("; "),
   },
@@ -29,13 +30,17 @@ const nextConfig = {
     ],
   },
   async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: securityHeaders,
-      },
-    ];
+    return [{ source: "/(.*)", headers: securityHeaders }];
   },
 };
 
-export default nextConfig;
+// Only wrap with Sentry if DSN is configured
+const hasSentry = !!(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN);
+
+export default hasSentry
+  ? withSentryConfig(nextConfig, {
+      silent: true,
+      hideSourceMaps: true,
+      disableLogger: true,
+    })
+  : nextConfig;

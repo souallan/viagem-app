@@ -37,7 +37,31 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
 };
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const GA_ID  = process.env.NEXT_PUBLIC_GA_ID;
+const GSC_ID = process.env.NEXT_PUBLIC_GSC_VERIFICATION;
+
+const JSON_LD_ORGANIZATION = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "RoteiroApp",
+  url: "https://roteiroapp.com",
+  logo: "https://roteiroapp.com/icon.svg",
+  description: "Planejador de viagens completo e gratuito para brasileiros.",
+  sameAs: ["https://instagram.com/roteiroapp"],
+  contactPoint: { "@type": "ContactPoint", email: "contato@roteiroapp.com", contactType: "customer support" },
+};
+
+const JSON_LD_WEBSITE = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "RoteiroApp",
+  url: "https://roteiroapp.com",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: { "@type": "EntryPoint", urlTemplate: "https://roteiroapp.com/blog?q={search_term_string}" },
+    "query-input": "required name=search_term_string",
+  },
+};
 
 export default function RootLayout({
   children,
@@ -47,6 +71,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
+        {/* JSON-LD structured data */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD_ORGANIZATION) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD_WEBSITE) }} />
+        {/* Google Search Console verification */}
+        {GSC_ID && <meta name="google-site-verification" content={GSC_ID} />}
         {GA_ID && (
           <>
             {/* eslint-disable-next-line @next/next/no-sync-scripts */}
