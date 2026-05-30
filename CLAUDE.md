@@ -180,6 +180,8 @@ Registered routes:
 - `/profile`
 - `/register`
 - `/reset-password`
+- `/roteiro`
+- `/roteiro/[cidade]`
 - `/routes`
 - `/routes/contribute`
 - `/share/[token]`
