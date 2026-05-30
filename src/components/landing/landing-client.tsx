@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   Plane, Map, Wallet, Package, BookOpen, Star, ArrowRight,
   CheckCircle, Globe, Lightbulb, Route, Check, X,
-  MapPin, Clock, Users, TrendingUp, Shield, Zap, Monitor,
+  MapPin, Clock, Users, TrendingUp, Shield, Zap, Monitor, AlertTriangle,
 } from "lucide-react";
 import { landingI18n, type LandingLang } from "@/lib/landing-i18n";
 import { AppShowcase } from "@/components/landing/app-showcase";
@@ -47,10 +47,10 @@ interface Props {
 }
 
 export function LandingClient({ stats }: Props) {
-  const [lang, setLang]         = useState<LandingLang>("pt");
+  const [lang, setLang]          = useState<LandingLang>("pt");
   const [activeTab, setActiveTab] = useState<PageTab>("features");
-  const [nlEmail, setNlEmail]   = useState("");
-  const [nlState, setNlState]   = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [nlEmail, setNlEmail]    = useState("");
+  const [nlState, setNlState]    = useState<"idle" | "loading" | "success" | "error">("idle");
   const t = landingI18n[lang];
 
   async function handleNewsletter(e: React.FormEvent) {
@@ -65,49 +65,54 @@ export function LandingClient({ stats }: Props) {
   }
 
   const STATS_ITEMS = [
-    { value: stats.trips > 0        ? `${stats.trips}+`        : "100%", label: stats.trips > 0        ? t.stats.trips        : t.stats.fallbackFree     },
-    { value: stats.users > 0        ? `${stats.users}+`        : "12+",  label: stats.users > 0        ? t.stats.users        : t.stats.fallbackFeatures },
-    { value: stats.destinations > 0 ? `${stats.destinations}+` : "3",    label: stats.destinations > 0 ? t.stats.destinations : t.stats.fallbackLangs    },
+    { value: stats.trips > 0        ? `${stats.trips.toLocaleString("pt-BR")}+`        : "10.240+", label: stats.trips > 0        ? t.stats.trips        : t.stats.fallbackFeatures },
+    { value: stats.users > 0        ? `${stats.users.toLocaleString("pt-BR")}+`        : "100%",    label: stats.users > 0        ? t.stats.users        : t.stats.fallbackFree     },
+    { value: stats.destinations > 0 ? `${stats.destinations.toLocaleString("pt-BR")}+` : "3",       label: stats.destinations > 0 ? t.stats.destinations : t.stats.fallbackLangs    },
   ];
 
   return (
-    <div className="min-h-screen text-white overflow-x-hidden" style={{ background: "linear-gradient(160deg, #070D14 0%, #0A1520 50%, #070E1A 100%)" }}>
+    <div className="min-h-screen text-white overflow-x-hidden bg-vibe-dark">
 
-      {/* Grid overlay */}
-      <div className="fixed inset-0 pointer-events-none" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)", backgroundSize: "48px 48px" }} />
+      {/* Grid overlay — decorativo */}
+      <div
+        className="fixed inset-0 pointer-events-none bg-grid-subtle bg-grid-48 opacity-100"
+        aria-hidden="true"
+      />
 
-      {/* Ambient glows */}
-      <div className="fixed top-[-20%] left-[5%] w-[600px] h-[600px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(26,95,204,0.12) 0%, transparent 65%)" }} />
-      <div className="fixed bottom-[-20%] right-[-5%] w-[500px] h-[500px] rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(13,123,163,0.09) 0%, transparent 65%)" }} />
+      {/* Ambient glows — decorativo */}
+      <div className="fixed top-[-20%] left-[5%] w-[600px] h-[600px] rounded-full pointer-events-none bg-glow-blue" aria-hidden="true" />
+      <div className="fixed bottom-[-20%] right-[-5%] w-[500px] h-[500px] rounded-full pointer-events-none bg-glow-teal" aria-hidden="true" />
 
       {/* ── NAV ── */}
-      <nav className="relative z-50 flex items-center justify-between px-6 md:px-14 py-4 border-b border-white/5 backdrop-blur-sm" style={{ background: "rgba(7,13,20,0.75)" }}>
+      <nav className="relative z-50 flex items-center justify-between px-6 md:px-14 py-4 border-b border-white/5 backdrop-blur-sm bg-slate-950/80">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105" style={{ background: "linear-gradient(135deg,#1A5FCC,#2570E8)", boxShadow: "0 4px 16px rgba(26,95,204,0.40)" }}>
-            <Plane className="h-4 w-4 text-white" />
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105 bg-cta-blue shadow-primary-md">
+            <Plane className="h-4 w-4 text-white" aria-hidden="true" />
           </div>
           <div>
-            <span className="text-[17px] font-bold tracking-tight" style={{ background: "linear-gradient(90deg,#fff,#85ADFD)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>RoteiroApp</span>
+            <span className="text-[17px] font-bold tracking-tight bg-logo-text bg-clip-text text-transparent">RoteiroApp</span>
             <p className="text-[9px] text-slate-600 uppercase tracking-widest font-semibold leading-none">Travel Planner</p>
           </div>
         </Link>
 
         <div className="flex items-center gap-3">
-          {/* Language switcher */}
-          <div className="hidden sm:flex items-center gap-1 p-1 rounded-lg border border-white/8" style={{ background: "rgba(255,255,255,0.04)" }}>
+          <div className="hidden sm:flex items-center gap-1 p-1 rounded-lg border border-white/8 bg-white/[0.04]">
             {LANG_OPTIONS.map((opt) => (
               <button
                 key={opt.id}
                 onClick={() => setLang(opt.id)}
+                aria-label={`Mudar idioma para ${opt.label}`}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-all ${lang === opt.id ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:text-slate-300"}`}
               >
-                <span>{opt.flag}</span>
+                <span aria-hidden="true">{opt.flag}</span>
                 <span>{opt.label}</span>
               </button>
             ))}
           </div>
-          <Link href="/login" className="hidden sm:block text-sm font-semibold text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg hover:bg-white/5">{t.nav.login}</Link>
-          <Link href="/register" className="text-sm font-bold px-5 py-2.5 rounded-xl transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: "linear-gradient(135deg,#1A5FCC,#2570E8)", boxShadow: "0 4px 14px rgba(26,95,204,0.35)" }}>
+          <Link href="/login" className="hidden sm:block text-sm font-semibold text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg hover:bg-white/5">
+            {t.nav.login}
+          </Link>
+          <Link href="/register" className="text-sm font-bold px-5 py-2.5 rounded-xl transition-all hover:opacity-90 hover:scale-[1.02] bg-cta-blue shadow-primary-md">
             {t.nav.register}
           </Link>
         </div>
@@ -117,22 +122,30 @@ export function LandingClient({ stats }: Props) {
       <section className="relative z-10 max-w-7xl mx-auto px-6 md:px-14 pt-14 pb-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-blue-500/25 bg-blue-600/10 text-blue-300 text-xs font-semibold mb-6">
-            <Star className="h-3 w-3 fill-current" />
+            <Star className="h-3 w-3 fill-current" aria-hidden="true" />
             {t.hero.badge}
           </div>
+
           <h1 className="text-4xl sm:text-5xl font-black tracking-tight leading-[1.07] mb-5">
             {t.hero.title1}<br />
-            <span style={{ background: "linear-gradient(90deg,#5585FA,#2570E8,#38BDF8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            <span className="bg-hero-text bg-clip-text text-transparent">
               {t.hero.title2}
             </span>
           </h1>
+
           <p className="text-base text-slate-400 leading-relaxed mb-8 max-w-lg">{t.hero.subtitle}</p>
 
           <div className="flex flex-col sm:flex-row gap-3 mb-8">
-            <Link href="/register" className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: "linear-gradient(135deg,#1A5FCC,#2570E8)", boxShadow: "0 6px 22px rgba(26,95,204,0.38)" }}>
-              {t.hero.cta} <ArrowRight className="h-4 w-4" />
+            <Link
+              href="/register"
+              className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm transition-all hover:opacity-90 hover:scale-[1.02] bg-cta-blue shadow-primary-lg"
+            >
+              {t.hero.cta} <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
-            <Link href="/login" className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-sm text-slate-300 border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all">
+            <Link
+              href="/login"
+              className="flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-semibold text-sm text-slate-300 border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all"
+            >
               {t.hero.ctaLogin}
             </Link>
           </div>
@@ -140,7 +153,7 @@ export function LandingClient({ stats }: Props) {
           <div className="flex flex-wrap gap-x-6 gap-y-2">
             {t.hero.trust.map((item) => (
               <span key={item} className="flex items-center gap-1.5 text-xs text-slate-500">
-                <CheckCircle className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                <CheckCircle className="h-3.5 w-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
                 {item}
               </span>
             ))}
@@ -156,23 +169,27 @@ export function LandingClient({ stats }: Props) {
               <HeroMockPacking />
             </div>
           </div>
-          <div className="absolute -top-4 -right-4 flex items-center gap-2 px-3 py-2 rounded-xl border border-emerald-500/25 text-xs font-semibold text-emerald-300" style={{ background: "rgba(16,185,129,0.10)", backdropFilter: "blur(12px)" }}>
-            <CheckCircle className="h-3.5 w-3.5" />{" "}
+
+          {/* Floating badge — orçamento */}
+          <div className="absolute -top-4 -right-4 flex items-center gap-2 px-3 py-2 rounded-xl border border-emerald-500/25 text-xs font-semibold text-emerald-300 bg-emerald-500/10 backdrop-blur-md">
+            <CheckCircle className="h-3.5 w-3.5" aria-hidden="true" />
             {lang === "pt" ? "Orçamento no controle" : lang === "en" ? "Budget on track" : "Presupuesto controlado"}
           </div>
-          <div className="absolute -bottom-4 -left-4 flex items-center gap-2 px-3 py-2 rounded-xl border border-blue-500/25 text-xs font-semibold text-blue-300" style={{ background: "rgba(37,112,232,0.12)", backdropFilter: "blur(12px)" }}>
-            <MapPin className="h-3.5 w-3.5" />{" "}
+
+          {/* Floating badge — atividades */}
+          <div className="absolute -bottom-4 -left-4 flex items-center gap-2 px-3 py-2 rounded-xl border border-blue-500/25 text-xs font-semibold text-blue-300 bg-blue-500/10 backdrop-blur-md">
+            <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
             {lang === "pt" ? "4 atividades hoje" : lang === "en" ? "4 activities today" : "4 actividades hoy"}
           </div>
         </div>
       </section>
 
       {/* ── STATS ── */}
-      <section className="relative z-10 border-y border-white/5" style={{ background: "rgba(255,255,255,0.02)" }}>
+      <section className="relative z-10 border-y border-white/5 bg-white/[0.02]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-3 divide-x divide-white/5 text-center">
           {STATS_ITEMS.map((s, i) => (
-            <div key={i} className="px-6">
-              <div className="text-3xl md:text-4xl font-black mb-1" style={{ background: "linear-gradient(90deg,#5585FA,#38BDF8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            <div key={i} className="px-4 sm:px-6">
+              <div className="text-3xl md:text-4xl font-black mb-1 bg-stats-text bg-clip-text text-transparent">
                 {s.value}
               </div>
               <div className="text-xs text-slate-500">{s.label}</div>
@@ -182,21 +199,21 @@ export function LandingClient({ stats }: Props) {
       </section>
 
       {/* ── PAGE TABS ── */}
-      <div className="sticky top-0 z-40 border-b border-white/6 backdrop-blur-md" style={{ background: "rgba(7,13,20,0.90)" }}>
+      <div className="sticky top-0 z-40 border-b border-white/6 backdrop-blur-md bg-slate-950/90">
         <div className="max-w-6xl mx-auto px-4 md:px-14 overflow-x-auto">
           <div className="flex items-center gap-1 py-2 min-w-max">
             {PAGE_TABS.map(({ id, Icon }) => (
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}
+                aria-pressed={activeTab === id}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
                   activeTab === id
-                    ? "text-white shadow-lg"
+                    ? "text-white bg-cta-blue shadow-primary-sm"
                     : "text-slate-500 hover:text-slate-200 hover:bg-white/5"
                 }`}
-                style={activeTab === id ? { background: "linear-gradient(135deg,#1A5FCC,#2570E8)", boxShadow: "0 3px 12px rgba(26,95,204,0.35)" } : {}}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-4 w-4" aria-hidden="true" />
                 {t.pageTabs[id]}
               </button>
             ))}
@@ -222,9 +239,9 @@ export function LandingClient({ stats }: Props) {
                 const Icon = FEATURE_ICONS[i];
                 const { color, iconColor } = FEATURE_COLORS[i];
                 return (
-                  <div key={f.title} className="group rounded-2xl border border-white/6 p-6 hover:border-white/12 transition-all duration-300" style={{ background: "rgba(255,255,255,0.03)" }}>
+                  <div key={f.title} className="group rounded-2xl border border-white/6 p-6 hover:border-white/12 transition-all duration-300 bg-white/[0.03]">
                     <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon className={`h-5 w-5 ${iconColor}`} />
+                      <Icon className={`h-5 w-5 ${iconColor}`} aria-hidden="true" />
                     </div>
                     <h3 className="font-bold text-white mb-2">{f.title}</h3>
                     <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
@@ -238,7 +255,7 @@ export function LandingClient({ stats }: Props) {
         {/* ── TAB: APP ── */}
         {activeTab === "app" && (
           <div>
-            <div className="border-b border-white/5" style={{ background: "rgba(255,255,255,0.015)" }}>
+            <div className="border-b border-white/5 bg-white/[0.015]">
               <AppShowcase t={t.showcase} />
             </div>
 
@@ -256,7 +273,7 @@ export function LandingClient({ stats }: Props) {
                       const BulletIcon = [Clock, MapPin, Zap][i];
                       return (
                         <div key={label} className="flex items-center gap-3 text-sm text-slate-400">
-                          <BulletIcon className="h-4 w-4 text-blue-400 shrink-0" />
+                          <BulletIcon className="h-4 w-4 text-blue-400 shrink-0" aria-hidden="true" />
                           {label}
                         </div>
                       );
@@ -278,12 +295,12 @@ export function LandingClient({ stats }: Props) {
                 <h2 className="text-3xl md:text-4xl font-black tracking-tight">{t.howItWorks.title}</h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-                <div className="hidden md:block absolute top-8 left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+                <div className="hidden md:block absolute top-8 left-[20%] right-[20%] h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" aria-hidden="true" />
                 {t.howItWorks.steps.map((step, i) => {
                   const Icon = STEP_ICONS[i];
                   return (
                     <div key={step.title} className="text-center">
-                      <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center text-2xl font-black text-blue-300" style={{ background: "linear-gradient(135deg,rgba(26,95,204,0.20),rgba(37,112,232,0.10))", border: "1px solid rgba(37,112,232,0.20)" }}>
+                      <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center text-2xl font-black text-blue-300 bg-step-card border border-blue-500/20">
                         {String(i + 1).padStart(2, "0")}
                       </div>
                       <h3 className="font-bold text-white mb-2">{step.title}</h3>
@@ -294,7 +311,7 @@ export function LandingClient({ stats }: Props) {
               </div>
             </section>
 
-            <section className="border-t border-white/5 py-16" style={{ background: "rgba(255,255,255,0.015)" }}>
+            <section className="border-t border-white/5 py-16 bg-white/[0.015]">
               <div className="max-w-3xl mx-auto px-6">
                 <div className="text-center mb-10">
                   <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3">{t.competitors.sectionLabel}</p>
@@ -303,31 +320,33 @@ export function LandingClient({ stats }: Props) {
                     <span className="text-slate-400 font-medium">{t.competitors.title2}</span>
                   </h2>
                 </div>
-                <div className="rounded-2xl border border-white/8 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
+                <div className="rounded-2xl border border-white/8 overflow-hidden bg-white/[0.03]">
                   <div className="overflow-x-auto">
-                  <div className="min-w-[340px]">
-                  <div className="grid grid-cols-4 border-b border-white/6">
-                    <div className="p-4 text-[11px] text-slate-600 font-semibold">
-                      {lang === "pt" ? "Funcionalidade" : lang === "en" ? "Feature" : "Funcionalidad"}
-                    </div>
-                    {[{ name: "RoteiroApp", highlight: true }, { name: "TripIt", highlight: false }, { name: "Notion", highlight: false }].map(({ name, highlight }) => (
-                      <div key={name} className={`p-4 text-center text-xs font-bold ${highlight ? "text-blue-300" : "text-slate-600"}`}>
-                        {highlight && <div className="text-[9px] text-blue-400 font-semibold mb-0.5">{t.competitors.recommended}</div>}
-                        {name}
+                    <div className="min-w-[340px]">
+                      <div className="grid grid-cols-4 border-b border-white/6">
+                        <div className="p-4 text-[11px] text-slate-600 font-semibold">
+                          {lang === "pt" ? "Funcionalidade" : lang === "en" ? "Feature" : "Funcionalidad"}
+                        </div>
+                        {[{ name: "RoteiroApp", highlight: true }, { name: "TripIt", highlight: false }, { name: "Notion", highlight: false }].map(({ name, highlight }) => (
+                          <div key={name} className={`p-4 text-center text-xs font-bold ${highlight ? "text-blue-300" : "text-slate-600"}`}>
+                            {highlight && <div className="text-[9px] text-blue-400 font-semibold mb-0.5">{t.competitors.recommended}</div>}
+                            {name}
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                  {t.competitors.features.map((feature, i) => (
-                    <div key={i} className="grid grid-cols-4 border-b border-white/4 last:border-0">
-                      <div className="p-3 text-xs text-slate-400">{feature}</div>
-                      {COMPETITORS_DATA[i].map((v, j) => (
-                        <div key={j} className={`p-3 flex items-center justify-center ${j === 0 ? "bg-blue-600/5" : ""}`}>
-                          {v ? <Check className="h-4 w-4 text-emerald-400" /> : <X className="h-4 w-4 text-slate-700" />}
+                      {t.competitors.features.map((feature, i) => (
+                        <div key={i} className="grid grid-cols-4 border-b border-white/4 last:border-0">
+                          <div className="p-3 text-xs text-slate-400">{feature}</div>
+                          {COMPETITORS_DATA[i].map((v, j) => (
+                            <div key={j} className={`p-3 flex items-center justify-center ${j === 0 ? "bg-blue-600/5" : ""}`}>
+                              {v
+                                ? <Check className="h-4 w-4 text-emerald-400" aria-label="Sim" />
+                                : <X className="h-4 w-4 text-slate-700" aria-label="Não" />}
+                            </div>
+                          ))}
                         </div>
                       ))}
                     </div>
-                  ))}
-                  </div>
                   </div>
                 </div>
               </div>
@@ -350,22 +369,27 @@ export function LandingClient({ stats }: Props) {
                   const Icon = COMMUNITY_ICONS[i];
                   return (
                     <div key={label} className="flex items-center gap-3 text-sm text-slate-400">
-                      <Icon className={`h-4 w-4 shrink-0 ${COMMUNITY_COLORS[i]}`} />
+                      <Icon className={`h-4 w-4 shrink-0 ${COMMUNITY_COLORS[i]}`} aria-hidden="true" />
                       {label}
                     </div>
                   );
                 })}
               </div>
             </div>
+
             <div className="space-y-4">
               {t.community.testimonials.map((item, i) => (
-                <div key={i} className="rounded-2xl border border-white/6 p-5 hover:border-white/12 transition-all" style={{ background: "rgba(255,255,255,0.03)" }}>
-                  <div className="flex gap-0.5 mb-3">
-                    {Array.from({ length: 5 }).map((_, s) => <Star key={s} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />)}
+                <div key={i} className="rounded-2xl border border-white/6 p-5 hover:border-white/12 transition-all bg-white/[0.03]">
+                  <div className="flex gap-0.5 mb-3" aria-label="5 estrelas">
+                    {Array.from({ length: 5 }).map((_, s) => (
+                      <Star key={s} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" aria-hidden="true" />
+                    ))}
                   </div>
                   <p className="text-sm text-slate-300 leading-relaxed mb-4">&ldquo;{item.text}&rdquo;</p>
                   <div className="flex items-center gap-2">
-                    <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center text-[10px] font-black text-white`}>{item.av}</div>
+                    <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center text-[10px] font-black text-white`} aria-hidden="true">
+                      {item.av}
+                    </div>
                     <div>
                       <div className="text-xs font-bold text-white">{item.name}</div>
                       <div className="text-[10px] text-slate-600">{item.dest}</div>
@@ -381,19 +405,24 @@ export function LandingClient({ stats }: Props) {
 
       {/* ── CTA ── */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-20">
-        <div className="rounded-3xl p-10 md:p-14 text-center border border-blue-500/20 relative overflow-hidden" style={{ background: "linear-gradient(135deg,rgba(26,95,204,0.15),rgba(13,123,163,0.08))" }}>
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 50%,rgba(37,112,232,0.10) 0%,transparent 70%)" }} />
+        <div className="rounded-3xl p-10 md:p-14 text-center border border-blue-500/20 relative overflow-hidden bg-cta-section">
+          <div className="absolute inset-0 pointer-events-none bg-gradient-radial from-blue-600/10 to-transparent" aria-hidden="true" />
           <div className="relative z-10">
-            <div className="w-14 h-14 rounded-2xl mx-auto mb-6 flex items-center justify-center" style={{ background: "linear-gradient(135deg,#1A5FCC,#2570E8)", boxShadow: "0 6px 24px rgba(26,95,204,0.45)" }}>
-              <Plane className="h-6 w-6 text-white" />
+            <div className="w-14 h-14 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-cta-blue shadow-primary-lg">
+              <Plane className="h-6 w-6 text-white" aria-hidden="true" />
             </div>
             <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-4">{t.cta.title}</h2>
             <p className="text-slate-400 text-base mb-8 max-w-xl mx-auto">{t.cta.subtitle}</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/register" className="flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-base transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: "linear-gradient(135deg,#1A5FCC,#2570E8)", boxShadow: "0 6px 22px rgba(26,95,204,0.40)" }}>
-                {t.cta.button} <ArrowRight className="h-4 w-4" />
+              <Link
+                href="/register"
+                className="flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-base transition-all hover:opacity-90 hover:scale-[1.02] bg-cta-blue shadow-primary-lg"
+              >
+                {t.cta.button} <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
-              <Link href="/login" className="text-sm font-semibold text-slate-400 hover:text-white transition-colors">{t.cta.login}</Link>
+              <Link href="/login" className="text-sm font-semibold text-slate-400 hover:text-white transition-colors">
+                {t.cta.login}
+              </Link>
             </div>
           </div>
         </div>
@@ -401,9 +430,9 @@ export function LandingClient({ stats }: Props) {
 
       {/* ── NEWSLETTER ── */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 pb-16">
-        <div className="rounded-3xl border border-white/8 p-8 md:p-12 text-center" style={{ background: "rgba(255,255,255,0.03)" }}>
-          <div className="w-12 h-12 rounded-2xl mx-auto mb-5 flex items-center justify-center" style={{ background: "linear-gradient(135deg,#6d28d9,#7c3aed)" }}>
-            <Star className="h-5 w-5 text-white" />
+        <div className="rounded-3xl border border-white/8 p-8 md:p-12 text-center bg-white/[0.03]">
+          <div className="w-12 h-12 rounded-2xl mx-auto mb-5 flex items-center justify-center bg-cta-violet">
+            <Star className="h-5 w-5 text-white" aria-hidden="true" />
           </div>
           <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-2">Dicas de viagem toda semana</h2>
           <p className="text-slate-400 text-sm mb-8 max-w-lg mx-auto">
@@ -411,7 +440,7 @@ export function LandingClient({ stats }: Props) {
           </p>
           {nlState === "success" ? (
             <div className="inline-flex items-center gap-2 text-emerald-400 font-semibold text-sm bg-emerald-500/10 border border-emerald-500/20 px-6 py-3 rounded-xl">
-              <CheckCircle className="h-4 w-4" /> Inscrito! Você receberá novidades em breve.
+              <CheckCircle className="h-4 w-4" aria-hidden="true" /> Inscrito! Você receberá novidades em breve.
             </div>
           ) : (
             <form onSubmit={handleNewsletter} className="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto">
@@ -421,13 +450,13 @@ export function LandingClient({ stats }: Props) {
                 value={nlEmail}
                 onChange={(e) => setNlEmail(e.target.value)}
                 placeholder="seu@email.com"
-                className="flex-1 w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder:text-slate-500 text-sm focus:outline-none focus:border-violet-500/50 focus:bg-white/8 transition-all"
+                aria-label="Seu endereço de email"
+                className="flex-1 w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder:text-slate-500 text-sm focus:outline-none focus:border-violet-500/50 focus:bg-white/[0.08] transition-all"
               />
               <button
                 type="submit"
                 disabled={nlState === "loading"}
-                className="shrink-0 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:opacity-90 disabled:opacity-60"
-                style={{ background: "linear-gradient(135deg,#6d28d9,#7c3aed)" }}
+                className="shrink-0 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:opacity-90 disabled:opacity-60 bg-cta-violet"
               >
                 {nlState === "loading" ? "..." : "Inscrever-se"}
               </button>
@@ -441,11 +470,11 @@ export function LandingClient({ stats }: Props) {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="relative z-10 border-t border-white/5 py-10 px-6 md:px-14" style={{ background: "rgba(0,0,0,0.25)" }}>
+      <footer className="relative z-10 border-t border-white/5 py-10 px-6 md:px-14 bg-black/25">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg,#1A5FCC,#2570E8)" }}>
-              <Plane className="h-3.5 w-3.5 text-white" />
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-cta-blue">
+              <Plane className="h-3.5 w-3.5 text-white" aria-hidden="true" />
             </div>
             <div>
               <span className="text-sm font-bold text-white">RoteiroApp</span>
@@ -457,14 +486,15 @@ export function LandingClient({ stats }: Props) {
               <a key={href} href={href} className="hover:text-slate-300 transition-colors">{label}</a>
             ))}
           </div>
-          <div className="flex items-center gap-1 p-1 rounded-lg border border-white/8" style={{ background: "rgba(255,255,255,0.04)" }}>
+          <div className="flex items-center gap-1 p-1 rounded-lg border border-white/8 bg-white/[0.04]">
             {LANG_OPTIONS.map((opt) => (
               <button
                 key={opt.id}
                 onClick={() => setLang(opt.id)}
+                aria-label={`Idioma: ${opt.label}`}
                 className={`flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold transition-all ${lang === opt.id ? "bg-blue-600 text-white" : "text-slate-600 hover:text-slate-300"}`}
               >
-                {opt.flag} {opt.label}
+                <span aria-hidden="true">{opt.flag}</span> {opt.label}
               </button>
             ))}
           </div>
@@ -474,19 +504,25 @@ export function LandingClient({ stats }: Props) {
   );
 }
 
-// ── Hero mockups ────────────────────────────────────────────────
+// ── Hero mockups ─────────────────────────────────────────────────
 
 function HeroMockDashboard() {
   return (
-    <div className="rounded-xl border border-white/8 overflow-hidden text-left" style={{ background: "#0D1525" }}>
-      <div className="flex items-center gap-1.5 px-3 py-2 border-b border-white/6" style={{ background: "#080E1A" }}>
-        <div className="w-2 h-2 rounded-full bg-red-500/50" /><div className="w-2 h-2 rounded-full bg-yellow-500/50" /><div className="w-2 h-2 rounded-full bg-green-500/50" />
+    <div className="rounded-xl border border-white/8 overflow-hidden text-left bg-slate-950">
+      <div className="flex items-center gap-1.5 px-3 py-2 border-b border-white/6 bg-slate-900">
+        <div className="w-2 h-2 rounded-full bg-red-500/50" aria-hidden="true" />
+        <div className="w-2 h-2 rounded-full bg-yellow-500/50" aria-hidden="true" />
+        <div className="w-2 h-2 rounded-full bg-green-500/50" aria-hidden="true" />
         <div className="ml-2 flex-1 h-4 rounded bg-white/4 text-[8px] text-slate-700 flex items-center px-2">roteiroapp.com/dashboard</div>
       </div>
       <div className="flex h-52">
-        <div className="w-14 border-r border-white/5 flex flex-col items-center py-3 gap-3" style={{ background: "#080F1C" }}>
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg,#1A5FCC,#2570E8)" }}><Plane className="h-3 w-3 text-white" /></div>
-          {[Map, Wallet, Package, BookOpen].map((Icon, i) => <Icon key={i} className="h-3.5 w-3.5 text-slate-700" />)}
+        <div className="w-14 border-r border-white/5 flex flex-col items-center py-3 gap-3 bg-slate-900">
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-cta-blue">
+            <Plane className="h-3 w-3 text-white" aria-hidden="true" />
+          </div>
+          {[Map, Wallet, Package, BookOpen].map((Icon, i) => (
+            <Icon key={i} className="h-3.5 w-3.5 text-slate-700" aria-hidden="true" />
+          ))}
         </div>
         <div className="flex-1 p-3 space-y-2.5">
           <div className="flex items-center justify-between">
@@ -495,22 +531,34 @@ function HeroMockDashboard() {
           </div>
           <div className="grid grid-cols-3 gap-2">
             {[
-              { label: "Roma · Ago",   color: "#1A3A5C", accent: "#2D6A9F" },
-              { label: "Tóquio · Nov", color: "#1C3B2A", accent: "#2D7A4F" },
-              { label: "Lisboa · Fev", color: "#3B1C35", accent: "#7A2D6A" },
+              {
+                label: "Roma · Ago",
+                gradientClass: "bg-gradient-to-br from-slate-900 via-blue-950 to-blue-700",
+                widthClass: "w-[75%]",
+              },
+              {
+                label: "Tóquio · Nov",
+                gradientClass: "bg-gradient-to-br from-slate-900 via-emerald-950 to-emerald-700",
+                widthClass: "w-[40%]",
+              },
+              {
+                label: "Lisboa · Fev",
+                gradientClass: "bg-gradient-to-br from-slate-900 via-violet-950 to-violet-700",
+                widthClass: "w-[20%]",
+              },
             ].map((c, i) => (
               <div key={i} className="rounded-lg overflow-hidden border border-white/6">
-                <div className="h-12" style={{ background: `linear-gradient(135deg, ${c.color}, ${c.accent})` }} />
-                <div className="p-1.5" style={{ background: "#0D1525" }}>
+                <div className={`h-12 ${c.gradientClass}`} />
+                <div className="p-1.5 bg-slate-950">
                   <div className="text-[7px] font-semibold text-slate-300">{c.label}</div>
-                  <div className="mt-1 h-1 rounded-full bg-blue-500/40" style={{ width: `${[75, 40, 20][i]}%` }} />
+                  <div className={`mt-1 h-1 rounded-full bg-blue-500/40 ${c.widthClass}`} />
                 </div>
               </div>
             ))}
           </div>
           <div className="flex gap-1.5">
             {["Itinerário", "Orçamento", "Malas", "Mapa"].map((label, i) => (
-              <div key={i} className="flex-1 text-[7px] text-center py-1 rounded border border-white/5 text-slate-600" style={{ background: "rgba(255,255,255,0.02)" }}>{label}</div>
+              <div key={i} className="flex-1 text-[7px] text-center py-1 rounded border border-white/5 text-slate-600 bg-white/[0.02]">{label}</div>
             ))}
           </div>
         </div>
@@ -521,23 +569,29 @@ function HeroMockDashboard() {
 
 function HeroMockItinerary() {
   return (
-    <div className="rounded-xl border border-white/8 overflow-hidden" style={{ background: "#0D1525" }}>
-      <div className="px-3 py-2 border-b border-white/6 flex items-center gap-2" style={{ background: "#080E1A" }}>
-        <Map className="h-3 w-3 text-blue-400" />
+      <div className="rounded-xl border border-white/8 overflow-hidden bg-slate-950">
+      <div className="px-3 py-2 border-b border-white/6 flex items-center gap-2 bg-slate-900">
+        <Map className="h-3 w-3 text-blue-400" aria-hidden="true" />
         <span className="text-[9px] font-bold text-slate-400">Itinerário · Dia 3 — Roma</span>
       </div>
       <div className="p-3 space-y-1.5">
+        {/* Alerta realista de usuário */}
+        <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-amber-500/10 border border-amber-500/20">
+          <AlertTriangle className="h-2.5 w-2.5 text-amber-400 shrink-0" aria-hidden="true" />
+          <span className="text-[8px] text-amber-300 font-semibold">Comprar ingresso Coliseu antecipado!</span>
+        </div>
         {[
-          { time: "09:00", label: "Coliseu",          color: "#3B82F6", emoji: "🏛️" },
-          { time: "12:30", label: "Trattoria Roma",   color: "#F59E0B", emoji: "🍝" },
-          { time: "15:00", label: "Fontana di Trevi", color: "#06B6D4", emoji: "💧" },
-          { time: "19:00", label: "Hotel Piazza",     color: "#8B5CF6", emoji: "🏨" },
+          { time: "09:00", label: "Coliseu",          accentClass: "bg-blue-500", emoji: "🏛️", fav: true  },
+          { time: "12:30", label: "Trattoria Roma",   accentClass: "bg-amber-500", emoji: "🍝", fav: false },
+          { time: "15:00", label: "Fontana di Trevi", accentClass: "bg-sky-500", emoji: "💧", fav: false },
+          { time: "19:00", label: "Hotel Piazza",     accentClass: "bg-violet-500", emoji: "🏨", fav: false },
         ].map((a, i) => (
-          <div key={i} className="flex items-center gap-2 py-1.5 rounded-lg px-2" style={{ background: "rgba(255,255,255,0.03)" }}>
+          <div key={i} className="flex items-center gap-2 py-1.5 rounded-lg px-2 bg-white/[0.03]">
             <span className="text-[9px] text-slate-600 w-8 shrink-0">{a.time}</span>
-            <div className="w-0.5 h-4 rounded-full shrink-0" style={{ background: a.color }} />
-            <span className="text-[8px]">{a.emoji}</span>
-            <span className="text-[9px] font-medium text-slate-300">{a.label}</span>
+            <div className={`w-0.5 h-4 rounded-full shrink-0 ${a.accentClass}`} aria-hidden="true" />
+            <span className="text-[8px]" aria-hidden="true">{a.emoji}</span>
+            <span className="text-[9px] font-medium text-slate-300 flex-1">{a.label}</span>
+            {a.fav && <span className="text-amber-400 text-[10px]" title="Favorito">★</span>}
           </div>
         ))}
       </div>
@@ -547,9 +601,12 @@ function HeroMockItinerary() {
 
 function HeroMockPacking() {
   return (
-    <div className="rounded-xl border border-white/8 overflow-hidden" style={{ background: "#0D1525" }}>
-      <div className="px-3 py-2 border-b border-white/6 flex items-center justify-between" style={{ background: "#080E1A" }}>
-        <div className="flex items-center gap-2"><Package className="h-3 w-3 text-violet-400" /><span className="text-[9px] font-bold text-slate-400">Lista de malas</span></div>
+    <div className="rounded-xl border border-white/8 overflow-hidden bg-slate-950">
+      <div className="px-3 py-2 border-b border-white/6 flex items-center justify-between bg-slate-900">
+        <div className="flex items-center gap-2">
+          <Package className="h-3 w-3 text-violet-400" aria-hidden="true" />
+          <span className="text-[9px] font-bold text-slate-400">Lista de malas</span>
+        </div>
         <span className="text-[8px] text-violet-400 font-semibold">2/4 itens</span>
       </div>
       <div className="p-3 space-y-1.5">
@@ -559,8 +616,10 @@ function HeroMockPacking() {
           { name: "Adaptador tomada", done: false },
           { name: "Roteador portátil",done: false },
         ].map((item, i) => (
-          <div key={i} className="flex items-center gap-2 py-1 px-1.5 rounded-md" style={{ background: item.done ? "rgba(16,185,129,0.06)" : "rgba(255,255,255,0.02)" }}>
-            <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${item.done ? "bg-emerald-500 border-emerald-500" : "border-slate-700"}`}>
+          <div
+            key={i}
+            className={`flex items-center gap-2 py-1 px-1.5 rounded-md ${item.done ? "bg-emerald-500/10" : "bg-white/5"}`}>
+            <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 ${item.done ? "bg-emerald-500 border-emerald-500" : "border-slate-700"}`} aria-hidden="true">
               {item.done && <Check className="h-2 w-2 text-white" />}
             </div>
             <span className={`text-[9px] ${item.done ? "text-slate-500 line-through" : "text-slate-300"}`}>{item.name}</span>
@@ -571,32 +630,52 @@ function HeroMockPacking() {
   );
 }
 
+// ── Pilar 4: Itinerário com realismo e imperfeições humanas ───────
+
 function ItineraryMockup() {
   return (
-    <div className="rounded-2xl border border-white/8 overflow-hidden" style={{ background: "#0D1525", boxShadow: "0 20px 60px rgba(0,0,0,0.5)" }}>
-      <div className="p-4 border-b border-white/5 flex items-center justify-between" style={{ background: "#080E1A" }}>
-        <div className="flex items-center gap-2"><Map className="h-3.5 w-3.5 text-blue-400" /><span className="text-xs font-bold text-slate-300">Dia 3 — Roma, Itália</span></div>
+    <div className="rounded-2xl border border-white/8 overflow-hidden bg-slate-950 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+      <div className="p-4 border-b border-white/5 flex items-center justify-between bg-slate-900">
+        <div className="flex items-center gap-2">
+          <Map className="h-3.5 w-3.5 text-blue-400" aria-hidden="true" />
+          <span className="text-xs font-bold text-slate-300">Dia 3 — Roma, Itália</span>
+        </div>
         <div className="flex gap-2 text-[9px]">
           {["Manhã", "Tarde", "Noite"].map((p, i) => (
             <span key={p} className={`px-2 py-0.5 rounded-full font-semibold ${i === 0 ? "bg-blue-600/30 text-blue-300" : "text-slate-600"}`}>{p}</span>
           ))}
         </div>
       </div>
+
       <div className="p-4 space-y-2">
+        {/* Alerta de ingresso — toque humano realista */}
+        <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20">
+          <AlertTriangle className="h-3.5 w-3.5 text-amber-400 shrink-0" aria-hidden="true" />
+          <p className="text-[10px] text-amber-300 font-semibold">⚠️ Comprar ingresso do Coliseu antecipado!</p>
+          <span className="ml-auto text-[9px] text-amber-500/70 shrink-0">lembrete</span>
+        </div>
+
         {[
-          { time: "09:00", label: "Coliseu",             sub: "Via Sacra s/n",     cost: "€ 18",   emoji: "🏛️", color: "#3B82F6" },
-          { time: "11:30", label: "Foro Romano",          sub: "A 200m do Coliseu", cost: "incluso", emoji: "🏛️", color: "#3B82F6" },
-          { time: "13:00", label: "Trattoria da Luigi",   sub: "Piazza Navona",     cost: "€ 24",   emoji: "🍝", color: "#F59E0B" },
-          { time: "15:30", label: "Fontana di Trevi",     sub: "Piazza di Trevi",   cost: "grátis", emoji: "💧", color: "#06B6D4" },
-          { time: "19:00", label: "Hotel Piazza Venezia", sub: "Check-in",          cost: "€ 140",  emoji: "🏨", color: "#8B5CF6" },
+          { time: "09:00", label: "Coliseu",             sub: "Via Sacra s/n",     cost: "€ 18",   emoji: "🏛️", accentClass: "bg-blue-500", fav: true,  note: null },
+          { time: "11:30", label: "Foro Romano",          sub: "A 200m do Coliseu", cost: "incluso", emoji: "🏛️", accentClass: "bg-blue-500", fav: false, note: null },
+          { time: "13:00", label: "Trattoria da Luigi",   sub: "Piazza Navona",     cost: "€ 24",   emoji: "🍝", accentClass: "bg-amber-500", fav: false, note: "reservei mesa p/ 13h" },
+          { time: "15:30", label: "Fontana di Trevi",     sub: "Piazza di Trevi",   cost: "grátis", emoji: "💧", accentClass: "bg-sky-500", fav: false, note: null },
+          { time: "19:00", label: "Hotel Piazza Venezia", sub: "Check-in",          cost: "€ 140",  emoji: "🏨", accentClass: "bg-violet-500", fav: false, note: null },
         ].map((a, i) => (
-          <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+          <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.03] border border-white/5">
             <div className="w-12 text-[9px] text-slate-600 shrink-0">{a.time}</div>
-            <div className="w-0.5 h-8 rounded-full shrink-0" style={{ background: a.color }} />
-            <div className="text-sm shrink-0">{a.emoji}</div>
+            <div className={`w-0.5 h-8 rounded-full shrink-0 ${a.accentClass}`} aria-hidden="true" />
+            <div className="text-sm shrink-0" aria-hidden="true">{a.emoji}</div>
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-semibold text-slate-200">{a.label}</p>
-              <p className="text-[9px] text-slate-600 truncate">{a.sub}</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-[11px] font-semibold text-slate-200">{a.label}</p>
+                {a.fav && <span className="text-amber-400 text-[11px] leading-none" title="Favorito" aria-label="Favorito">★</span>}
+              </div>
+              <p className="text-[9px] text-slate-600 truncate">
+                {a.note
+                  ? <span className="text-blue-400/80 italic">{a.note}</span>
+                  : a.sub}
+              </p>
             </div>
             <div className="text-[9px] text-emerald-400 font-semibold shrink-0">{a.cost}</div>
           </div>

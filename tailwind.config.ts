@@ -169,6 +169,21 @@ const config: Config = {
         "mesh-dark": "radial-gradient(at 10% 10%, hsla(220,80%,50%,0.18) 0px, transparent 50%), radial-gradient(at 90% 90%, hsla(199,80%,40%,0.15) 0px, transparent 50%)",
         // Backward compat
         "mesh-coral": "radial-gradient(at 20% 20%, hsla(220,80%,70%,0.25) 0px, transparent 50%), radial-gradient(at 80% 0%, hsla(199,80%,60%,0.18) 0px, transparent 50%)",
+        // ── Landing page semantic utilities ──────────────────────────
+        "vibe-dark":       "linear-gradient(160deg, #070D14 0%, #0A1520 50%, #070E1A 100%)",
+        "grid-subtle":     "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)",
+        "glow-blue":       "radial-gradient(circle, rgba(26,95,204,0.12) 0%, transparent 65%)",
+        "glow-teal":       "radial-gradient(circle, rgba(13,123,163,0.09) 0%, transparent 65%)",
+        "cta-blue":        "linear-gradient(135deg, #1A5FCC 0%, #2570E8 100%)",
+        "cta-violet":      "linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%)",
+        "hero-text":       "linear-gradient(90deg, #5585FA, #2570E8, #38BDF8)",
+        "stats-text":      "linear-gradient(90deg, #5585FA, #38BDF8)",
+        "logo-text":       "linear-gradient(90deg, #ffffff, #85ADFD)",
+        "step-card":       "linear-gradient(135deg, rgba(26,95,204,0.20), rgba(37,112,232,0.10))",
+        "cta-section":     "linear-gradient(135deg, rgba(26,95,204,0.15), rgba(13,123,163,0.08))",
+      },
+      backgroundSize: {
+        "grid-48": "48px 48px",
       },
     },
   },
