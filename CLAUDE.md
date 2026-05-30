@@ -117,6 +117,7 @@ Registered routes:
 - `/experiences` — GET, POST
 - `/newsletter` — POST
 - `/public-stats` — GET
+- `/referral` — GET
 - `/register` — POST
 - `/share/[token]` — GET
 - `/tips/community` — GET
