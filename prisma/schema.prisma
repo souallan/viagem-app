@@ -14,6 +14,10 @@ model User {
   emailVerified DateTime?
   password      String?
   image         String?
+  // Preferences
+  country       String?
+  currency      String?   @default("BRL")
+  bio           String?
   // Role values: USER | ADMIN
   role                 String    @default("USER")
   // Plan values: FREE | PREMIUM

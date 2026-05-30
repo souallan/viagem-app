@@ -20,7 +20,7 @@ export const SITE_CONFIG = {
   },
 
   copyright: {
-    year:  2025,
+    year:  2026,
     owner: "RoteiroApp",
     text:  "Todos os direitos reservados.",
   },

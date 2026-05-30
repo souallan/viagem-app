@@ -5,7 +5,7 @@ import { signOut } from "next-auth/react";
 import {
   User, Mail, Lock, Camera, Save, LogOut,
   Plane, BookOpen, Route, CheckCircle2, AlertCircle, Pencil,
-  Download, Trash2, ShieldAlert,
+  Download, Trash2, ShieldAlert, Globe, DollarSign, FileText,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,9 @@ interface UserProfile {
   name: string | null;
   email: string;
   image: string | null;
+  country: string | null;
+  currency: string | null;
+  bio: string | null;
   createdAt: string;
   stats: {
     trips: number;
@@ -25,6 +28,27 @@ interface UserProfile {
     routes: number;
   };
 }
+
+const CURRENCIES = [
+  { code: "BRL", label: "R$ — Real Brasileiro" },
+  { code: "USD", label: "$ — Dólar Americano" },
+  { code: "EUR", label: "€ — Euro" },
+  { code: "GBP", label: "£ — Libra Esterlina" },
+  { code: "ARS", label: "$ — Peso Argentino" },
+  { code: "CLP", label: "$ — Peso Chileno" },
+  { code: "COP", label: "$ — Peso Colombiano" },
+  { code: "MXN", label: "$ — Peso Mexicano" },
+  { code: "JPY", label: "¥ — Iene Japonês" },
+  { code: "CNY", label: "¥ — Yuan Chinês" },
+  { code: "AUD", label: "A$ — Dólar Australiano" },
+  { code: "CAD", label: "C$ — Dólar Canadense" },
+];
+
+const COUNTRIES = [
+  "Brasil", "Argentina", "Chile", "Colômbia", "México", "Peru", "Uruguai", "Paraguai",
+  "Portugal", "Espanha", "França", "Alemanha", "Itália", "Reino Unido", "Países Baixos",
+  "Estados Unidos", "Canadá", "Austrália", "Japão", "China", "Outro",
+];
 
 function Avatar({ name, image, size = "lg" }: { name: string | null; image: string | null; size?: "sm" | "lg" }) {
   const initials = (name ?? "U").split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
@@ -53,7 +77,7 @@ export default function ProfilePage() {
 
   // Profile edit state
   const [editingProfile, setEditingProfile] = useState(false);
-  const [profileForm, setProfileForm] = useState({ name: "", image: "" });
+  const [profileForm, setProfileForm] = useState({ name: "", image: "", country: "", currency: "BRL", bio: "" });
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileMsg, setProfileMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
 
@@ -73,7 +97,7 @@ export default function ProfilePage() {
     if (res.ok) {
       const data = await res.json();
       setUser(data);
-      setProfileForm({ name: data.name ?? "", image: data.image ?? "" });
+      setProfileForm({ name: data.name ?? "", image: data.image ?? "", country: data.country ?? "", currency: data.currency ?? "BRL", bio: data.bio ?? "" });
     }
     setLoading(false);
   }
@@ -87,12 +111,12 @@ export default function ProfilePage() {
     const res = await fetch("/api/user", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: profileForm.name, image: profileForm.image }),
+      body: JSON.stringify({ name: profileForm.name, image: profileForm.image, country: profileForm.country, currency: profileForm.currency, bio: profileForm.bio }),
     });
     setProfileSaving(false);
     if (res.ok) {
       const updated = await res.json();
-      setUser((prev) => prev ? { ...prev, name: updated.name, image: updated.image } : prev);
+      setUser((prev) => prev ? { ...prev, name: updated.name, image: updated.image, country: updated.country, currency: updated.currency, bio: updated.bio } : prev);
       setEditingProfile(false);
       setProfileMsg({ type: "ok", text: "Perfil atualizado com sucesso." });
     } else {
@@ -203,7 +227,20 @@ export default function ProfilePage() {
               <Mail className="h-3.5 w-3.5 shrink-0" />
               {user.email}
             </p>
-            <p className="text-xs text-gray-400 mt-1.5">Membro desde {joined}</p>
+            {user.bio && <p className="text-xs text-gray-500 mt-1 leading-relaxed">{user.bio}</p>}
+            <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+              {user.country && (
+                <span className="flex items-center gap-1 text-xs text-gray-400">
+                  <Globe className="h-3 w-3" />{user.country}
+                </span>
+              )}
+              {user.currency && (
+                <span className="flex items-center gap-1 text-xs text-gray-400">
+                  <DollarSign className="h-3 w-3" />{user.currency}
+                </span>
+              )}
+              <span className="text-xs text-gray-400">Membro desde {joined}</span>
+            </div>
           </div>
           <button
             onClick={() => { setEditingProfile(true); setProfileMsg(null); }}
@@ -258,6 +295,43 @@ export default function ProfilePage() {
                   <span className="text-xs text-gray-400">Pré-visualização</span>
                 </div>
               )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="flex items-center gap-1.5"><Globe className="h-3.5 w-3.5 text-gray-400" />País de origem</Label>
+                <select
+                  value={profileForm.country}
+                  onChange={(e) => setProfileForm((p) => ({ ...p, country: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-200"
+                >
+                  <option value="">Selecionar...</option>
+                  {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="flex items-center gap-1.5"><DollarSign className="h-3.5 w-3.5 text-gray-400" />Moeda preferida</Label>
+                <select
+                  value={profileForm.currency}
+                  onChange={(e) => setProfileForm((p) => ({ ...p, currency: e.target.value }))}
+                  className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-200"
+                >
+                  {CURRENCIES.map((c) => <option key={c.code} value={c.code}>{c.label}</option>)}
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="flex items-center gap-1.5"><FileText className="h-3.5 w-3.5 text-gray-400" />Bio <span className="text-gray-400 font-normal">(opcional · até 300 caracteres)</span></Label>
+              <textarea
+                value={profileForm.bio}
+                onChange={(e) => setProfileForm((p) => ({ ...p, bio: e.target.value }))}
+                placeholder="Conte um pouco sobre você como viajante..."
+                maxLength={300}
+                rows={3}
+                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-200 resize-none"
+              />
+              <p className="text-xs text-gray-400 text-right">{profileForm.bio.length}/300</p>
             </div>
 
             {profileMsg && (

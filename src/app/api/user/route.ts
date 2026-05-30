@@ -10,7 +10,7 @@ export async function GET() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, name: true, email: true, image: true, createdAt: true },
+    select: { id: true, name: true, email: true, image: true, createdAt: true, country: true, currency: true, bio: true },
   });
   if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
@@ -40,7 +40,7 @@ export async function PUT(req: NextRequest) {
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { name, image, currentPassword, newPassword } = body;
+  const { name, image, currentPassword, newPassword, country, currency, bio } = body;
 
   const user = await prisma.user.findUnique({ where: { id: session.user.id } });
   if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -62,6 +62,26 @@ export async function PUT(req: NextRequest) {
     data.image = image || null;
   }
 
+  if (country !== undefined) {
+    data.country = country || null;
+  }
+
+  if (currency !== undefined) {
+    const VALID_CURRENCIES = ["BRL", "USD", "EUR", "GBP", "ARS", "CLP", "COP", "MXN", "PYG", "UYU", "JPY", "CNY", "AUD", "CAD"];
+    if (currency && !VALID_CURRENCIES.includes(currency)) {
+      return NextResponse.json({ error: "Moeda inválida." }, { status: 400 });
+    }
+    data.currency = currency || "BRL";
+  }
+
+  if (bio !== undefined) {
+    const trimmedBio = String(bio ?? "").trim();
+    if (trimmedBio.length > 300) {
+      return NextResponse.json({ error: "Bio deve ter no máximo 300 caracteres." }, { status: 400 });
+    }
+    data.bio = trimmedBio || null;
+  }
+
   if (newPassword) {
     if (!currentPassword) return NextResponse.json({ error: "Informe a senha atual." }, { status: 400 });
     if (!user.password) return NextResponse.json({ error: "Conta sem senha local." }, { status: 400 });
@@ -74,7 +94,7 @@ export async function PUT(req: NextRequest) {
   const updated = await prisma.user.update({
     where: { id: session.user.id },
     data,
-    select: { id: true, name: true, email: true, image: true },
+    select: { id: true, name: true, email: true, image: true, country: true, currency: true, bio: true },
   });
 
   return NextResponse.json(updated);
