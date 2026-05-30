@@ -115,6 +115,7 @@ Registered routes:
 - `/exchange-rate` — GET
 - `/experiences/[id]` — DELETE, GET, PATCH, PUT
 - `/experiences` — GET, POST
+- `/health` — GET
 - `/newsletter` — POST
 - `/public-stats` — GET
 - `/referral` — GET
