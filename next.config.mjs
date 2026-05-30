@@ -34,13 +34,17 @@ const nextConfig = {
   },
 };
 
-// Only wrap with Sentry if DSN is configured
+// Only wrap with Sentry if DSN + auth token are both set (auth token needed for source map upload)
+// Without auth token, skip withSentryConfig to avoid OOM during build —
+// runtime monitoring still works via NEXT_PUBLIC_SENTRY_DSN in sentry.client.config.ts
 const hasSentry = !!(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN);
+const hasSentryAuth = !!process.env.SENTRY_AUTH_TOKEN;
 
-export default hasSentry
+export default hasSentry && hasSentryAuth
   ? withSentryConfig(nextConfig, {
       silent: true,
       hideSourceMaps: true,
       disableLogger: true,
+      sourcemaps: { disable: true },
     })
   : nextConfig;
