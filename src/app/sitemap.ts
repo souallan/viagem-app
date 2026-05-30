@@ -7,6 +7,10 @@ const BLOG_SLUGS = [
   "passaporte-brasileiro-destinos-sem-visto",
   "seguro-viagem-vale-a-pena",
   "economizar-no-cambio",
+  "lista-de-malas-viagem-internacional",
+  "melhores-destinos-para-brasileiros-2025",
+  "como-viajar-mais-barato",
+  "roteiro-europa-15-dias",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

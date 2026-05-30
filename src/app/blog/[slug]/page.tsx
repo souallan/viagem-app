@@ -132,6 +132,212 @@ Alguns cartões de crédito premium (Nubank, C6, Santander Free) isentam o IOF (
 
 **Regra de ouro**: nunca chegue ao destino sem alguma moeda local para os primeiros momentos.`,
   },
+  {
+    slug: "lista-de-malas-viagem-internacional",
+    title: "Lista de malas completa para viagem internacional",
+    excerpt: "O que levar na mala para não esquecer nada essencial. Lista de documentos, roupas, eletrônicos e produtos de higiene para viagem internacional.",
+    date: "2025-06-12",
+    readTime: "6 min",
+    category: "Planejamento",
+    emoji: "🧳",
+    content: `## Documentos essenciais
+
+- Passaporte (validade mínima de 6 meses após retorno)
+- Visto (se necessário)
+- Seguro viagem impresso ou no celular
+- Passagens de ida e volta
+- Vouchers de hotel
+- Carteira de motorista internacional (se for alugar carro)
+- Cópias de todos os documentos (e-mail ou nuvem)
+
+## Dinheiro e cartões
+
+- Cartão internacional (Wise ou Nomad)
+- Alguma moeda local para chegada
+- Cartão de crédito emergência
+
+## Eletrônicos
+
+- Carregador do celular
+- Adaptador de tomada universal
+- Power bank (não despachar)
+- Fones de ouvido
+
+## Roupas — regra dos 3
+
+Leve 3 partes de baixo, 5 camisetas, 1 agasalho e 1 jaqueta impermeável. Para cada semana adicional, adicione apenas 2 peças — lave as outras.
+
+## Higiene e saúde
+
+- Protetor solar
+- Remédios pessoais + analgésico + antidiarreico
+- Repelente (destinos tropicais)
+- Seguro saúde com contato de emergência salvo no celular
+
+**Dica RoteiroApp**: use a lista de malas inteligente do app — ela sugere itens automaticamente pelo destino e clima da sua viagem.`,
+  },
+  {
+    slug: "melhores-destinos-para-brasileiros-2025",
+    title: "Melhores destinos internacionais para brasileiros em 2025",
+    excerpt: "De Lisboa a Bangkok: os destinos mais procurados por brasileiros em 2025, com custo médio, melhor época para visitar e dicas de planejamento.",
+    date: "2025-06-19",
+    readTime: "9 min",
+    category: "Destinos",
+    emoji: "🌍",
+    content: `Brasileiros estão viajando mais — e o leque de destinos favoritos cresceu. Aqui estão os mais procurados em 2025.
+
+## 🇵🇹 Lisboa e Porto, Portugal
+
+O destino favorito dos brasileiros. Língua comum, gastronomia familiar e custo acessível para a Europa. Melhor época: abril a junho e setembro a outubro.
+
+Custo médio: R$ 8.000 – R$ 12.000 por pessoa (10 dias, voo incluso).
+
+## 🇦🇷 Buenos Aires, Argentina
+
+Destino clássico e acessível. Câmbio favorável, gastronomia excelente e cultura rica. Melhor época: setembro a novembro.
+
+Custo médio: R$ 4.000 – R$ 7.000 por pessoa (7 dias).
+
+## 🇹🇭 Tailândia
+
+O destino asiático queridinho dos brasileiros. Praias paradisíacas, comida barata e hostels de qualidade. Melhor época: novembro a fevereiro.
+
+Custo médio: R$ 10.000 – R$ 16.000 por pessoa (14 dias, voo incluso).
+
+## 🇮🇹 Itália
+
+Roma, Florença e Veneza formam o roteiro clássico. Exige planejamento com antecedência para fugir das filas nos museus. Melhor época: maio e setembro.
+
+Custo médio: R$ 14.000 – R$ 22.000 por pessoa (12 dias).
+
+## 🇺🇸 Estados Unidos
+
+Florida, Nova York e California lideram. O visto ESTA é simples e rápido. Melhor época: março a maio e setembro a novembro.
+
+Custo médio: R$ 15.000 – R$ 25.000 por pessoa (12 dias, voo incluso).
+
+## 🇯🇵 Japão
+
+Explosão de popularidade em 2025. Seguro, organizado e com gastronomia incrível. Melhor época: março-abril (cerejeiras) ou outubro-novembro (outono).
+
+Custo médio: R$ 14.000 – R$ 20.000 por pessoa (12 dias).
+
+**Dica**: independente do destino, planeje com 3–6 meses de antecedência para conseguir voos mais baratos e acomodações nas datas certas.`,
+  },
+  {
+    slug: "como-viajar-mais-barato",
+    title: "Como viajar mais barato: 12 dicas que realmente funcionam",
+    excerpt: "Estratégias práticas para reduzir o custo das suas viagens internacionais sem abrir mão do conforto. Voos, hospedagem, câmbio e muito mais.",
+    date: "2025-06-26",
+    readTime: "7 min",
+    category: "Finanças",
+    emoji: "💰",
+    content: `Viajar mais barato não significa viajar mal. Com as estratégias certas, você viaja mais com o mesmo orçamento.
+
+## 1. Seja flexível com as datas
+
+Voar na terça ou quarta custa em média 20–30% menos que no final de semana. Use o calendário de preços do Google Flights ou Skyscanner para ver o mapa de preços por data.
+
+## 2. Reserve com antecedência
+
+O ponto ideal para passagens internacionais é 2–4 meses antes. Configure alertas no Google Flights para seu destino.
+
+## 3. Evite alta temporada
+
+Viajar na baixa temporada pode reduzir o custo total em 30–50%. Julho e dezembro/janeiro são os períodos mais caros para a maioria dos destinos.
+
+## 4. Hospedagem fora do centro
+
+Hotéis e airbnbs a 15–20 minutos do centro custam metade do preço. Com transporte público, a diferença de tempo é mínima.
+
+## 5. Use cartões sem IOF
+
+O IOF de 6,38% sobre compras no exterior é um custo invisível enorme. Cartões como Wise, Nomad ou Nubank internacional eliminam esse custo.
+
+## 6. Coma onde os locais comem
+
+Restaurantes a 2 quarteirões dos pontos turísticos custam metade e são frequentemente melhores.
+
+## 7. Viaje só com bagagem de mão
+
+Despachar bagagem custa R$ 200–400 por trecho em companhias low-cost. Aprender a viajar só com bagagem de mão pode economizar R$ 800+ em uma viagem.
+
+## 8. City Pass e museus gratuitos
+
+Muitas cidades oferecem passes de museu e transporte com desconto. Em Paris, os museus são gratuitos no primeiro domingo do mês.
+
+## 9. Compare sempre 3 opções
+
+Para cada item (voo, hotel, seguro), compare pelo menos 3 opções. A diferença entre a primeira e a melhor oferta pode ser de 30%.
+
+## 10. Controle o orçamento em tempo real
+
+Use o RoteiroApp para registrar cada gasto durante a viagem. Pequenos gastos não planejados somados são os maiores vilões do orçamento.`,
+  },
+  {
+    slug: "roteiro-europa-15-dias",
+    title: "Roteiro pela Europa em 15 dias: guia completo para brasileiros",
+    excerpt: "O roteiro ideal pela Europa em 15 dias passando por Portugal, Espanha, França e Itália. Com dicas de transporte, hospedagem e orçamento.",
+    date: "2025-07-03",
+    readTime: "10 min",
+    category: "Roteiros",
+    emoji: "🗼",
+    content: `Quinze dias na Europa é o tempo mínimo para ver o essencial sem se sentir atropelado. Este roteiro cobre 4 países com equilíbrio entre turismo e descanso.
+
+## Visão geral
+
+- Dias 1–3: Lisboa, Portugal
+- Dias 4–5: Madri, Espanha (trem AVE 2h30)
+- Dias 6–8: Barcelona, Espanha
+- Dias 9–11: Paris, França (trem TGV 6h30)
+- Dias 12–15: Roma, Itália (voo 2h)
+
+## Lisboa (Dias 1–3)
+
+- Dia 1: Alfama, Sé Catedral, Miradouro das Portas do Sol
+- Dia 2: Belém (Torre, Pastéis, Mosteiro dos Jerônimos)
+- Dia 3: Sintra (excursão de dia inteiro — reservar com antecedência)
+
+Hospedagem: Bairro Alto ou Chiado. Orçamento: €80–140/noite.
+
+## Madri (Dias 4–5)
+
+- Museu do Prado (reservar ingresso online)
+- Parque del Retiro e Gran Vía
+
+## Barcelona (Dias 6–8)
+
+- Sagrada Família (reservar com 1–2 meses de antecedência)
+- Parque Güell, Las Ramblas, Bairro Gótico
+- Dia de praia na Barceloneta
+
+## Paris (Dias 9–11)
+
+- Torre Eiffel (reservar online — filas enormes presencialmente)
+- Museu do Louvre (reservar online)
+- Montmartre, Sacré-Cœur, Arc de Triomphe
+
+## Roma (Dias 12–15)
+
+- Coliseu e Foro Romano (reservar com antecedência)
+- Vaticano — Museus e Basílica (reservar semanas antes)
+- Fontana di Trevi, Pantheon, Campo de' Fiori
+
+## Orçamento estimado por pessoa
+
+- Passagens (Brasil–Lisboa, Roma–Brasil): R$ 4.000 – R$ 7.000
+- Transporte interno (trens + 1 voo): €250 – €400
+- Hospedagem (14 noites, hotel 3★): €1.200 – €2.000
+- Alimentação: €40–70/dia
+- Atrações: €200 – €350
+- **Total estimado: R$ 18.000 – R$ 28.000**
+
+## Documentos necessários
+
+Passaporte válido por 6 meses após retorno. Nenhum visto necessário para brasileiros. Seguro viagem com cobertura mínima de €30.000 (obrigatório para Schengen).
+
+**Dica**: organize todo o roteiro dia a dia no RoteiroApp — incluindo reservas de atrações, transportes entre cidades e controle de gastos em euros.`,
+  },
 ];
 
 type Props = { params: Promise<{ slug: string }> };
