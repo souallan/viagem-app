@@ -125,19 +125,19 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
       {isAdmin && (
         <div className="relative z-10 px-3 pb-2">
           <Link
-            href="/admin"
+            href="/backoffice"
             className={cn(
               "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
-              pathname.startsWith("/admin")
+              pathname.startsWith("/backoffice")
                 ? "text-white bg-red-500/10"
                 : "text-slate-600 hover:text-red-300 hover:bg-red-500/8"
             )}
           >
-            <div className={cn("w-6 h-6 rounded-md flex items-center justify-center shrink-0", pathname.startsWith("/admin") ? "bg-red-600/30" : "bg-red-900/20")}>
-              <Settings className={cn("h-3.5 w-3.5", pathname.startsWith("/admin") ? "text-red-400" : "text-red-800")} />
+            <div className={cn("w-6 h-6 rounded-md flex items-center justify-center shrink-0", pathname.startsWith("/backoffice") ? "bg-red-600/30" : "bg-red-900/20")}>
+              <Settings className={cn("h-3.5 w-3.5", pathname.startsWith("/backoffice") ? "text-red-400" : "text-red-800")} />
             </div>
             <span>{t.sidebar.adminPanel}</span>
-            {!pathname.startsWith("/admin") && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-red-700/60" />}
+            {!pathname.startsWith("/backoffice") && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-red-700/60" />}
           </Link>
         </div>
       )}

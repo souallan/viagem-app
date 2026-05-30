@@ -4,17 +4,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Users, FileText, BarChart3, Shield,
-  ArrowLeft, Plane, Settings, Mail, X,
+  ArrowLeft, Plane, Settings, Mail, X, ScrollText, GitBranch,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/admin/users", label: "Usuários", icon: Users },
-  { href: "/admin/content", label: "Conteúdo", icon: FileText },
-  { href: "/admin/stats", label: "Estatísticas", icon: BarChart3 },
-  { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
-  { href: "/admin/settings", label: "Configurações", icon: Settings },
+  { href: "/backoffice", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/backoffice/users", label: "Usuários", icon: Users },
+  { href: "/backoffice/audit", label: "Auditoria", icon: ScrollText },
+  { href: "/backoffice/referrals", label: "Referrals", icon: GitBranch },
+  { href: "/backoffice/content", label: "Conteúdo", icon: FileText },
+  { href: "/backoffice/stats", label: "Estatísticas", icon: BarChart3 },
+  { href: "/backoffice/newsletter", label: "Newsletter", icon: Mail },
+  { href: "/backoffice/settings", label: "Configurações", icon: Settings },
 ];
 
 export function AdminSidebar({ onClose }: { onClose?: () => void } = {}) {

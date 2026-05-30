@@ -44,7 +44,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           >
             <Menu className="h-5 w-5" />
           </button>
-          <Link href="/admin" className="flex items-center gap-2">
+          <Link href="/backoffice" className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-md flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg, #DC2626, #EF4444)" }}>
               <Shield className="h-3.5 w-3.5 text-white" />
             </div>

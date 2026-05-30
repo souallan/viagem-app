@@ -21,6 +21,9 @@ model User {
   // Referral
   referralCode  String?   @unique
   referredBy    String?
+  // Moderation
+  bannedAt      DateTime?
+  banReason     String?
   // Role values: USER | ADMIN
   role                 String    @default("USER")
   // Plan values: FREE | PREMIUM

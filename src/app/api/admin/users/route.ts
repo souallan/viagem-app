@@ -20,8 +20,12 @@ export async function GET() {
       name: true,
       email: true,
       role: true,
+      plan: true,
       image: true,
       createdAt: true,
+      bannedAt: true,
+      banReason: true,
+      referralCode: true,
       _count: { select: { trips: true, experiences: true, communityRoutes: true } },
     },
   });
@@ -33,17 +37,54 @@ export async function PATCH(req: NextRequest) {
   const { session, isAdmin } = await adminSession();
   if (!isAdmin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { id, role } = await req.json();
-  if (!id || !["USER", "ADMIN"].includes(role)) {
-    return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+  const body = await req.json();
+  const { id, role, action, banReason } = body;
+  if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
+
+  if (action === "BAN") {
+    const updated = await prisma.user.update({
+      where: { id },
+      data: { bannedAt: new Date(), banReason: banReason ?? "Violação dos termos de uso" },
+      select: { id: true, email: true, bannedAt: true },
+    });
+    await auditLog({
+      actorId: session!.user!.id!,
+      actorEmail: session!.user!.email ?? "",
+      action: "USER_BAN",
+      targetId: id,
+      targetType: "User",
+      detail: `Usuário banido: ${updated.email} — motivo: ${banReason ?? "não informado"}`,
+      ip: req.headers.get("x-forwarded-for") ?? undefined,
+    });
+    return NextResponse.json(updated);
   }
 
+  if (action === "UNBAN") {
+    const updated = await prisma.user.update({
+      where: { id },
+      data: { bannedAt: null, banReason: null },
+      select: { id: true, email: true, bannedAt: true },
+    });
+    await auditLog({
+      actorId: session!.user!.id!,
+      actorEmail: session!.user!.email ?? "",
+      action: "USER_UNBAN",
+      targetId: id,
+      targetType: "User",
+      detail: `Usuário desbanido: ${updated.email}`,
+      ip: req.headers.get("x-forwarded-for") ?? undefined,
+    });
+    return NextResponse.json(updated);
+  }
+
+  if (!role || !["USER", "ADMIN"].includes(role)) {
+    return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+  }
   const updated = await prisma.user.update({
     where: { id },
     data: { role },
     select: { id: true, email: true, role: true },
   });
-
   await auditLog({
     actorId: session!.user!.id!,
     actorEmail: session!.user!.email ?? "",
@@ -53,7 +94,6 @@ export async function PATCH(req: NextRequest) {
     detail: `Role alterado para ${role} em ${updated.email}`,
     ip: req.headers.get("x-forwarded-for") ?? undefined,
   });
-
   return NextResponse.json(updated);
 }
 
