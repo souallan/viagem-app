@@ -10,12 +10,12 @@ export const SITE_CONFIG = {
 
   admin: {
     name:  "Allan Souza",
-    email: "alandesouza.ac@gmail.com",
+    email: "contato@roteiroapp.com",
     phone: "+55 (84) 99999-0000", // ajuste conforme necessário
   },
 
   social: {
-    instagram: "https://instagram.com/RoteiroApp",
+    instagram: "https://instagram.com/roteiroapp",
     whatsapp:  "https://wa.me/5584999990000",
   },
 
