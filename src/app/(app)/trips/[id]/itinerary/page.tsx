@@ -7,7 +7,7 @@ import {
   Plus, Clock, MapPin, Trash2, Pencil,
   Utensils, Bus, Building2, CalendarDays, FileText, Zap,
   Sunrise, Sun, Moon, LayoutList, Grid3x3, ExternalLink, Compass,
-  Sparkles, Loader2, ChevronDown, ChevronUp,
+  Sparkles, Loader2, Wand2, CheckCircle2,
 } from "lucide-react";
 import HolidayAlerts from "@/components/trips/holiday-alerts";
 import { affiliates } from "@/lib/affiliates";
@@ -382,6 +382,280 @@ function AffiliateActivitiesBanner({ destinations }: { destinations: string[] })
   );
 }
 
+// ── Generator Dialog ─────────────────────────────────────────
+
+type RawSuggestion = {
+  title: string;
+  type: string;
+  startTime: string;
+  description: string;
+  cost: number | null;
+};
+
+function GeneratorDialog({
+  tripId,
+  destinations,
+  tripStartDate,
+  onClose,
+  onAdded,
+}: {
+  tripId: string;
+  destinations: string[];
+  tripStartDate: string | null;
+  onClose: () => void;
+  onAdded: () => void;
+}) {
+  const [suggestions, setSuggestions] = useState<RawSuggestion[]>([]);
+  const [fetchLoading, setFetchLoading] = useState(true);
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [date, setDate] = useState(tripStartDate ?? new Date().toISOString().slice(0, 10));
+  const [adding, setAdding] = useState(false);
+  const [activeCity, setActiveCity] = useState(destinations[0] ?? "");
+
+  async function fetchSuggestions(city: string) {
+    setFetchLoading(true);
+    setSuggestions([]);
+    setSelected(new Set());
+    const res = await fetch(`/api/trips/${tripId}/activities/suggest`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ city }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setSuggestions(data.suggestions ?? []);
+    }
+    setFetchLoading(false);
+  }
+
+  useEffect(() => { fetchSuggestions(activeCity); }, [activeCity]);
+
+  function toggle(i: number) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i); else next.add(i);
+      return next;
+    });
+  }
+
+  function selectAll() { setSelected(new Set(suggestions.map((_, i) => i))); }
+  function clearAll()  { setSelected(new Set()); }
+
+  async function addSelected() {
+    if (!date || selected.size === 0) return;
+    setAdding(true);
+    const toAdd = suggestions.filter((_, i) => selected.has(i));
+    await Promise.all(
+      toAdd.map((s) =>
+        fetch(`/api/trips/${tripId}/activities`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: s.title,
+            type: s.type,
+            date,
+            startTime: s.startTime ?? "",
+            description: s.description ?? "",
+            cost: s.cost,
+            city: activeCity,
+          }),
+        })
+      )
+    );
+    setAdding(false);
+    onAdded();
+  }
+
+  const PERIOD_LABEL: Record<string, { label: string; icon: string }> = {
+    manha: { label: "Manhã", icon: "🌅" },
+    tarde: { label: "Tarde", icon: "☀️" },
+    noite: { label: "Noite", icon: "🌙" },
+  };
+
+  function getPeriod(time: string | null) {
+    if (!time) return "manha";
+    const h = parseInt(time.split(":")[0]);
+    if (h >= 18) return "noite";
+    if (h >= 12) return "tarde";
+    return "manha";
+  }
+
+  const grouped = suggestions.reduce<Record<string, { s: RawSuggestion; idx: number }[]>>((acc, s, i) => {
+    const p = getPeriod(s.startTime);
+    if (!acc[p]) acc[p] = [];
+    acc[p].push({ s, idx: i });
+    return acc;
+  }, {});
+
+  return (
+    <Dialog open onClose={onClose}>
+      <DialogHeader>
+        <DialogTitle className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-violet-500" />
+          Sugestões de roteiro
+        </DialogTitle>
+        <DialogClose onClose={onClose} />
+      </DialogHeader>
+
+      <DialogBody>
+        <div className="space-y-4">
+          {/* Destination tabs */}
+          {destinations.length > 1 && (
+            <div className="flex flex-wrap gap-1.5">
+              {destinations.map((dest) => {
+                const city = dest.split(",")[0].trim();
+                const isActive = activeCity === dest;
+                return (
+                  <button
+                    key={dest}
+                    onClick={() => setActiveCity(dest)}
+                    className={cn(
+                      "inline-flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border font-semibold transition-all",
+                      isActive
+                        ? "bg-violet-600 border-violet-600 text-white shadow-sm"
+                        : "bg-gray-50 border-gray-200 text-gray-600 hover:border-violet-300 hover:text-violet-600"
+                    )}
+                  >
+                    <MapPin className="h-2.5 w-2.5" />{city}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Date picker */}
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-200">
+            <CalendarDays className="h-4 w-4 text-gray-400 shrink-0" />
+            <div className="flex-1">
+              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Adicionar ao dia</p>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="mt-0.5 text-sm font-semibold text-gray-900 bg-transparent border-0 outline-none cursor-pointer w-full"
+              />
+            </div>
+          </div>
+
+          {/* Loading */}
+          {fetchLoading && (
+            <div className="flex items-center justify-center py-12 gap-3 text-violet-500">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              <span className="text-sm font-medium">Gerando sugestões para {activeCity.split(",")[0]}…</span>
+            </div>
+          )}
+
+          {/* Suggestions */}
+          {!fetchLoading && suggestions.length > 0 && (
+            <>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-500">
+                  <span className="font-bold text-gray-900">{suggestions.length}</span> sugestões para{" "}
+                  <span className="font-semibold text-violet-600">{activeCity.split(",")[0]}</span>
+                </p>
+                <div className="flex gap-2">
+                  <button onClick={selectAll} className="text-xs font-semibold text-violet-600 hover:text-violet-700">Selecionar todas</button>
+                  {selected.size > 0 && (
+                    <>
+                      <span className="text-gray-300">·</span>
+                      <button onClick={clearAll} className="text-xs text-gray-400 hover:text-gray-600">Limpar</button>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {["manha", "tarde", "noite"].map((period) => {
+                  const items = grouped[period];
+                  if (!items?.length) return null;
+                  const { label, icon } = PERIOD_LABEL[period];
+                  return (
+                    <div key={period}>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                        <span>{icon}</span> {label}
+                      </p>
+                      <div className="space-y-2">
+                        {items.map(({ s, idx }) => {
+                          const cfg = TYPE_STYLE[s.type] ?? FALLBACK_STYLE;
+                          const { Icon } = cfg;
+                          const isSelected = selected.has(idx);
+                          return (
+                            <label
+                              key={idx}
+                              className={cn(
+                                "flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all",
+                                isSelected
+                                  ? "bg-violet-50 border-violet-200 shadow-sm"
+                                  : "bg-white border-gray-100 hover:border-gray-200"
+                              )}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => toggle(idx)}
+                                className="h-4 w-4 rounded accent-violet-600 mt-0.5 shrink-0"
+                              />
+                              <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center shrink-0", cfg.bg, "border", cfg.border)}>
+                                <Icon className={cn("h-3.5 w-3.5", cfg.color)} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="text-sm font-semibold text-gray-900">{s.title}</span>
+                                  {s.startTime && (
+                                    <span className="text-[10px] text-gray-400 flex items-center gap-0.5">
+                                      <Clock className="h-2.5 w-2.5" />{s.startTime}
+                                    </span>
+                                  )}
+                                  {s.cost != null ? (
+                                    <span className="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded-full">R$ {s.cost}</span>
+                                  ) : (
+                                    <span className="text-[10px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded-full">Gratuito</span>
+                                  )}
+                                </div>
+                                {s.description && (
+                                  <p className="text-xs text-gray-500 mt-1 leading-relaxed line-clamp-2">{s.description}</p>
+                                )}
+                              </div>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+
+          {!fetchLoading && suggestions.length === 0 && (
+            <div className="text-center py-10 text-gray-400">
+              <Sparkles className="h-8 w-8 mx-auto mb-2 opacity-30" />
+              <p className="text-sm">Nenhuma sugestão encontrada</p>
+            </div>
+          )}
+        </div>
+      </DialogBody>
+
+      <DialogFooter>
+        <Button variant="outline" onClick={onClose}>{adding ? "" : "Cancelar"}</Button>
+        <Button
+          onClick={addSelected}
+          disabled={selected.size === 0 || !date || adding}
+          className="gap-2"
+        >
+          {adding ? (
+            <><Loader2 className="h-4 w-4 animate-spin" />Adicionando…</>
+          ) : (
+            <><CheckCircle2 className="h-4 w-4" />
+              {selected.size > 0 ? `Adicionar ${selected.size} atividade${selected.size > 1 ? "s" : ""}` : "Selecione atividades"}
+            </>
+          )}
+        </Button>
+      </DialogFooter>
+    </Dialog>
+  );
+}
+
 // ── Page ─────────────────────────────────────────────────────
 
 const EMPTY_FORM = {
@@ -399,11 +673,8 @@ export default function ItineraryPage() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [editingId, setEditingId] = useState<string | null>(null);
-
-  type Suggestion = { title: string; type: string; startTime: string; description: string; cost: number | null };
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  const [suggestLoading, setSuggestLoading] = useState(false);
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [generatorOpen, setGeneratorOpen] = useState(false);
+  const [tripStartDate, setTripStartDate] = useState<string | null>(null);
 
   async function load() {
     const [actRes, tripRes] = await Promise.all([
@@ -418,6 +689,7 @@ export default function ItineraryPage() {
           trip.destination.split(" → ").map((d: string) => d.trim()).filter(Boolean)
         );
       }
+      if (trip.startDate) setTripStartDate(trip.startDate.slice(0, 10));
     }
   }
 
@@ -425,35 +697,6 @@ export default function ItineraryPage() {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
-  }
-
-  async function handleSuggest() {
-    if (!form.city) return;
-    setSuggestLoading(true);
-    setShowSuggestions(false);
-    const res = await fetch(`/api/trips/${id}/activities/suggest`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ city: form.city, date: form.date }),
-    });
-    setSuggestLoading(false);
-    if (res.ok) {
-      const data = await res.json();
-      setSuggestions(data.suggestions ?? []);
-      setShowSuggestions(true);
-    }
-  }
-
-  function applySuggestion(s: Suggestion) {
-    setForm((p) => ({
-      ...p,
-      title: s.title,
-      type: s.type,
-      startTime: s.startTime ?? "",
-      description: s.description ?? "",
-      cost: s.cost != null ? String(s.cost) : "",
-    }));
-    setShowSuggestions(false);
   }
 
   function openEdit(activity: Activity) {
@@ -560,6 +803,18 @@ export default function ItineraryPage() {
                 {t.itinerary.byPeriod}
               </button>
             </div>
+          )}
+
+          {tripDestinations.length > 0 && (
+            <Button
+              variant="outline"
+              onClick={() => setGeneratorOpen(true)}
+              className="gap-2 border-violet-200 text-violet-700 hover:bg-violet-50"
+              size="sm"
+            >
+              <Wand2 className="h-4 w-4" />
+              Sugerir roteiro
+            </Button>
           )}
 
           <Button onClick={() => setOpen(true)} className="gap-2" size="sm">
@@ -682,8 +937,19 @@ export default function ItineraryPage() {
         </div>
       )}
 
-      {/* Dialog */}
-      <Dialog open={open} onClose={() => { setOpen(false); setEditingId(null); setForm(EMPTY_FORM); setSuggestions([]); setShowSuggestions(false); }}>
+      {/* Generator Dialog */}
+      {generatorOpen && (
+        <GeneratorDialog
+          tripId={id}
+          destinations={tripDestinations}
+          tripStartDate={tripStartDate}
+          onClose={() => setGeneratorOpen(false)}
+          onAdded={() => { setGeneratorOpen(false); load(); }}
+        />
+      )}
+
+      {/* Dialog — Add / Edit activity */}
+      <Dialog open={open} onClose={() => { setOpen(false); setEditingId(null); setForm(EMPTY_FORM); }}>
         <DialogHeader>
           <DialogTitle>{editingId ? t.itinerary.dialogEdit : t.itinerary.dialogNew}</DialogTitle>
           <DialogClose onClose={() => { setOpen(false); setEditingId(null); setForm(EMPTY_FORM); }} />
@@ -720,11 +986,11 @@ export default function ItineraryPage() {
               </div>
             </div>
 
-            {/* City */}
+            {/* City chips */}
             {tripDestinations.length > 0 && (
               <div className="space-y-1.5">
                 <Label className="text-xs">{t.itinerary.formCity}</Label>
-                <div className="flex flex-wrap gap-1.5 items-center">
+                <div className="flex flex-wrap gap-1.5">
                   {tripDestinations.map((dest) => {
                     const city = dest.split(",")[0].trim();
                     const isSelected = form.city === dest;
@@ -732,11 +998,7 @@ export default function ItineraryPage() {
                       <button
                         key={dest}
                         type="button"
-                        onClick={() => {
-                          setForm((p) => ({ ...p, city: isSelected ? "" : dest }));
-                          setSuggestions([]);
-                          setShowSuggestions(false);
-                        }}
+                        onClick={() => setForm((p) => ({ ...p, city: isSelected ? "" : dest }))}
                         className={cn(
                           "inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border font-medium transition-all",
                           isSelected
@@ -749,72 +1011,7 @@ export default function ItineraryPage() {
                       </button>
                     );
                   })}
-
-                  {form.city && !editingId && (
-                    <button
-                      type="button"
-                      onClick={handleSuggest}
-                      disabled={suggestLoading}
-                      className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border border-violet-200 bg-violet-50 text-violet-700 font-semibold hover:bg-violet-100 transition-colors disabled:opacity-60 ml-auto"
-                    >
-                      {suggestLoading
-                        ? <Loader2 className="h-3 w-3 animate-spin" />
-                        : <Sparkles className="h-3 w-3" />
-                      }
-                      {suggestLoading ? "Gerando..." : "Sugerir com IA"}
-                      {suggestions.length > 0 && !showSuggestions && (
-                        <ChevronDown className="h-3 w-3 ml-0.5" />
-                      )}
-                      {suggestions.length > 0 && showSuggestions && (
-                        <ChevronUp className="h-3 w-3 ml-0.5" />
-                      )}
-                    </button>
-                  )}
                 </div>
-
-                {/* Suggestion cards */}
-                {showSuggestions && suggestions.length > 0 && (
-                  <div className="mt-2 rounded-xl border border-violet-100 bg-violet-50/50 p-2 space-y-1.5">
-                    <p className="text-[11px] font-semibold text-violet-500 px-1">
-                      Clique para preencher o formulário
-                    </p>
-                    {suggestions.map((s, i) => {
-                      const cfg = TYPE_STYLE[s.type] ?? FALLBACK_STYLE;
-                      const { Icon } = cfg;
-                      return (
-                        <button
-                          key={i}
-                          type="button"
-                          onClick={() => applySuggestion(s)}
-                          className="w-full text-left flex items-start gap-2.5 p-2.5 rounded-lg bg-white border border-violet-100 hover:border-violet-300 hover:shadow-sm transition-all group"
-                        >
-                          <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5", cfg.bg, "border", cfg.border)}>
-                            <Icon className={cn("h-3.5 w-3.5", cfg.color)} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-xs font-bold text-gray-900 group-hover:text-violet-700 transition-colors">{s.title}</span>
-                              {s.startTime && (
-                                <span className="text-[10px] text-gray-400 flex items-center gap-0.5">
-                                  <Clock className="h-2.5 w-2.5" />{s.startTime}
-                                </span>
-                              )}
-                              {s.cost != null && (
-                                <span className="text-[10px] font-semibold text-green-700 bg-green-50 px-1.5 py-0.5 rounded-full">
-                                  R$ {s.cost}
-                                </span>
-                              )}
-                              {s.cost === null && (
-                                <span className="text-[10px] font-semibold text-green-700 bg-green-50 px-1.5 py-0.5 rounded-full">Gratuito</span>
-                              )}
-                            </div>
-                            <p className="text-[11px] text-gray-500 mt-0.5 line-clamp-2">{s.description}</p>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
               </div>
             )}
 
@@ -863,7 +1060,7 @@ export default function ItineraryPage() {
           </form>
         </DialogBody>
         <DialogFooter>
-          <Button variant="outline" onClick={() => { setOpen(false); setEditingId(null); setForm(EMPTY_FORM); setSuggestions([]); setShowSuggestions(false); }}>{t.common.cancel}</Button>
+          <Button variant="outline" onClick={() => { setOpen(false); setEditingId(null); setForm(EMPTY_FORM); }}>{t.common.cancel}</Button>
           <Button type="submit" form="activity-form" disabled={loading}>
             {loading ? t.common.saving : editingId ? t.itinerary.saveChanges : t.common.add}
           </Button>
