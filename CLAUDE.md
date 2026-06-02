@@ -124,17 +124,18 @@ Registered routes:
 - `/experiences` — GET, POST
 - `/health` — GET
 - `/newsletter` — POST
+- `/notifications` — GET
 - `/posts/[slug]` — GET
 - `/posts` — GET
 - `/public-stats` — GET
 - `/referral` — GET
 - `/register` — POST
-- `/setup-admin` — GET
 - `/share/[token]` — GET
 - `/tips/community` — GET
 - `/tips/external` — GET
 - `/trips/[id]/accommodations` — DELETE, GET, POST, PUT
 - `/trips/[id]/activities` — DELETE, GET, POST, PUT
+- `/trips/[id]/activities/suggest` — POST
 - `/trips/[id]/documents` — DELETE, GET, POST
 - `/trips/[id]/expenses` — DELETE, GET, POST, PUT
 - `/trips/[id]/journal` — DELETE, GET, POST, PUT
