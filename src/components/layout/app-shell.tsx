@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { Sidebar } from "./sidebar";
+import { NotificationBell } from "./notification-bell";
 import Link from "next/link";
 import { Plane } from "lucide-react";
 
@@ -81,6 +82,10 @@ export function AppShell({
             </div>
             <span className="text-sm font-bold text-white">RoteiroApp</span>
           </Link>
+
+          <div className="ml-auto">
+            <NotificationBell />
+          </div>
         </header>
 
         {children}

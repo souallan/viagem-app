@@ -7,6 +7,7 @@ import {
   Plus, Clock, MapPin, Trash2, Pencil,
   Utensils, Bus, Building2, CalendarDays, FileText, Zap,
   Sunrise, Sun, Moon, LayoutList, Grid3x3, ExternalLink, Compass,
+  Sparkles, Loader2, ChevronDown, ChevronUp,
 } from "lucide-react";
 import HolidayAlerts from "@/components/trips/holiday-alerts";
 import { affiliates } from "@/lib/affiliates";
@@ -399,6 +400,11 @@ export default function ItineraryPage() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [editingId, setEditingId] = useState<string | null>(null);
 
+  type Suggestion = { title: string; type: string; startTime: string; description: string; cost: number | null };
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [suggestLoading, setSuggestLoading] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
   async function load() {
     const [actRes, tripRes] = await Promise.all([
       fetch(`/api/trips/${id}/activities`),
@@ -419,6 +425,35 @@ export default function ItineraryPage() {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+  }
+
+  async function handleSuggest() {
+    if (!form.city) return;
+    setSuggestLoading(true);
+    setShowSuggestions(false);
+    const res = await fetch(`/api/trips/${id}/activities/suggest`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ city: form.city, date: form.date }),
+    });
+    setSuggestLoading(false);
+    if (res.ok) {
+      const data = await res.json();
+      setSuggestions(data.suggestions ?? []);
+      setShowSuggestions(true);
+    }
+  }
+
+  function applySuggestion(s: Suggestion) {
+    setForm((p) => ({
+      ...p,
+      title: s.title,
+      type: s.type,
+      startTime: s.startTime ?? "",
+      description: s.description ?? "",
+      cost: s.cost != null ? String(s.cost) : "",
+    }));
+    setShowSuggestions(false);
   }
 
   function openEdit(activity: Activity) {
@@ -648,7 +683,7 @@ export default function ItineraryPage() {
       )}
 
       {/* Dialog */}
-      <Dialog open={open} onClose={() => { setOpen(false); setEditingId(null); setForm(EMPTY_FORM); }}>
+      <Dialog open={open} onClose={() => { setOpen(false); setEditingId(null); setForm(EMPTY_FORM); setSuggestions([]); setShowSuggestions(false); }}>
         <DialogHeader>
           <DialogTitle>{editingId ? t.itinerary.dialogEdit : t.itinerary.dialogNew}</DialogTitle>
           <DialogClose onClose={() => { setOpen(false); setEditingId(null); setForm(EMPTY_FORM); }} />
@@ -689,7 +724,7 @@ export default function ItineraryPage() {
             {tripDestinations.length > 0 && (
               <div className="space-y-1.5">
                 <Label className="text-xs">{t.itinerary.formCity}</Label>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-1.5 items-center">
                   {tripDestinations.map((dest) => {
                     const city = dest.split(",")[0].trim();
                     const isSelected = form.city === dest;
@@ -697,10 +732,11 @@ export default function ItineraryPage() {
                       <button
                         key={dest}
                         type="button"
-                        onClick={() => setForm((p) => ({
-                          ...p,
-                          city: isSelected ? "" : dest,
-                        }))}
+                        onClick={() => {
+                          setForm((p) => ({ ...p, city: isSelected ? "" : dest }));
+                          setSuggestions([]);
+                          setShowSuggestions(false);
+                        }}
                         className={cn(
                           "inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border font-medium transition-all",
                           isSelected
@@ -713,7 +749,72 @@ export default function ItineraryPage() {
                       </button>
                     );
                   })}
+
+                  {form.city && !editingId && (
+                    <button
+                      type="button"
+                      onClick={handleSuggest}
+                      disabled={suggestLoading}
+                      className="inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full border border-violet-200 bg-violet-50 text-violet-700 font-semibold hover:bg-violet-100 transition-colors disabled:opacity-60 ml-auto"
+                    >
+                      {suggestLoading
+                        ? <Loader2 className="h-3 w-3 animate-spin" />
+                        : <Sparkles className="h-3 w-3" />
+                      }
+                      {suggestLoading ? "Gerando..." : "Sugerir com IA"}
+                      {suggestions.length > 0 && !showSuggestions && (
+                        <ChevronDown className="h-3 w-3 ml-0.5" />
+                      )}
+                      {suggestions.length > 0 && showSuggestions && (
+                        <ChevronUp className="h-3 w-3 ml-0.5" />
+                      )}
+                    </button>
+                  )}
                 </div>
+
+                {/* Suggestion cards */}
+                {showSuggestions && suggestions.length > 0 && (
+                  <div className="mt-2 rounded-xl border border-violet-100 bg-violet-50/50 p-2 space-y-1.5">
+                    <p className="text-[11px] font-semibold text-violet-500 px-1">
+                      Clique para preencher o formulário
+                    </p>
+                    {suggestions.map((s, i) => {
+                      const cfg = TYPE_STYLE[s.type] ?? FALLBACK_STYLE;
+                      const { Icon } = cfg;
+                      return (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => applySuggestion(s)}
+                          className="w-full text-left flex items-start gap-2.5 p-2.5 rounded-lg bg-white border border-violet-100 hover:border-violet-300 hover:shadow-sm transition-all group"
+                        >
+                          <div className={cn("w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5", cfg.bg, "border", cfg.border)}>
+                            <Icon className={cn("h-3.5 w-3.5", cfg.color)} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-xs font-bold text-gray-900 group-hover:text-violet-700 transition-colors">{s.title}</span>
+                              {s.startTime && (
+                                <span className="text-[10px] text-gray-400 flex items-center gap-0.5">
+                                  <Clock className="h-2.5 w-2.5" />{s.startTime}
+                                </span>
+                              )}
+                              {s.cost != null && (
+                                <span className="text-[10px] font-semibold text-green-700 bg-green-50 px-1.5 py-0.5 rounded-full">
+                                  R$ {s.cost}
+                                </span>
+                              )}
+                              {s.cost === null && (
+                                <span className="text-[10px] font-semibold text-green-700 bg-green-50 px-1.5 py-0.5 rounded-full">Gratuito</span>
+                              )}
+                            </div>
+                            <p className="text-[11px] text-gray-500 mt-0.5 line-clamp-2">{s.description}</p>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
 
@@ -762,7 +863,7 @@ export default function ItineraryPage() {
           </form>
         </DialogBody>
         <DialogFooter>
-          <Button variant="outline" onClick={() => { setOpen(false); setEditingId(null); setForm(EMPTY_FORM); }}>{t.common.cancel}</Button>
+          <Button variant="outline" onClick={() => { setOpen(false); setEditingId(null); setForm(EMPTY_FORM); setSuggestions([]); setShowSuggestions(false); }}>{t.common.cancel}</Button>
           <Button type="submit" form="activity-form" disabled={loading}>
             {loading ? t.common.saving : editingId ? t.itinerary.saveChanges : t.common.add}
           </Button>

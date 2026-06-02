@@ -14,6 +14,7 @@ interface Stats {
   recentUsers: { id: string; name: string | null; email: string; role: string; createdAt: string }[];
   recentTrips: { id: string; title: string; destination: string; status: string; createdAt: string; owner: { name: string | null; email: string } }[];
   tripsByStatus: { status: string; _count: { id: number } }[];
+  activity: { newUsers7d: number; newUsers30d: number; activeUsers7d: number; activeUsers30d: number };
 }
 
 interface Analytics {
@@ -91,7 +92,7 @@ export default function AdminDashboard() {
 
   if (!stats) return null;
 
-  const { totals, recentUsers, recentTrips, tripsByStatus } = stats;
+  const { totals, recentUsers, recentTrips, tripsByStatus, activity } = stats;
   const totalCohort = analytics ? Object.values(analytics.userCohorts).reduce((a, b) => a + b, 0) : 0;
   const dormantPct = analytics && totalCohort > 0
     ? Math.round((analytics.userCohorts.zero / totalCohort) * 100)
@@ -126,7 +127,7 @@ export default function AdminDashboard() {
             <Download className="h-3.5 w-3.5" />
             {backupLoading ? "Gerando..." : "Backup"}
           </button>
-          <Link href="/admin/stats" className="flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors border border-blue-500/20 hover:border-blue-400/40 px-3 py-1.5 rounded-lg">
+          <Link href="/backoffice/stats" className="flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors border border-blue-500/20 hover:border-blue-400/40 px-3 py-1.5 rounded-lg">
             <TrendingUp className="h-3.5 w-3.5" /> Analytics <ArrowRight className="h-3 w-3" />
           </Link>
         </div>
@@ -140,6 +141,30 @@ export default function AdminDashboard() {
         <KPI label="Roteiros" value={totals.routes} icon={Route} color="bg-orange-600/20 text-orange-400" sub="comunidade" />
         <KPI label="Newsletter" value={totals.subscribers ?? 0} icon={Mail} color="bg-teal-600/20 text-teal-400" sub="inscritos" />
       </div>
+
+      {/* Activity metrics */}
+      {activity && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[
+            { label: "Novos usuários (7d)", value: activity.newUsers7d, color: "text-emerald-400", bg: "bg-emerald-600/15" },
+            { label: "Novos usuários (30d)", value: activity.newUsers30d, color: "text-teal-400", bg: "bg-teal-600/15" },
+            { label: "Usuários ativos (7d)", value: activity.activeUsers7d, color: "text-sky-400", bg: "bg-sky-600/15" },
+            { label: "Usuários ativos (30d)", value: activity.activeUsers30d, color: "text-blue-400", bg: "bg-blue-600/15" },
+          ].map(({ label, value, color, bg }) => (
+            <div key={label} className="rounded-xl border border-white/6 p-3.5" style={{ background: "rgba(255,255,255,0.03)" }}>
+              <p className={`text-2xl font-black ${color}`}>{value}</p>
+              <p className="text-[10px] text-slate-600 mt-1 leading-snug">{label}</p>
+              <div className="mt-2 h-1 rounded-full bg-white/5 overflow-hidden">
+                <div className={`h-full rounded-full ${bg}`}
+                  style={{ width: `${totals.users > 0 ? Math.min((value / totals.users) * 100, 100) : 0}%` }} />
+              </div>
+              <p className="text-[9px] text-slate-700 mt-1">
+                {totals.users > 0 ? `${Math.round((value / totals.users) * 100)}% do total` : "—"}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Behavioral snapshot */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -181,7 +206,7 @@ export default function AdminDashboard() {
             <h2 className="text-sm font-bold text-slate-300 flex items-center gap-2">
               <Users className="h-4 w-4 text-blue-400" />Usuários recentes
             </h2>
-            <Link href="/admin/users" className="text-[10px] text-blue-400 hover:text-blue-300 transition-colors">Ver todos →</Link>
+            <Link href="/backoffice/users" className="text-[10px] text-blue-400 hover:text-blue-300 transition-colors">Ver todos →</Link>
           </div>
           <div className="space-y-2">
             {recentUsers.map(u => (
@@ -209,7 +234,7 @@ export default function AdminDashboard() {
             <h2 className="text-sm font-bold text-slate-300 flex items-center gap-2">
               <Plane className="h-4 w-4 text-violet-400" />Viagens recentes
             </h2>
-            <Link href="/admin/content" className="text-[10px] text-violet-400 hover:text-violet-300 transition-colors">Ver conteúdo →</Link>
+            <Link href="/backoffice/content" className="text-[10px] text-violet-400 hover:text-violet-300 transition-colors">Ver conteúdo →</Link>
           </div>
           <div className="space-y-2">
             {recentTrips.map(t => (

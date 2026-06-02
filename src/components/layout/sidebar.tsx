@@ -7,6 +7,7 @@ import { LayoutDashboard, Route, Plane, Lightbulb, Globe, BookOpen, Mail, Instag
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
 import { SITE_CONFIG } from "@/lib/site-config";
+import { NotificationBell } from "./notification-bell";
 import type { Lang } from "@/lib/i18n";
 
 const LANGS: { code: Lang; label: string; flag: string }[] = [
@@ -75,15 +76,18 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
             <p className="text-[10px] text-slate-600 leading-tight mt-0.5 font-medium tracking-wide uppercase">Travel Planner</p>
           </div>
         </Link>
-        {onClose && (
-          <button
-            onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:text-white hover:bg-white/8 transition-colors"
-            aria-label="Fechar menu"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        )}
+        <div className="flex items-center gap-1">
+          <NotificationBell />
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:text-white hover:bg-white/8 transition-colors"
+              aria-label="Fechar menu"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Nav */}
