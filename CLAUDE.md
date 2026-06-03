@@ -112,6 +112,7 @@ Registered routes:
 - `/announcement` — GET
 - `/auth/[...nextauth]` — 
 - `/auth/check-credentials` — POST
+- `/auth/check-verification` — GET
 - `/auth/forgot-password` — POST
 - `/auth/reset-password` — POST
 - `/auth/send-verification` — POST
