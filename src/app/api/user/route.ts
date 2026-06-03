@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { auditLog } from "@/lib/audit";
+import { stripHtml } from "@/lib/sanitize";
 
 export async function GET() {
   const session = await auth();
@@ -48,7 +49,7 @@ export async function PUT(req: NextRequest) {
   const data: Record<string, unknown> = {};
 
   if (name !== undefined) {
-    const trimmed = String(name ?? "").trim();
+    const trimmed = stripHtml(String(name ?? "").trim());
     if (trimmed.length < 2 || trimmed.length > 100) {
       return NextResponse.json({ error: "Nome deve ter entre 2 e 100 caracteres." }, { status: 400 });
     }
@@ -75,7 +76,7 @@ export async function PUT(req: NextRequest) {
   }
 
   if (bio !== undefined) {
-    const trimmedBio = String(bio ?? "").trim();
+    const trimmedBio = stripHtml(String(bio ?? "").trim());
     if (trimmedBio.length > 300) {
       return NextResponse.json({ error: "Bio deve ter no máximo 300 caracteres." }, { status: 400 });
     }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { stripHtml } from "@/lib/sanitize";
 
 async function getTrip(id: string, userId: string) {
   return prisma.trip.findFirst({ where: { id, userId } });
@@ -31,10 +32,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const entry = await prisma.journalEntry.create({
     data: {
       tripId: id,
-      date: new Date(body.date),
-      title: body.title ?? null,
-      content: body.content,
-      mood: body.mood ?? null,
+      date:    new Date(body.date),
+      title:   body.title   ? stripHtml(body.title)   : null,
+      content: stripHtml(body.content),
+      mood:    body.mood ?? null,
     },
   });
   return NextResponse.json(entry, { status: 201 });
@@ -51,9 +52,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   const entry = await prisma.journalEntry.updateMany({
     where: { id: body.entryId, tripId: id },
     data: {
-      title: body.title ?? null,
-      content: body.content,
-      mood: body.mood ?? null,
+      title:   body.title   ? stripHtml(body.title)   : null,
+      content: stripHtml(body.content),
+      mood:    body.mood ?? null,
     },
   });
   return NextResponse.json(entry);

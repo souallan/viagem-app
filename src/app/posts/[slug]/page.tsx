@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { ArrowLeft, MapPin, Calendar, Tag, ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
+import sanitizeHtml from "sanitize-html";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -34,9 +35,14 @@ function getVideoEmbed(url: string): string | null {
   return null;
 }
 
+const ALLOWED_TAGS = ["h2","h3","p","strong","em","ul","li","a","br","blockquote","code","pre"];
+const ALLOWED_ATTRS: sanitizeHtml.IOptions["allowedAttributes"] = {
+  h2: ["class"], h3: ["class"], p: ["class"], li: ["class"], ul: ["class"],
+  a: ["href", "target", "rel"],
+};
+
 function renderContent(content: string): string {
-  // Simple markdown-like rendering
-  return content
+  const raw = content
     .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold text-gray-900 mt-8 mb-3">$1</h2>')
     .replace(/^### (.+)$/gm, '<h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">$1</h3>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -46,6 +52,8 @@ function renderContent(content: string): string {
     .replace(/\n\n/g, '</p><p class="text-gray-700 leading-relaxed my-3">')
     .replace(/^/, '<p class="text-gray-700 leading-relaxed my-3">')
     .replace(/$/, '</p>');
+
+  return sanitizeHtml(raw, { allowedTags: ALLOWED_TAGS, allowedAttributes: ALLOWED_ATTRS });
 }
 
 export default async function PostPage({ params }: Props) {

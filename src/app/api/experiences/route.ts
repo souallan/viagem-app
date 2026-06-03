@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { stripHtml } from "@/lib/sanitize";
 
 export async function GET() {
   const session = await auth();
@@ -28,16 +29,16 @@ export async function POST(req: NextRequest) {
   try {
     const experience = await prisma.experience.create({
       data: {
-        userId: session.user.id,
-        title,
-        destination,
+        userId:      session.user.id,
+        title:       stripHtml(title),
+        destination: stripHtml(destination),
         tripDate,
-        coverImage: coverImage ?? null,
-        excerpt: excerpt ?? null,
-        content,
-        rating: rating ? parseInt(rating) : null,
-        mood: mood ?? null,
-        tags: tags ?? null,
+        coverImage:  coverImage ?? null,
+        excerpt:     excerpt     ? stripHtml(excerpt)  : null,
+        content:     stripHtml(content),
+        rating:      rating ? parseInt(rating) : null,
+        mood:        mood ?? null,
+        tags:        tags  ? stripHtml(tags)   : null,
       },
     });
     return NextResponse.json(experience, { status: 201 });

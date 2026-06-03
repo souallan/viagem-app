@@ -37,6 +37,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Credenciais inválidas." }, { status: 401 });
     }
 
+    if (user.role === "ADMIN") {
+      return NextResponse.json(
+        { error: "Administradores devem acessar pelo painel exclusivo." },
+        { status: 403 }
+      );
+    }
+
     // Credentials valid — generate and send OTP
     const otp = await createOtp(user.email);
     await sendOtpEmail(user.email, otp, user.name);

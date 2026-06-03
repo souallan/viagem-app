@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { stripHtml } from "@/lib/sanitize";
+import { containsProfanity } from "@/lib/content-filter";
 
 export async function GET(
   _req: NextRequest,
@@ -26,7 +28,11 @@ export async function POST(
   if (!route) return NextResponse.json({ error: "Route not found" }, { status: 404 });
 
   const { content } = await req.json();
-  if (!content?.trim()) return NextResponse.json({ error: "Conteúdo obrigatório" }, { status: 400 });
+  const cleanContent = stripHtml(content);
+  if (!cleanContent) return NextResponse.json({ error: "Conteúdo obrigatório" }, { status: 400 });
+  if (containsProfanity(cleanContent)) {
+    return NextResponse.json({ error: "O comentário contém linguagem inapropriada." }, { status: 422 });
+  }
 
   try {
     const comment = await prisma.routeComment.create({
@@ -34,7 +40,7 @@ export async function POST(
         routeId: id,
         userId: session.user.id,
         userName: session.user.name ?? "Viajante",
-        content: content.trim(),
+        content: cleanContent,
       },
     });
     return NextResponse.json(comment, { status: 201 });

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { createVerifyToken } from "@/lib/otp";
 import { sendVerificationEmail } from "@/lib/email";
 import { rateLimit, getIp } from "@/lib/rate-limit";
+import { stripHtml } from "@/lib/sanitize";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const name: string = (body.name ?? "").trim();
+    const name: string = stripHtml((body.name ?? "").trim());
     const email: string = (body.email ?? "").trim().toLowerCase();
     const password: string = body.password ?? "";
     const refCode: string = (body.ref ?? "").trim().toUpperCase();
