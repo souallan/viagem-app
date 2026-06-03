@@ -21,16 +21,27 @@ const PILLAR_COLORS = {
   pink:   { badge: "bg-pink-500/10 border-pink-500/20 text-pink-300",   icon: "text-pink-400"   },
 } as const;
 
-const PILLAR_IMGS = [
-  "/screenshots/trip-overview.png",
-  "/screenshots/roteiros.png",
-  "/screenshots/experience-detail.png",
-];
+// Pilar 1 usa elemento especial (tiras empilhadas), 2 e 3 usam AppScreen
+const PILLAR2_IMG = "/screenshots/roteiros.png";
+const PILLAR3_IMG = "/screenshots/experience-detail.png";
 
-function AppScreen({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
+function AppScreen({
+  src, alt, height = 360, pos = "top center", className = "",
+}: {
+  src: string; alt: string; height?: number; pos?: string; className?: string;
+}) {
   return (
-    <div className={`overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ${className}`}>
-      <img src={src} alt={alt} className="w-full h-full object-cover object-top" loading="lazy" />
+    <div
+      className={`overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ${className}`}
+      style={{ height }}
+    >
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-full object-cover"
+        style={{ objectPosition: pos }}
+        loading="lazy"
+      />
     </div>
   );
 }
@@ -155,15 +166,11 @@ export function LandingClient({ stats }: Props) {
           </div>
         </div>
 
-        {/* Screenshot hero */}
+        {/* Screenshot hero — empilha header + stats para simular tela completa */}
         <div className="relative max-w-5xl mx-auto">
           <div className="rounded-2xl overflow-hidden border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.6)]">
-            <img
-              src="/screenshots/trip-overview.png"
-              alt="RoteiroApp — visão geral da viagem"
-              className="w-full object-cover object-top"
-              loading="eager"
-            />
+            <img src="/screenshots/trip-overview.png" alt="Cabeçalho da viagem no RoteiroApp" className="w-full block" loading="eager" />
+            <img src="/screenshots/stats.png"         alt="Cards de estatísticas da viagem" className="w-full block" loading="eager" />
           </div>
           <div className="absolute -top-4 -right-4 sm:-right-8 flex items-center gap-2 px-3 py-2 rounded-xl border border-emerald-500/25 text-xs font-semibold text-emerald-300 bg-emerald-500/10 backdrop-blur-md shadow-lg">
             <CheckCircle className="h-3.5 w-3.5" /> {t.hero.badgeBudget}
@@ -223,13 +230,36 @@ export function LandingClient({ stats }: Props) {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-4 mb-4">
-            <AppScreen src="/screenshots/sidebar.png"  alt={t.showcase.alts.sidebar}      className="max-h-[380px]" />
-            <AppScreen src="/screenshots/stats.png"    alt={t.showcase.alts.stats}        className="max-h-[380px]" />
+          {/* Linha 1: sidebar estreita (257px natural) + dicas (16:9) */}
+          <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-4 mb-4">
+            <AppScreen
+              src="/screenshots/sidebar.png"
+              alt={t.showcase.alts.sidebar}
+              height={420}
+              pos="top center"
+            />
+            <AppScreen
+              src="/screenshots/dicas.png"
+              alt={t.showcase.alts.dicas}
+              height={420}
+              pos="top center"
+            />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4">
-            <AppScreen src="/screenshots/dicas.png"       alt={t.showcase.alts.dicas}       className="max-h-[340px]" />
-            <AppScreen src="/screenshots/experiences.png" alt={t.showcase.alts.experiences} className="max-h-[340px]" />
+
+          {/* Linha 2: roteiros (16:9) + experiences */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <AppScreen
+              src="/screenshots/roteiros.png"
+              alt={t.showcase.alts.stats}
+              height={360}
+              pos="top center"
+            />
+            <AppScreen
+              src="/screenshots/experiences.png"
+              alt={t.showcase.alts.experiences}
+              height={360}
+              pos="top center"
+            />
           </div>
         </div>
       </section>
@@ -252,9 +282,21 @@ export function LandingClient({ stats }: Props) {
             const Icon = PILLAR_ICONS[i];
             const colors = PILLAR_COLORS[pillar.color as keyof typeof PILLAR_COLORS];
             const isEven = i % 2 === 0;
+
+            const screenshot = i === 0 ? (
+              /* Pilar 1: empilha header + stats para tela completa */
+              <div className={`rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.5)]`}>
+                <img src="/screenshots/trip-overview.png" alt="Cabeçalho da viagem" className="w-full block" loading="lazy" />
+                <img src="/screenshots/stats.png"         alt="Cards de estatísticas" className="w-full block" loading="lazy" />
+              </div>
+            ) : i === 1 ? (
+              <AppScreen src={PILLAR2_IMG} alt={pillar.alt} height={440} pos="top center" />
+            ) : (
+              <AppScreen src={PILLAR3_IMG} alt={pillar.alt} height={440} pos="top center" />
+            );
+
             return (
               <div key={i} className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                {/* Text */}
                 <div className={isEven ? "" : "lg:order-last"}>
                   <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-bold mb-5 ${colors.badge}`}>
                     <Icon className={`h-3 w-3 ${colors.icon}`} />
@@ -272,12 +314,7 @@ export function LandingClient({ stats }: Props) {
                     ))}
                   </ul>
                 </div>
-                {/* Screenshot */}
-                <AppScreen
-                  src={PILLAR_IMGS[i]}
-                  alt={pillar.alt}
-                  className={`max-h-[420px] ${!isEven ? "lg:order-first" : ""}`}
-                />
+                <div className={!isEven ? "lg:order-first" : ""}>{screenshot}</div>
               </div>
             );
           })}
