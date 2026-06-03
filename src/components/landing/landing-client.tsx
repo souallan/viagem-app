@@ -21,9 +21,14 @@ const PILLAR_COLORS = {
   pink:   { badge: "bg-pink-500/10 border-pink-500/20 text-pink-300",   icon: "text-pink-400"   },
 } as const;
 
-// Pilar 1 usa elemento especial (tiras empilhadas), 2 e 3 usam AppScreen
-const PILLAR2_IMG = "/screenshots/roteiros.png";
-const PILLAR3_IMG = "/screenshots/experience-detail.png";
+const IMG = {
+  dicas:    "/screenshots/dicas.png",          // 1630×869 (16:9)
+  roteiros: "/screenshots/roteiros.png",       // 1690×878 (16:9)
+  detail:   "/screenshots/experience-detail.png", // 1707×889 (16:9)
+  cotacao:  "/screenshots/cotação.png",        // 1644×837 (16:9)
+  sidebar:  "/screenshots/sidebar.png",        // 257×913  (estreita/alta)
+  exps:     "/screenshots/experiences.png",    // 1698×637 (banner wide)
+} as const;
 
 function AppScreen({
   src, alt, height = 360, pos = "top center", className = "",
@@ -166,11 +171,15 @@ export function LandingClient({ stats }: Props) {
           </div>
         </div>
 
-        {/* Screenshot hero — empilha header + stats para simular tela completa */}
+        {/* Screenshot hero */}
         <div className="relative max-w-5xl mx-auto">
           <div className="rounded-2xl overflow-hidden border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.6)]">
-            <img src="/screenshots/trip-overview.png" alt="Cabeçalho da viagem no RoteiroApp" className="w-full block" loading="eager" />
-            <img src="/screenshots/stats.png"         alt="Cards de estatísticas da viagem" className="w-full block" loading="eager" />
+            <img
+              src={IMG.roteiros}
+              alt="Roteiros prontos no RoteiroApp"
+              className="w-full block"
+              loading="eager"
+            />
           </div>
           <div className="absolute -top-4 -right-4 sm:-right-8 flex items-center gap-2 px-3 py-2 rounded-xl border border-emerald-500/25 text-xs font-semibold text-emerald-300 bg-emerald-500/10 backdrop-blur-md shadow-lg">
             <CheckCircle className="h-3.5 w-3.5" /> {t.hero.badgeBudget}
@@ -230,37 +239,53 @@ export function LandingClient({ stats }: Props) {
             </h2>
           </div>
 
-          {/* Linha 1: sidebar estreita (257px natural) + dicas (16:9) */}
-          <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-4 mb-4">
-            <AppScreen
-              src="/screenshots/sidebar.png"
-              alt={t.showcase.alts.sidebar}
-              height={420}
-              pos="top center"
-            />
-            <AppScreen
-              src="/screenshots/dicas.png"
-              alt={t.showcase.alts.dicas}
-              height={420}
-              pos="top center"
-            />
+          {/* Linha 1: sidebar (estreita/alta) + dicas (16:9 wide) */}
+          <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-4 mb-4">
+            <AppScreen src={IMG.sidebar} alt={t.showcase.alts.sidebar}  height={400} pos="top center" />
+            <AppScreen src={IMG.dicas}   alt={t.showcase.alts.dicas}    height={400} pos="top center" />
           </div>
 
-          {/* Linha 2: roteiros (16:9) + experiences */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <AppScreen
-              src="/screenshots/roteiros.png"
-              alt={t.showcase.alts.stats}
-              height={360}
-              pos="top center"
-            />
-            <AppScreen
-              src="/screenshots/experiences.png"
-              alt={t.showcase.alts.experiences}
-              height={360}
-              pos="top center"
-            />
+          {/* Linha 2: três 16:9 em colunas iguais */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <AppScreen src={IMG.cotacao}  alt="Cotação de moedas"               height={280} pos="top center" />
+            <AppScreen src={IMG.detail}   alt={t.showcase.alts.experiences}     height={280} pos="top center" />
+            <AppScreen src={IMG.exps}     alt="Minhas experiências de viagem"   height={280} pos="top left"   />
           </div>
+        </div>
+      </section>
+
+      {/* ── DESTAQUE: Cotação e câmbio ── */}
+      <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-bold mb-5">
+              <Globe className="h-3 w-3 text-amber-400" />
+              {lang === "pt" ? "Câmbio e moedas" : lang === "en" ? "Currency & exchange" : "Divisas y cambio"}
+            </div>
+            <h3 className="text-2xl font-black mb-4 text-white">
+              {lang === "pt" ? <>Cotação em tempo real.<br />Conversão automática.</> :
+               lang === "en" ? <>Real-time rates.<br />Automatic conversion.</> :
+               <>Cotizaciones en tiempo real.<br />Conversión automática.</>}
+            </h3>
+            <p className="text-slate-400 leading-relaxed mb-6">
+              {lang === "pt" ? "Veja a cotação atual de mais de 150 moedas e converta seus gastos automaticamente. Nunca mais faça conta de cabeça no aeroporto." :
+               lang === "en" ? "See live rates for 150+ currencies and convert your expenses automatically. No more mental math at the airport." :
+               "Consulta cotizaciones en vivo de más de 150 monedas y convierte tus gastos automáticamente. Sin más cálculos mentales en el aeropuerto."}
+            </p>
+            <ul className="space-y-2.5">
+              {(lang === "pt"
+                ? ["Cotação ao vivo de +150 moedas", "Conversão automática de todos os gastos", "Histórico de câmbio para planejar melhor"]
+                : lang === "en"
+                ? ["Live rates for 150+ currencies", "Automatic conversion of all expenses", "Exchange history for smarter planning"]
+                : ["Cotizaciones en vivo de +150 monedas", "Conversión automática de todos los gastos", "Historial de cambio para planificar mejor"]
+              ).map((item) => (
+                <li key={item} className="flex items-center gap-2.5 text-sm text-slate-400">
+                  <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" /> {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <AppScreen src={IMG.cotacao} alt="Cotação e conversão de moedas no RoteiroApp" height={440} pos="top center" />
         </div>
       </section>
 
@@ -283,16 +308,9 @@ export function LandingClient({ stats }: Props) {
             const colors = PILLAR_COLORS[pillar.color as keyof typeof PILLAR_COLORS];
             const isEven = i % 2 === 0;
 
-            const screenshot = i === 0 ? (
-              /* Pilar 1: empilha header + stats para tela completa */
-              <div className={`rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.5)]`}>
-                <img src="/screenshots/trip-overview.png" alt="Cabeçalho da viagem" className="w-full block" loading="lazy" />
-                <img src="/screenshots/stats.png"         alt="Cards de estatísticas" className="w-full block" loading="lazy" />
-              </div>
-            ) : i === 1 ? (
-              <AppScreen src={PILLAR2_IMG} alt={pillar.alt} height={440} pos="top center" />
-            ) : (
-              <AppScreen src={PILLAR3_IMG} alt={pillar.alt} height={440} pos="top center" />
+            const pillarImgs = [IMG.dicas, IMG.roteiros, IMG.detail];
+            const screenshot = (
+              <AppScreen src={pillarImgs[i]} alt={pillar.alt} height={440} pos="top center" />
             );
 
             return (
