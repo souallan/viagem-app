@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, XCircle } from "lucide-react";
-import { darkInputClass } from "@/app/(auth)/_auth-input";
+import { darkInputClass, autofillStyle } from "@/app/(auth)/_auth-input";
 
 function ResetPasswordForm() {
   const params = useSearchParams();
@@ -98,6 +98,7 @@ function ResetPasswordForm() {
             minLength={8}
             autoComplete="new-password"
             className={darkInputClass}
+            style={autofillStyle}
           />
         </div>
 
@@ -112,6 +113,7 @@ function ResetPasswordForm() {
             minLength={8}
             autoComplete="new-password"
             className={darkInputClass}
+            style={autofillStyle}
           />
         </div>
 

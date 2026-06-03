@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MailCheck } from "lucide-react";
-import { darkInputClass } from "@/app/(auth)/_auth-input";
+import { darkInputClass, autofillStyle } from "@/app/(auth)/_auth-input";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -71,6 +71,7 @@ export default function ForgotPasswordPage() {
             required
             autoComplete="email"
             className={darkInputClass}
+            style={autofillStyle}
           />
         </div>
 
