@@ -32,6 +32,7 @@ function RegisterContent() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
   const [accepted, setAccepted] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -44,8 +45,11 @@ function RegisterContent() {
 
   const pwStrength = getPasswordStrength(password);
 
+  const passwordsMatch = confirm.length === 0 || password === confirm;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (password !== confirm) { setError("As senhas não coincidem."); return; }
     if (!accepted) { setError("Você precisa aceitar a Política de Privacidade para criar uma conta."); return; }
     setError("");
     setLoading(true);
@@ -147,6 +151,25 @@ function RegisterContent() {
           )}
         </div>
 
+        <div className="space-y-1.5">
+          <label className="text-sm font-semibold text-slate-300">Confirmar senha</label>
+          <input
+            type="password"
+            placeholder="Digite a senha novamente"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            required
+            autoComplete="new-password"
+            className={`${darkInputClass} ${!passwordsMatch ? "border-red-500/60 focus:border-red-500" : confirm.length > 0 && passwordsMatch ? "border-green-500/50 focus:border-green-500" : ""}`}
+            style={autofillStyle}
+          />
+          {confirm.length > 0 && (
+            <p className={`text-[11px] font-semibold ${passwordsMatch ? "text-green-400" : "text-red-400"}`}>
+              {passwordsMatch ? "✓ Senhas coincidem" : "✗ Senhas não coincidem"}
+            </p>
+          )}
+        </div>
+
         {/* Consentimento LGPD */}
         <label className="flex items-start gap-3 cursor-pointer group">
           <input
@@ -174,7 +197,7 @@ function RegisterContent() {
           </p>
         )}
 
-        <Button type="submit" className="w-full h-11 text-base mt-2" disabled={loading || !accepted}>
+        <Button type="submit" className="w-full h-11 text-base mt-2" disabled={loading || !accepted || !passwordsMatch || confirm.length === 0}>
           {loading ? "Criando conta..." : "Criar conta grátis"}
         </Button>
       </form>
