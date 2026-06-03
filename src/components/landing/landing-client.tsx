@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { landingI18n, type LandingLang } from "@/lib/landing-i18n";
 
-// ── Cada imagem usada UMA vez, sem corte ─────────────────────────
+// ── Imagens (public/screenshots/) ────────────────────────────────
 // roteiros.png       1690×878  hero principal
 // stats.png          1641×376  strip "o que você vê num olhar"
 // hospedagem.png     1630×915  feature: hospedagem + calendário
@@ -16,7 +16,6 @@ import { landingI18n, type LandingLang } from "@/lib/landing-i18n";
 // dicas.png          1630×869  feature: dicas & guias
 // experiences.png    1698×637  banner: experiências (wide)
 // experience-detail  1707×889  feature: relato detalhado
-// sidebar.png          257×913 preview: menu lateral
 
 const S = {
   roteiros:   "/screenshots/roteiros.png",
@@ -26,13 +25,46 @@ const S = {
   dicas:      "/screenshots/dicas.png",
   exps:       "/screenshots/experiences.png",
   detail:     "/screenshots/experience-detail.png",
-  sidebar:    "/screenshots/sidebar.png",
 };
 
+// Imagem padrão — sem corte, proporção original
 function Img({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
   return (
     <figure className={`overflow-hidden rounded-2xl border border-white/10 shadow-[0_16px_48px_rgba(0,0,0,0.5)] ${className}`}>
       <img src={src} alt={alt} className="w-full h-auto block" loading="lazy" decoding="async" />
+    </figure>
+  );
+}
+
+// Imagem premium — moldura de browser + glow colorido + hover scale
+// Usada em: roteiros (hero), cotação, dicas, experience-detail
+function PremiumImg({ src, alt, glow = "rgba(59,130,246,0.25)", eager = false }: {
+  src: string; alt: string; glow?: string; eager?: boolean;
+}) {
+  return (
+    <figure
+      className="overflow-hidden rounded-2xl transition-transform duration-300 hover:scale-[1.01]"
+      style={{
+        border: "1px solid rgba(255,255,255,0.12)",
+        boxShadow: `0 0 0 1px rgba(255,255,255,0.05), 0 24px 64px rgba(0,0,0,0.55), 0 0 80px ${glow}`,
+      }}
+    >
+      {/* Barra de browser simulada */}
+      <div className="flex items-center gap-1.5 px-3 py-2.5" style={{ background: "#1a1f2e", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+        <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+        <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
+        <span className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
+        <div className="ml-2 flex-1 h-5 rounded-md px-2 flex items-center" style={{ background: "rgba(255,255,255,0.06)" }}>
+          <span className="text-[9px] text-slate-500 font-medium">roteiroapp.com</span>
+        </div>
+      </div>
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-auto block"
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+      />
     </figure>
   );
 }
@@ -179,13 +211,16 @@ export function LandingClient({ stats }: Props) {
             ))}
           </div>
         </div>
-        {/* roteiros.png — 1690×878 — proporção 16:9 — sem corte */}
+        {/* roteiros.png — 1690×878 — sem corte — premium */}
         <div className="max-w-5xl mx-auto">
-          <Img src={S.roteiros}
+          <PremiumImg
+            src={S.roteiros}
             alt={pt ? "Biblioteca de roteiros prontos: Paris 5 dias, Tóquio 7 dias e Nova York 5 dias com atividades e custo estimado"
                : en ? "Ready-made itinerary library: Paris 5 days, Tokyo 7 days, New York 5 days with activities and estimated cost"
                : "Biblioteca de rutas: París 5 días, Tokio 7 días, Nueva York 5 días con actividades y costo estimado"}
-            className="shadow-[0_40px_100px_rgba(0,0,0,0.6)]" />
+            glow="rgba(99,102,241,0.3)"
+            eager
+          />
           <p className="text-center text-xs text-slate-600 mt-3">
             {pt ? "Roteiros curados — aplique à sua viagem com um clique e personalize"
              : en ? "Curated itineraries — apply to your trip with one click and customize"
@@ -288,11 +323,14 @@ export function LandingClient({ stats }: Props) {
       <section className="relative z-10 border-t border-white/5 bg-white/[0.015]">
         <div className="max-w-6xl mx-auto px-6 md:px-14 py-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
-            {/* cotação.png — 1644×837 — sem corte */}
-            <Img src={S.cotacao}
+            {/* cotação.png — 1644×837 — sem corte — premium */}
+            <PremiumImg
+              src={S.cotacao}
               alt={pt ? "Cotação ao vivo de moedas: euro, dólar, iene, libra e mais de 150 moedas com conversão automática"
                  : en ? "Live currency rates: euro, dollar, yen, pound and 150+ currencies with automatic conversion"
-                 : "Cotizaciones en vivo: euro, dólar, yen, libra y más de 150 monedas"} />
+                 : "Cotizaciones en vivo: euro, dólar, yen, libra y más de 150 monedas"}
+              glow="rgba(245,158,11,0.2)"
+            />
             <FeatureText
               badge={pt ? "Câmbio em tempo real" : en ? "Real-time exchange" : "Cambio en tiempo real"}
               badgeIcon={Globe}
@@ -331,11 +369,14 @@ export function LandingClient({ stats }: Props) {
                        : ["28 artículos en PT, EN y ES — creciendo cada semana", "Categorías: finanzas, seguridad, documentos, tecnología, salud", "Sin discurso de agencia — consejos reales de viajeros"]}
             bulletColor="text-teal-400"
           />
-          {/* dicas.png — 1630×869 — sem corte */}
-          <Img src={S.dicas}
+          {/* dicas.png — 1630×869 — sem corte — premium */}
+          <PremiumImg
+            src={S.dicas}
             alt={pt ? "Página de dicas com artigos sobre voos baratos, viagem solo feminina, Google Maps offline e passaporte sem visto"
                : en ? "Tips page with articles on cheap flights, solo female travel, offline Google Maps and visa-free passport"
-               : "Página de consejos con artículos sobre vuelos baratos, viaje solo femenino, Google Maps sin conexión"} />
+               : "Página de consejos con artículos sobre vuelos baratos, viaje solo femenino, Google Maps sin conexión"}
+            glow="rgba(20,184,166,0.2)"
+          />
         </div>
       </section>
 
@@ -375,11 +416,14 @@ export function LandingClient({ stats }: Props) {
       ══════════════════════════════════════════════════════ */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
-          {/* experience-detail.png — 1707×889 — sem corte */}
-          <Img src={S.detail}
+          {/* experience-detail.png — 1707×889 — sem corte — premium */}
+          <PremiumImg
+            src={S.detail}
             alt={pt ? "Detalhe do relato Visita Coliseu: foto de capa, avaliação 4/5, texto completo do relato e hashtags #Coliseu #Roma"
                : en ? "Experience detail: Colosseum Visit with cover photo, 4/5 rating, full story text and hashtags #Colosseum #Rome"
-               : "Detalle de experiencia: Visita al Coliseo con foto, valoración 4/5, texto del relato y hashtags"} />
+               : "Detalle de experiencia: Visita al Coliseo con foto, valoración 4/5, texto del relato y hashtags"}
+            glow="rgba(236,72,153,0.2)"
+          />
           <FeatureText
             badge={pt ? "Diário de bordo" : en ? "Travel diary" : "Diario de a bordo"}
             badgeIcon={BookOpen}
@@ -394,54 +438,6 @@ export function LandingClient({ stats }: Props) {
                        : ["Foto de portada, valoración y humor del viaje", "Hashtags para descubrir relatos del mismo destino", "Publica para la comunidad o mantenlo privado"]}
             bulletColor="text-pink-400"
           />
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          APP PREVIEW — sidebar.png (257×913)
-          Menu lateral — exibido na largura natural
-      ══════════════════════════════════════════════════════ */}
-      <section className="relative z-10 border-t border-white/5 bg-white/[0.015]">
-        <div className="max-w-6xl mx-auto px-6 md:px-14 py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-500/10 border border-slate-500/20 text-slate-300 text-xs font-bold mb-5">
-                <Route className="h-3 w-3" />
-                {pt ? "Navegação completa" : en ? "Complete navigation" : "Navegación completa"}
-              </div>
-              <h2 className="text-2xl md:text-3xl font-black mb-4 leading-tight text-white">
-                {pt ? <>Meus Roteiros, Dicas, Experiências,<br /><span className="text-slate-400">Perfil — tudo a um toque.</span></>
-                 : en ? <>My Routes, Tips, Experiences,<br /><span className="text-slate-400">Profile — all one tap away.</span></>
-                 : <>Mis Rutas, Consejos, Experiencias,<br /><span className="text-slate-400">Perfil — todo a un toque.</span></>}
-              </h2>
-              <p className="text-slate-400 leading-relaxed mb-6 text-[15px]">
-                {pt ? "Menu lateral limpo e organizado, disponível no desktop e como drawer no mobile. Troque de idioma, instale como app no celular (PWA) e acesse o suporte — tudo a partir do mesmo menu."
-                 : en ? "Clean, organized side menu available on desktop and as a drawer on mobile. Switch language, install as a phone app (PWA), and access support — all from the same menu."
-                 : "Menú lateral limpio y organizado, disponible en escritorio y como cajón en móvil. Cambia de idioma, instala como app (PWA) y accede al soporte — todo desde el mismo menú."}
-              </p>
-              <ul className="space-y-3">
-                {(pt ? ["Menu em PT, EN e ES — muda na hora", "Instalável como PWA no iOS e Android", "Acesso rápido ao perfil, suporte e painel admin"]
-                     : en ? ["Menu in PT, EN, ES — changes instantly", "Installable as PWA on iOS and Android", "Quick access to profile, support, and admin panel"]
-                     : ["Menú en PT, EN y ES — cambia al instante", "Instalable como PWA en iOS y Android", "Acceso rápido a perfil, soporte y panel admin"]
-                ).map((b) => (
-                  <li key={b} className="flex items-start gap-3 text-sm text-slate-300">
-                    <CheckCircle className="h-4 w-4 text-slate-400 shrink-0 mt-0.5" /> {b}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* sidebar.png — 257×913 — largura natural, centrado */}
-            <div className="flex justify-center lg:justify-start">
-              <figure className="overflow-hidden rounded-2xl border border-white/10 shadow-[0_16px_48px_rgba(0,0,0,0.5)]"
-                style={{ width: "257px" }}>
-                <img src={S.sidebar}
-                  alt={pt ? "Menu lateral do RoteiroApp: Meus Roteiros, Roteiros, Dicas, Experiências, Meu Perfil, seletor de idioma PT/ES/EN e botão Sair"
-                     : en ? "RoteiroApp side menu: My Routes, Routes, Tips, Experiences, My Profile, PT/ES/EN language selector and Sign out button"
-                     : "Menú lateral: Mis Rutas, Rutas, Consejos, Experiencias, Mi Perfil, selector PT/ES/EN y botón Salir"}
-                  className="w-full h-auto block" loading="lazy" decoding="async" />
-              </figure>
-            </div>
-          </div>
         </div>
       </section>
 
