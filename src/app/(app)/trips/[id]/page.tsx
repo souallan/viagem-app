@@ -4,10 +4,10 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatDate, formatCurrency, tripStatusLabel, tripStatusColor } from "@/lib/utils";
 import {
-  Calendar, MapPin, DollarSign, FileText, Luggage,
+  Calendar, MapPin, DollarSign, FileText,
   Activity, Map, BarChart2, ExternalLink, Globe,
-  Hotel, Star, Compass, Newspaper, Share2,
-  Plane, TrendingUp, Package,
+  Hotel, Star, Compass, Newspaper,
+  Plane, TrendingUp, Package, Pencil,
 } from "lucide-react";
 import WeatherWidget from "@/components/trips/weather-widget";
 import ImmigrationAlerts from "@/components/trips/immigration-alerts";
@@ -93,6 +93,12 @@ export default async function TripOverviewPage({
             </div>
           </div>
           <div className="flex flex-col gap-2 items-end">
+            <Link
+              href={`/trips/${id}/edit`}
+              className="inline-flex items-center gap-1.5 text-sm font-bold px-4 py-2 rounded-xl bg-white text-primary-700 hover:bg-primary-50 shadow-sm transition-colors"
+            >
+              <Pencil className="h-3.5 w-3.5" /> Editar viagem
+            </Link>
             <Link href={`/trips/${id}/map`} className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 border border-white/20 text-white transition-colors">
               <Map className="h-3.5 w-3.5" /> Ver no mapa
             </Link>
@@ -239,12 +245,6 @@ export default async function TripOverviewPage({
         </div>
       </div>
 
-      {/* ── Edit link ── */}
-      <div className="flex gap-3 pt-1 border-t border-gray-100">
-        <Link href={`/trips/${id}/edit`} className="text-sm text-primary-600 hover:underline font-medium">
-          Editar informações da viagem
-        </Link>
-      </div>
     </div>
   );
 }
