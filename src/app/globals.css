@@ -235,4 +235,15 @@
   .status-progress   { @apply bg-emerald-50 text-emerald-700 border border-emerald-200; }
   .status-completed  { @apply bg-slate-100 text-slate-600  border border-slate-200;  }
   .status-cancelled  { @apply bg-red-50    text-red-600    border border-red-200;    }
+
+  /* Auth inputs — força fundo escuro no autofill do browser (Chrome/Safari) */
+  input.auth-input:-webkit-autofill,
+  input.auth-input:-webkit-autofill:hover,
+  input.auth-input:-webkit-autofill:focus,
+  input.auth-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #0d1929 inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #ffffff;
+    transition: background-color 9999s ease-in-out 0s;
+  }
 }
