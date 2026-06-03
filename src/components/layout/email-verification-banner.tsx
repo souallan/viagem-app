@@ -1,12 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MailCheck, X } from "lucide-react";
 
 export function EmailVerificationBanner({ email }: { email: string }) {
   const [dismissed, setDismissed] = useState(false);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+
+  // Auto-dismiss when user returns to tab after verifying in another tab
+  useEffect(() => {
+    async function checkVerified() {
+      try {
+        const res = await fetch("/api/auth/check-verification");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.verified) setDismissed(true);
+        }
+      } catch { /* silent */ }
+    }
+
+    const onFocus = () => checkVerified();
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") checkVerified();
+    });
+    return () => window.removeEventListener("focus", onFocus);
+  }, []);
 
   if (dismissed) return null;
 

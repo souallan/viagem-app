@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { AppShell } from "@/components/layout/app-shell";
 import { LanguageProvider } from "@/contexts/language-context";
