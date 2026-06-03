@@ -3,11 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Route, Plane, Lightbulb, Globe, BookOpen, Mail, Instagram, MessageCircle, Shield, UserCircle2, Settings, Lock, Download, X } from "lucide-react";
+import { LayoutDashboard, Route, Plane, Lightbulb, Globe, BookOpen, Mail, Instagram, MessageCircle, UserCircle2, Settings, Lock, Download, X, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
 import { SITE_CONFIG } from "@/lib/site-config";
 import { NotificationBell } from "./notification-bell";
+import { signOut } from "next-auth/react";
 import type { Lang } from "@/lib/i18n";
 
 const LANGS: { code: Lang; label: string; flag: string }[] = [
@@ -146,102 +147,106 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
         </div>
       )}
 
-      {/* Install PWA button — shown only when browser supports it */}
-      {installPrompt && !installed && (
-        <div className="relative z-10 px-3 pb-2">
+      {/* ── Bottom area ── */}
+      <div className="relative z-10 border-t border-white/5 mt-auto">
+
+        {/* PWA install */}
+        {installPrompt && !installed && (
+          <div className="px-3 pt-3">
+            <button
+              onClick={() => installPrompt.prompt?.()}
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-violet-300 hover:text-white bg-violet-600/15 hover:bg-violet-600/25 border border-violet-500/20 transition-all"
+            >
+              <Download className="h-3.5 w-3.5 shrink-0" />
+              Instalar aplicativo
+            </button>
+          </div>
+        )}
+
+        {/* Logout */}
+        <div className="px-3 pt-3">
           <button
-            onClick={() => installPrompt.prompt?.()}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-violet-300 hover:text-white bg-violet-600/15 hover:bg-violet-600/25 border border-violet-500/20 transition-all"
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-500 hover:text-red-400 hover:bg-red-500/8 border border-transparent hover:border-red-500/15 transition-all group"
           >
-            <Download className="h-3.5 w-3.5 shrink-0" />
-            Instalar aplicativo
+            <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 bg-white/4 group-hover:bg-red-500/15 transition-colors">
+              <LogOut className="h-3.5 w-3.5" />
+            </div>
+            <span>Sair da conta</span>
           </button>
         </div>
-      )}
 
-      {/* Language selector */}
-      <div className="relative z-10 px-3 pb-3">
-        <div
-          className="rounded-xl p-3 border border-white/6"
-          style={{ background: "rgba(255,255,255,0.03)" }}
-        >
-          <p className="text-[9px] font-bold text-slate-700 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-            <Globe className="h-2.5 w-2.5" /> {t.nav.language}
-          </p>
-          <div className="flex gap-1.5">
-            {LANGS.map((l) => (
-              <button
-                key={l.code}
-                onClick={() => setLang(l.code)}
-                title={l.label}
-                className={cn(
-                  "flex-1 flex flex-col items-center gap-0.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150",
-                  lang === l.code
-                    ? "bg-primary-600/25 text-primary-300 border border-primary-500/35"
-                    : "text-slate-600 hover:text-slate-300 hover:bg-white/6 border border-transparent"
-                )}
+        {/* Language + social + copyright */}
+        <div className="px-3 pb-3 space-y-3">
+
+          {/* Language selector — compact row */}
+          <div className="flex items-center gap-1.5">
+            <Globe className="h-3 w-3 text-slate-700 shrink-0" />
+            <div className="flex gap-1 flex-1">
+              {LANGS.map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => setLang(l.code)}
+                  title={l.label}
+                  className={cn(
+                    "flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all",
+                    lang === l.code
+                      ? "bg-primary-600/20 text-primary-300 border border-primary-500/30"
+                      : "text-slate-600 hover:text-slate-300 hover:bg-white/5 border border-transparent"
+                  )}
+                >
+                  <span>{l.flag}</span>
+                  <span>{l.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Social icons + copyright */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-0.5">
+              <a
+                href={`mailto:${SITE_CONFIG.admin.email}`}
+                title={SITE_CONFIG.admin.email}
+                className="w-7 h-7 flex items-center justify-center rounded-md text-slate-700 hover:text-primary-400 hover:bg-white/5 transition-all"
               >
-                <span className="text-base leading-none">{l.flag}</span>
-                <span className="text-[10px] leading-none font-bold">{l.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+                <Mail className="h-3.5 w-3.5" />
+              </a>
+              <a
+                href={SITE_CONFIG.social.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Instagram"
+                className="w-7 h-7 flex items-center justify-center rounded-md text-slate-700 hover:text-pink-400 hover:bg-white/5 transition-all"
+              >
+                <Instagram className="h-3.5 w-3.5" />
+              </a>
+              <a
+                href={SITE_CONFIG.social.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="WhatsApp"
+                className="w-7 h-7 flex items-center justify-center rounded-md text-slate-700 hover:text-green-400 hover:bg-white/5 transition-all"
+              >
+                <MessageCircle className="h-3.5 w-3.5" />
+              </a>
+            </div>
 
-      {/* ── Footer com copyright e contato ── */}
-      <div className="relative z-10 border-t border-white/5">
-
-        {/* Contato / redes sociais */}
-        <div className="px-4 py-3 space-y-1.5">
-          <p className="text-[9px] font-bold text-slate-700 uppercase tracking-widest mb-2 flex items-center gap-1">
-            <Shield className="h-2.5 w-2.5" /> {t.sidebar.contact}
-          </p>
-
-          <a
-            href={`mailto:${SITE_CONFIG.admin.email}`}
-            className="flex items-center gap-2 text-[10px] text-slate-600 hover:text-primary-400 transition-colors group"
-          >
-            <Mail className="h-3 w-3 shrink-0 group-hover:text-primary-400" />
-            <span className="truncate">{SITE_CONFIG.admin.email}</span>
-          </a>
-
-          <div className="flex items-center gap-2 pt-1">
-            <a
-              href={SITE_CONFIG.social.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-[10px] text-slate-600 hover:text-pink-400 transition-colors"
+            <Link
+              href="/privacy"
+              title={t.sidebar.privacyPolicy}
+              className="w-7 h-7 flex items-center justify-center rounded-md text-slate-700 hover:text-slate-400 hover:bg-white/5 transition-all"
             >
-              <Instagram className="h-3 w-3" />
-              <span>Instagram</span>
-            </a>
-            <span className="text-slate-800">·</span>
-            <a
-              href={SITE_CONFIG.social.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-[10px] text-slate-600 hover:text-green-400 transition-colors"
-            >
-              <MessageCircle className="h-3 w-3" />
-              <span>WhatsApp</span>
-            </a>
+              <Lock className="h-3.5 w-3.5" />
+            </Link>
           </div>
-        </div>
 
-        {/* Copyright */}
-        <div className="px-4 py-2.5 border-t border-white/5 bg-black/20">
-          <p className="text-[9px] text-slate-700 leading-snug">
-            © {SITE_CONFIG.copyright.year} <span className="text-slate-500 font-semibold">{SITE_CONFIG.copyright.owner}</span>
-            <br />{SITE_CONFIG.copyright.text}
+          {/* Copyright */}
+          <p className="text-[9px] text-slate-800 leading-snug">
+            © {SITE_CONFIG.copyright.year}{" "}
+            <span className="text-slate-600 font-semibold">{SITE_CONFIG.copyright.owner}</span>
+            {" · "}{SITE_CONFIG.copyright.text}
           </p>
-          <p className="text-[9px] text-slate-800 mt-1">
-            v1.0 · {t.sidebar.madeWith}
-          </p>
-          <Link href="/privacy" className="flex items-center gap-1 text-[9px] text-slate-700 hover:text-slate-500 transition-colors mt-1.5">
-            <Lock className="h-2.5 w-2.5" />
-            {t.sidebar.privacyPolicy}
-          </Link>
         </div>
       </div>
     </aside>
