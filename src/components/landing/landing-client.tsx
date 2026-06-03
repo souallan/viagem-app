@@ -22,12 +22,13 @@ const PILLAR_COLORS = {
 } as const;
 
 const IMG = {
-  dicas:    "/screenshots/dicas.png",          // 1630×869 (16:9)
-  roteiros: "/screenshots/roteiros.png",       // 1690×878 (16:9)
-  detail:   "/screenshots/experience-detail.png", // 1707×889 (16:9)
-  cotacao:  "/screenshots/cotação.png",        // 1644×837 (16:9)
-  sidebar:  "/screenshots/sidebar.png",        // 257×913  (estreita/alta)
-  exps:     "/screenshots/experiences.png",    // 1698×637 (banner wide)
+  dicas:      "/screenshots/dicas.png",            // 1630×869 (16:9)
+  roteiros:   "/screenshots/roteiros.png",         // 1690×878 (16:9)
+  detail:     "/screenshots/experience-detail.png",// 1707×889 (16:9)
+  cotacao:    "/screenshots/cotação.png",          // 1644×837 (16:9)
+  hospedagem: "/screenshots/hospedagem.png",       // 1630×915 (16:9)
+  sidebar:    "/screenshots/sidebar.png",          // 257×913  (estreita/alta)
+  exps:       "/screenshots/experiences.png",      // 1698×637 (banner wide)
 } as const;
 
 function AppScreen({
@@ -286,6 +287,91 @@ export function LandingClient({ stats }: Props) {
             </ul>
           </div>
           <AppScreen src={IMG.cotacao} alt="Cotação e conversão de moedas no RoteiroApp" height={440} pos="top center" />
+        </div>
+      </section>
+
+      {/* ── DESTAQUE: Hospedagem + Calendário ── */}
+      <section className="relative z-10 border-t border-white/5 bg-white/[0.015] py-16">
+        <div className="max-w-6xl mx-auto px-6 md:px-14">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+            {/* Imagem — lado esquerdo */}
+            <div className="relative">
+              <AppScreen
+                src={IMG.hospedagem}
+                alt="Calendário de hospedagens no RoteiroApp"
+                height={460}
+                pos="top center"
+              />
+              {/* Badge flutuante no calendário */}
+              <div className="absolute -bottom-4 -right-4 sm:-right-6 flex items-center gap-2 px-3 py-2 rounded-xl border border-violet-500/25 text-xs font-semibold text-violet-200 bg-violet-600/20 backdrop-blur-md shadow-lg">
+                <span className="text-base">🗓️</span>
+                {lang === "pt" ? "Calendário visual incluído" :
+                 lang === "en" ? "Visual calendar included" :
+                 "Calendario visual incluido"}
+              </div>
+            </div>
+
+            {/* Texto — lado direito */}
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-300 text-xs font-bold mb-5">
+                <span>🏨</span>
+                {lang === "pt" ? "Hospedagem organizada" :
+                 lang === "en" ? "Organized accommodation" :
+                 "Alojamiento organizado"}
+              </div>
+
+              <h3 className="text-2xl md:text-3xl font-black mb-4 text-white leading-tight">
+                {lang === "pt" ? <>Todas as suas acomodações.<br /><span className="text-sky-400">Num calendário que você consegue enxergar de verdade.</span></> :
+                 lang === "en" ? <>All your stays.<br /><span className="text-sky-400">In a calendar you can actually read.</span></> :
+                 <>Todos tus alojamientos.<br /><span className="text-sky-400">En un calendario que realmente entiendes.</span></>}
+              </h3>
+
+              <p className="text-slate-400 leading-relaxed mb-8 text-base">
+                {lang === "pt"
+                  ? "Cadastre hotéis, hostels, Airbnb e pousadas em segundos. O RoteiroApp monta um calendário visual automaticamente — com check-in, check-out, número de noites e código de confirmação na palma da mão. Nunca mais confunda uma data."
+                  : lang === "en"
+                  ? "Add hotels, hostels, Airbnbs, and guesthouses in seconds. RoteiroApp automatically builds a visual calendar — check-in, check-out, night count, and confirmation number at your fingertips. Never mix up a date again."
+                  : "Registra hoteles, hosteles, Airbnbs y posadas en segundos. RoteiroApp construye automáticamente un calendario visual — check-in, check-out, cantidad de noches y código de confirmación a mano. Nunca más confundas una fecha."}
+              </p>
+
+              <ul className="space-y-3 mb-8">
+                {(lang === "pt"
+                  ? [
+                      "Calendário visual com barras coloridas por tipo de hospedagem",
+                      "Check-in e check-out num clique — com contagem automática de noites",
+                      "Código de confirmação, telefone e site sempre à mão",
+                    ]
+                  : lang === "en"
+                  ? [
+                      "Visual calendar with color-coded bars by accommodation type",
+                      "Check-in and check-out in one click — automatic night count",
+                      "Confirmation number, phone, and website always at hand",
+                    ]
+                  : [
+                      "Calendario visual con barras de colores por tipo de alojamiento",
+                      "Check-in y check-out en un clic — conteo automático de noches",
+                      "Número de confirmación, teléfono y sitio web siempre a mano",
+                    ]
+                ).map((item) => (
+                  <li key={item} className="flex items-start gap-3 text-sm text-slate-300">
+                    <CheckCircle className="h-4 w-4 text-sky-400 shrink-0 mt-0.5" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm bg-sky-600 hover:bg-sky-500 text-white transition-all shadow-lg shadow-sky-900/30 hover:scale-[1.02]"
+              >
+                {lang === "pt" ? "Organizar minha hospedagem" :
+                 lang === "en" ? "Organize my stays" :
+                 "Organizar mi alojamiento"}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
