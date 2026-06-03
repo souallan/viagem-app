@@ -4,9 +4,16 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   Plane, ArrowRight, CheckCircle, Star,
-  MapPin, Package, Wallet, BookOpen, Route,
-  Calendar, Clock, Zap, Users, Globe,
+  MapPin, Zap, BookOpen, Route, Globe,
 } from "lucide-react";
+
+function AppScreen({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
+  return (
+    <div className={`overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.5)] ${className}`}>
+      <img src={src} alt={alt} className="w-full h-full object-cover object-top" loading="lazy" />
+    </div>
+  );
+}
 
 interface Props {
   stats: { users: number; trips: number; destinations: number };
@@ -100,7 +107,7 @@ export function LandingClient({ stats }: Props) {
         {/* App screenshot — trip overview */}
         <div className="relative max-w-5xl mx-auto">
           <div className="rounded-2xl overflow-hidden border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.6)]">
-            <MockTripOverview />
+            <img src="/screenshots/trip-overview.png" alt="Visão geral da viagem no RoteiroApp" className="w-full object-cover object-top" loading="eager" />
           </div>
           {/* floating badges */}
           <div className="absolute -top-4 -right-4 sm:-right-8 flex items-center gap-2 px-3 py-2 rounded-xl border border-emerald-500/25 text-xs font-semibold text-emerald-300 bg-emerald-500/10 backdrop-blur-md shadow-lg">
@@ -165,24 +172,16 @@ export function LandingClient({ stats }: Props) {
             </h2>
           </div>
 
-          {/* Row 1: Sidebar + Itinerário */}
+          {/* Row 1: Sidebar + Stats */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-4 mb-4">
-            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-xl">
-              <MockSidebar />
-            </div>
-            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-xl">
-              <MockItinerary />
-            </div>
+            <AppScreen src="/screenshots/sidebar.png" alt="Menu lateral do RoteiroApp" className="max-h-[380px]" />
+            <AppScreen src="/screenshots/stats.png"   alt="Cards de estatísticas da viagem" className="max-h-[380px]" />
           </div>
 
           {/* Row 2: Dicas + Experiências */}
           <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4">
-            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-xl">
-              <MockDicas />
-            </div>
-            <div className="rounded-2xl overflow-hidden border border-white/10 shadow-xl">
-              <MockExperiences />
-            </div>
+            <AppScreen src="/screenshots/dicas.png"       alt="Dicas e guias de viagem" className="max-h-[340px]" />
+            <AppScreen src="/screenshots/experiences.png" alt="Minhas experiências de viagem" className="max-h-[340px]" />
           </div>
         </div>
       </section>
@@ -216,16 +215,12 @@ export function LandingClient({ stats }: Props) {
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl overflow-hidden border border-white/8 shadow-xl">
-              <MockItineraryDetail />
-            </div>
+            <AppScreen src="/screenshots/trip-overview.png" alt="Itinerário visual da viagem" className="max-h-[420px]" />
           </div>
 
           {/* Pilar 2 */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="order-last lg:order-first rounded-2xl overflow-hidden border border-white/8 shadow-xl">
-              <MockRoteiros />
-            </div>
+            <AppScreen src="/screenshots/roteiros.png" alt="Roteiros prontos para aplicar" className="order-last lg:order-first max-h-[420px]" />
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-bold mb-5">
                 <Route className="h-3 w-3" /> Roteiros prontos
@@ -262,9 +257,7 @@ export function LandingClient({ stats }: Props) {
                 ))}
               </ul>
             </div>
-            <div className="rounded-2xl overflow-hidden border border-white/8 shadow-xl">
-              <MockExperienceDetail />
-            </div>
+            <AppScreen src="/screenshots/experience-detail.png" alt="Detalhe de experiência de viagem" className="max-h-[420px]" />
           </div>
         </div>
       </section>
@@ -398,9 +391,9 @@ export function LandingClient({ stats }: Props) {
   );
 }
 
-// ── Mockups fiéis às capturas reais ──────────────────────────────
+// ── (mockups removidos — usando screenshots reais) ───────────────
 
-function MockTripOverview() {
+function _unused() {
   return (
     <div className="bg-white text-gray-900 font-sans">
       {/* Header azul */}
