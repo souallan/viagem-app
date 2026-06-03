@@ -158,47 +158,39 @@ function AccommodationCalendar({
     }}>
       {/* ── Gradient header ── */}
       <div
-        className="relative px-5 py-4 overflow-hidden"
+        className="relative px-4 py-3 overflow-hidden"
         style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #1a56cc 60%, #6d28d9 100%)" }}
       >
-        {/* Dot pattern overlay */}
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
           backgroundSize: "20px 20px",
         }} />
 
         <div className="relative z-10 flex items-center justify-between">
-          <button
-            onClick={prevMonth}
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 transition-all"
-          >
-            <ChevronLeft className="h-5 w-5" />
+          <button onClick={prevMonth} className="w-7 h-7 rounded-lg flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 transition-all">
+            <ChevronLeft className="h-4 w-4" />
           </button>
 
           <div className="text-center">
-            <p className="text-white font-black text-xl tracking-tight leading-none capitalize">
+            <p className="text-white font-black text-base tracking-tight leading-none capitalize">
               {new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date(year, monthIdx, 1))}
             </p>
-            <p className="text-white/60 text-xs font-semibold tracking-widest mt-0.5">{year}</p>
+            <p className="text-white/60 text-[10px] font-semibold tracking-widest mt-0.5">{year}</p>
           </div>
 
-          <button
-            onClick={nextMonth}
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 transition-all"
-          >
-            <ChevronRight className="h-5 w-5" />
+          <button onClick={nextMonth} className="w-7 h-7 rounded-lg flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 transition-all">
+            <ChevronRight className="h-4 w-4" />
           </button>
         </div>
 
-        {/* Stats pill */}
         {items.length > 0 && (
-          <div className="relative z-10 flex items-center justify-center gap-3 mt-3">
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/80 bg-white/10 border border-white/20 px-3 py-1 rounded-full">
-              <BedDouble className="h-3 w-3" />
+          <div className="relative z-10 flex items-center justify-center gap-2 mt-2">
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-white/80 bg-white/10 border border-white/20 px-2.5 py-0.5 rounded-full">
+              <BedDouble className="h-2.5 w-2.5" />
               {items.length} {items.length === 1 ? t.accommodation.accommodationSingular : t.accommodation.accommodationPlural}
             </span>
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/80 bg-white/10 border border-white/20 px-3 py-1 rounded-full">
-              <Calendar className="h-3 w-3" />
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-white/80 bg-white/10 border border-white/20 px-2.5 py-0.5 rounded-full">
+              <Calendar className="h-2.5 w-2.5" />
               {totalNights} {totalNights === 1 ? t.accommodation.nightSingular : t.accommodation.nightPlural}
             </span>
           </div>
@@ -206,20 +198,17 @@ function AccommodationCalendar({
       </div>
 
       {/* ── Day-of-week headers ── */}
-      <div className="overflow-x-auto -mx-0">
-      <div className="min-w-[320px]">
+      <div className="overflow-x-auto">
+      <div className="min-w-[280px]">
       <div className="grid grid-cols-7 border-b border-sky-100/80 bg-white/50">
         {Array.from({ length: 7 }, (_, i) =>
           new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(2024, 0, 7 + i))
         ).map((d, i) => (
-          <div
-            key={i}
-            className={cn(
-              "text-center text-[11px] font-black py-2.5 uppercase tracking-widest",
-              i === 0 || i === 6 ? "text-rose-400" : "text-slate-400"
-            )}
-          >
-            {d.replace(".", "").substring(0, 3)}
+          <div key={i} className={cn(
+            "text-center text-[10px] font-black py-1.5 uppercase tracking-wider",
+            i === 0 || i === 6 ? "text-rose-400" : "text-slate-400"
+          )}>
+            {d.replace(".", "").substring(0, 2)}
           </div>
         ))}
       </div>
@@ -234,75 +223,67 @@ function AccommodationCalendar({
                   <div
                     key={di}
                     className={cn(
-                      "h-24 sm:h-28 border-r border-sky-100/50 last:border-r-0",
+                      "h-14 sm:h-16 border-r border-sky-100/50 last:border-r-0",
                       di === 0 || di === 6 ? "bg-rose-50/30" : "bg-white/20"
                     )}
                   />
                 );
               }
 
-              const dateKey = toDateKey(date);
-              const isToday = dateKey === todayKey;
-              const accoms  = getAccomsForDay(dateKey);
+              const dateKey   = toDateKey(date);
+              const isToday   = dateKey === todayKey;
+              const accoms    = getAccomsForDay(dateKey);
               const isWeekend = di === 0 || di === 6;
 
               return (
                 <div
                   key={di}
                   className={cn(
-                    "h-24 sm:h-28 border-r border-sky-100/50 last:border-r-0 flex flex-col min-w-0",
+                    "h-14 sm:h-16 border-r border-sky-100/50 last:border-r-0 flex flex-col min-w-0",
                     isWeekend ? "bg-rose-50/20" : "bg-white/30",
                     accoms.length > 0 && "bg-sky-50/40"
                   )}
                 >
                   {/* Date number */}
-                  <div className="flex justify-end px-1.5 pt-1.5 pb-0.5 shrink-0">
+                  <div className="flex justify-end px-1 pt-1 pb-0.5 shrink-0">
                     <span className={cn(
-                      "w-6 h-6 text-[11px] font-bold flex items-center justify-center rounded-full transition-all",
+                      "w-5 h-5 text-[10px] font-bold flex items-center justify-center rounded-full transition-all",
                       isToday
-                        ? "bg-gradient-to-br from-primary-500 to-violet-600 text-white shadow-sm shadow-primary-300"
-                        : isWeekend
-                        ? "text-rose-400/70 font-semibold"
-                        : "text-gray-500"
+                        ? "bg-gradient-to-br from-primary-500 to-violet-600 text-white shadow-sm"
+                        : isWeekend ? "text-rose-400/70" : "text-gray-500"
                     )}>
                       {date.getDate()}
                     </span>
                   </div>
 
                   {/* Accommodation bars */}
-                  <div className="flex-1 flex flex-col gap-[3px] overflow-hidden pb-1.5">
-                    {accoms.slice(0, 3).map((accom, idx) => {
-                      const accomStart = accom.checkIn.slice(0, 10);
-                      const accomEnd   = accom.checkOut.slice(0, 10);
-                      const isStart    = accomStart === dateKey || di === 0;
-                      const isEnd      = accomEnd   === dateKey || di === 6;
-                      const showName   = true;
-                      const [c1, c2]   = TYPE_GRADIENT[accom.type] ?? ["#9ca3af", "#6b7280"];
-
+                  <div className="flex-1 flex flex-col gap-[2px] overflow-hidden pb-1">
+                    {accoms.slice(0, 2).map((accom, idx) => {
+                      const isStart = accom.checkIn.slice(0, 10) === dateKey || di === 0;
+                      const isEnd   = accom.checkOut.slice(0, 10) === dateKey || di === 6;
+                      const [c1, c2] = TYPE_GRADIENT[accom.type] ?? ["#9ca3af", "#6b7280"];
                       return (
                         <button
                           key={accom.id + idx}
                           onClick={() => onSelect(accom)}
                           title={accom.name}
-                          className="h-[22px] sm:h-6 flex items-center text-white text-[9px] sm:text-[10px] font-bold overflow-hidden transition-all hover:brightness-110 hover:scale-y-105 active:opacity-70 shadow-sm"
+                          className="h-[16px] sm:h-[18px] flex items-center text-white text-[8px] font-bold overflow-hidden transition-all hover:brightness-110 active:opacity-70 shadow-sm"
                           style={{
                             background: `linear-gradient(90deg, ${c1}, ${c2})`,
-                            marginLeft:  isStart ? "5px" : "0",
-                            marginRight: isEnd   ? "5px" : "0",
+                            marginLeft:  isStart ? "4px" : "0",
+                            marginRight: isEnd   ? "4px" : "0",
                             borderRadius: `${isStart ? "99px" : "0"} ${isEnd ? "99px" : "0"} ${isEnd ? "99px" : "0"} ${isStart ? "99px" : "0"}`,
                           }}
                         >
-                          {showName && (
-                            <span className="truncate px-2 leading-none drop-shadow-sm">
-                              {TYPE_EMOJI[accom.type]} {accom.name}
-                            </span>
-                          )}
+                          <span className="truncate px-1.5 leading-none drop-shadow-sm">
+                            {isStart ? `${TYPE_EMOJI[accom.type]} ${accom.name}` : ""}
+                          </span>
                         </button>
                       );
                     })}
-                    {accoms.length > 3 && (
-                      <span className="text-[9px] text-primary-500 font-bold px-1.5 leading-none">
-                        +{accoms.length - 3}
+                    {accoms.length > 2 && (
+                      <span className="text-[8px] text-primary-500 font-bold px-1 leading-none">
+                        +{accoms.length - 2}
                       </span>
                     )}
                   </div>
@@ -317,9 +298,9 @@ function AccommodationCalendar({
 
       {/* ── Legend ── */}
       {items.length > 0 && (
-        <div className="px-4 py-4 border-t border-sky-100/60 bg-white/60">
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2.5">{t.accommodation.legend}</p>
-          <div className="flex flex-wrap gap-2">
+        <div className="px-3 py-3 border-t border-sky-100/60 bg-white/60">
+          <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">{t.accommodation.legend}</p>
+          <div className="flex flex-wrap gap-1.5">
             {sorted.map((item) => {
               const [c1, c2] = TYPE_GRADIENT[item.type] ?? ["#9ca3af", "#6b7280"];
               const nights   = nightsCount(item.checkIn, item.checkOut);
@@ -327,20 +308,14 @@ function AccommodationCalendar({
                 <button
                   key={item.id}
                   onClick={() => onSelect(item)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-white/80 bg-white/70 hover:bg-white hover:shadow-md transition-all text-left"
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-white/80 bg-white/70 hover:bg-white hover:shadow-sm transition-all text-left"
                 >
-                  <span
-                    className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm"
-                    style={{ background: `linear-gradient(135deg, ${c1}, ${c2})` }}
-                  />
-                  <span className="text-xs font-bold text-gray-800">{item.name}</span>
-                  <span className="text-[10px] text-gray-400">
+                  <span className="w-2 h-2 rounded-full shrink-0" style={{ background: `linear-gradient(135deg, ${c1}, ${c2})` }} />
+                  <span className="text-[10px] font-bold text-gray-800">{item.name}</span>
+                  <span className="text-[9px] text-gray-400">
                     {item.checkIn.slice(5, 10).replace("-", "/")} → {item.checkOut.slice(5, 10).replace("-", "/")}
                   </span>
-                  <span
-                    className="text-[10px] font-bold px-1.5 py-0.5 rounded-full text-white leading-none"
-                    style={{ background: `linear-gradient(90deg, ${c1}, ${c2})` }}
-                  >
+                  <span className="text-[9px] font-bold px-1 py-0.5 rounded-full text-white leading-none" style={{ background: `linear-gradient(90deg, ${c1}, ${c2})` }}>
                     {nights}n
                   </span>
                 </button>
