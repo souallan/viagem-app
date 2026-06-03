@@ -8,7 +8,6 @@ export function EmailVerificationBanner({ email }: { email: string }) {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
-  // Auto-dismiss when user returns to tab after verifying in another tab
   useEffect(() => {
     async function checkVerified() {
       try {
@@ -20,6 +19,7 @@ export function EmailVerificationBanner({ email }: { email: string }) {
       } catch { /* silent */ }
     }
 
+    checkVerified(); // dismiss immediately if already verified in DB
     const onFocus = () => checkVerified();
     window.addEventListener("focus", onFocus);
     document.addEventListener("visibilitychange", () => {
