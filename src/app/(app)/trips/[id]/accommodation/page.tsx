@@ -333,10 +333,12 @@ function AccommodationCalendar({
 function AccommodationDetail({
   item,
   onClose,
+  onEdit,
   onDelete,
 }: {
   item: Accommodation;
   onClose: () => void;
+  onEdit: (item: Accommodation) => void;
   onDelete: (id: string) => void;
 }) {
   const { t } = useLanguage();
@@ -451,6 +453,10 @@ function AccommodationDetail({
         </button>
         <div className="flex-1" />
         <Button variant="outline" onClick={onClose}>{t.accommodation.close}</Button>
+        <Button onClick={() => { onClose(); onEdit(item); }} className="gap-1.5">
+          <Pencil className="h-3.5 w-3.5" />
+          {t.common.edit}
+        </Button>
       </DialogFooter>
     </Dialog>
   );
@@ -843,6 +849,7 @@ export default function AccommodationPage() {
         <AccommodationDetail
           item={selected}
           onClose={() => setSelected(null)}
+          onEdit={(item) => { setSelected(null); openEdit(item); }}
           onDelete={(itemId) => { handleDelete(itemId); setSelected(null); }}
         />
       )}
