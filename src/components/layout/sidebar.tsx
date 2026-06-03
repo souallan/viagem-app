@@ -1,9 +1,9 @@
 ﻿"use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Route, Plane, Lightbulb, Globe, BookOpen, Mail, Instagram, MessageCircle, UserCircle2, Settings, Lock, Download, X, LogOut } from "lucide-react";
+import { LayoutDashboard, Route, Plane, Lightbulb, Globe, BookOpen, Mail, Instagram, MessageCircle, UserCircle2, Settings, Lock, X, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
 import { SITE_CONFIG } from "@/lib/site-config";
@@ -20,18 +20,6 @@ const LANGS: { code: Lang; label: string; flag: string }[] = [
 export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClose?: () => void }) {
   const pathname = usePathname();
   const { t, lang, setLang } = useLanguage();
-  const [installPrompt, setInstallPrompt] = useState<Event & { prompt?: () => Promise<void> } | null>(null);
-  const [installed, setInstalled] = useState(false);
-
-  useEffect(() => {
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setInstallPrompt(e as Event & { prompt?: () => Promise<void> });
-    };
-    window.addEventListener("beforeinstallprompt", handler);
-    window.addEventListener("appinstalled", () => setInstalled(true));
-    return () => window.removeEventListener("beforeinstallprompt", handler);
-  }, []);
 
   const navItems = [
     { href: "/dashboard", label: t.nav.myTrips, icon: LayoutDashboard },
@@ -149,19 +137,6 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
 
       {/* ── Bottom area ── */}
       <div className="relative z-10 border-t border-white/5 mt-auto">
-
-        {/* PWA install */}
-        {installPrompt && !installed && (
-          <div className="px-3 pt-3">
-            <button
-              onClick={() => installPrompt.prompt?.()}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-violet-300 hover:text-white bg-violet-600/15 hover:bg-violet-600/25 border border-violet-500/20 transition-all"
-            >
-              <Download className="h-3.5 w-3.5 shrink-0" />
-              Instalar aplicativo
-            </button>
-          </div>
-        )}
 
         {/* Logout */}
         <div className="px-3 pt-3">
