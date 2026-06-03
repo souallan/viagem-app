@@ -111,6 +111,7 @@ Registered routes:
 - `/admin/users` — DELETE, GET, PATCH
 - `/announcement` — GET
 - `/auth/[...nextauth]` — 
+- `/auth/check-admin-credentials` — POST
 - `/auth/check-credentials` — POST
 - `/auth/check-verification` — GET
 - `/auth/forgot-password` — POST
@@ -131,6 +132,7 @@ Registered routes:
 - `/public-stats` — GET
 - `/referral` — GET
 - `/register` — POST
+- `/setup-admin` — POST
 - `/share/[token]` — GET
 - `/tips/community` — GET
 - `/tips/external` — GET
@@ -159,6 +161,7 @@ Registered routes:
 - `/backoffice/audit`
 - `/backoffice/comments`
 - `/backoffice/content`
+- `/backoffice/login`
 - `/backoffice/newsletter`
 - `/backoffice/posts`
 - `/backoffice/referrals`
