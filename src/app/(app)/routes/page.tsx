@@ -51,13 +51,14 @@ interface RouteComment {
 }
 
 // ── Continent config ─────────────────────────────────────────
+// key = internal value used for filtering; label comes from translations
 
-const CONTINENTS: { label: string; icon: string; color: string; activeBg: string; activeBorder: string }[] = [
-  { label: "Todos",        icon: "🌍", color: "text-gray-700",  activeBg: "bg-primary-600",  activeBorder: "border-primary-600" },
-  { label: "Europa",       icon: "🏰", color: "text-blue-700",  activeBg: "bg-blue-600",     activeBorder: "border-blue-600"    },
-  { label: "Ásia",         icon: "🏯", color: "text-amber-700", activeBg: "bg-amber-500",    activeBorder: "border-amber-500"   },
-  { label: "Américas",     icon: "🗽", color: "text-teal-700",  activeBg: "bg-teal-600",     activeBorder: "border-teal-600"    },
-  { label: "Oriente Médio",icon: "🕌", color: "text-purple-700",activeBg: "bg-purple-600",   activeBorder: "border-purple-600"  },
+const CONTINENT_DEFS: { key: string; dbValue: string | null; icon: string; color: string; activeBg: string; activeBorder: string }[] = [
+  { key: "all",         dbValue: null,           icon: "🌍", color: "text-gray-700",  activeBg: "bg-primary-600",  activeBorder: "border-primary-600" },
+  { key: "Europa",      dbValue: "Europa",        icon: "🏰", color: "text-blue-700",  activeBg: "bg-blue-600",     activeBorder: "border-blue-600"    },
+  { key: "Asia",        dbValue: "Ásia",          icon: "🏯", color: "text-amber-700", activeBg: "bg-amber-500",    activeBorder: "border-amber-500"   },
+  { key: "Americas",    dbValue: "Américas",      icon: "🗽", color: "text-teal-700",  activeBg: "bg-teal-600",     activeBorder: "border-teal-600"    },
+  { key: "MiddleEast",  dbValue: "Oriente Médio", icon: "🕌", color: "text-purple-700",activeBg: "bg-purple-600",   activeBorder: "border-purple-600"  },
 ];
 
 const CONTINENT_CARD_ACCENT: Record<string, string> = {
@@ -438,7 +439,7 @@ export default function RoutesPage() {
     searchParams.get("tab") === "community" ? "comunidade" : "curados"
   );
   const [search, setSearch] = useState("");
-  const [continent, setContinent] = useState("Todos");
+  const [continent, setContinent] = useState("all");
 
   // Community routes state
   const [communityRoutes, setCommunityRoutes] = useState<CommunityRoute[]>([]);
@@ -462,7 +463,7 @@ export default function RoutesPage() {
   function switchTab(t: "curados" | "comunidade") {
     setTab(t);
     setSearch("");
-    setContinent("Todos");
+    setContinent("all");
     const params = new URLSearchParams(searchParams.toString());
     if (t === "comunidade") params.set("tab", "community");
     else params.delete("tab");
@@ -478,7 +479,8 @@ export default function RoutesPage() {
         tmpl.destination.toLowerCase().includes(q) ||
         tmpl.tags.some((tag) => tag.toLowerCase().includes(q)) ||
         tmpl.highlights.some((h) => h.toLowerCase().includes(q));
-      const matchesContinent = continent === "Todos" || tmpl.continent === continent;
+      const def = CONTINENT_DEFS.find((c) => c.key === continent);
+      const matchesContinent = continent === "all" || tmpl.continent === def?.dbValue;
       return matchesSearch && matchesContinent;
     });
   }, [search, continent]);
@@ -502,7 +504,11 @@ export default function RoutesPage() {
     return { total: ROUTE_TEMPLATES.length, destinations, continents };
   }, []);
 
-  const activeContinent = CONTINENTS.find((c) => c.label === continent) ?? CONTINENTS[0];
+  const activeContinent = CONTINENT_DEFS.find((c) => c.key === continent) ?? CONTINENT_DEFS[0];
+  const CONTINENTS = CONTINENT_DEFS.map((c) => ({
+    ...c,
+    label: (t.routes.continents as Record<string, string>)[c.key] ?? c.key,
+  }));
   const filtered = tab === "curados" ? filteredCurados : filteredCommunity;
 
   return (
@@ -593,11 +599,11 @@ export default function RoutesPage() {
       {tab === "curados" && (
         <div className="flex gap-2 flex-wrap">
           {CONTINENTS.map((c) => {
-            const isActive = continent === c.label;
+            const isActive = continent === c.key;
             return (
               <button
-                key={c.label}
-                onClick={() => setContinent(c.label)}
+                key={c.key}
+                onClick={() => setContinent(c.key)}
                 className={cn(
                   "inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border transition-all",
                   isActive
@@ -635,9 +641,9 @@ export default function RoutesPage() {
         <p className="text-sm text-gray-500">
           <span className="font-bold text-gray-900">{filtered.length}</span>{" "}
           roteiro{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
-          {tab === "curados" && continent !== "Todos" && (
+          {tab === "curados" && continent !== "all" && (
             <span className="ml-1">
-              em <span className="font-semibold text-gray-700">{activeContinent.icon} {continent}</span>
+              em <span className="font-semibold text-gray-700">{activeContinent.icon} {CONTINENTS.find(c => c.key === continent)?.label ?? continent}</span>
             </span>
           )}
           {search && (

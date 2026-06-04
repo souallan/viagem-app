@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/language-context";
 
 interface UserProfile {
   id: string;
@@ -30,26 +31,7 @@ interface UserProfile {
   };
 }
 
-const CURRENCIES = [
-  { code: "BRL", label: "R$ — Real Brasileiro" },
-  { code: "USD", label: "$ — Dólar Americano" },
-  { code: "EUR", label: "€ — Euro" },
-  { code: "GBP", label: "£ — Libra Esterlina" },
-  { code: "ARS", label: "$ — Peso Argentino" },
-  { code: "CLP", label: "$ — Peso Chileno" },
-  { code: "COP", label: "$ — Peso Colombiano" },
-  { code: "MXN", label: "$ — Peso Mexicano" },
-  { code: "JPY", label: "¥ — Iene Japonês" },
-  { code: "CNY", label: "¥ — Yuan Chinês" },
-  { code: "AUD", label: "A$ — Dólar Australiano" },
-  { code: "CAD", label: "C$ — Dólar Canadense" },
-];
-
-const COUNTRIES = [
-  "Brasil", "Argentina", "Chile", "Colômbia", "México", "Peru", "Uruguai", "Paraguai",
-  "Portugal", "Espanha", "França", "Alemanha", "Itália", "Reino Unido", "Países Baixos",
-  "Estados Unidos", "Canadá", "Austrália", "Japão", "China", "Outro",
-];
+const CURRENCY_CODES = ["BRL","USD","EUR","GBP","ARS","CLP","COP","MXN","JPY","CNY","AUD","CAD"] as const;
 
 function Avatar({ name, image, size = "lg" }: { name: string | null; image: string | null; size?: "sm" | "lg" }) {
   const initials = (name ?? "U").split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
@@ -73,6 +55,14 @@ function Avatar({ name, image, size = "lg" }: { name: string | null; image: stri
 }
 
 export default function ProfilePage() {
+  const { t } = useLanguage();
+  const tp = t.profile;
+  const CURRENCIES = CURRENCY_CODES.map((code) => ({
+    code,
+    label: (tp.currencies as Record<string, string>)[code] ?? code,
+  }));
+  const COUNTRIES = tp.countries as unknown as string[];
+
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -126,10 +116,10 @@ export default function ProfilePage() {
       const updated = await res.json();
       setUser((prev) => prev ? { ...prev, name: updated.name, image: updated.image, country: updated.country, currency: updated.currency, bio: updated.bio } : prev);
       setEditingProfile(false);
-      setProfileMsg({ type: "ok", text: "Perfil atualizado com sucesso." });
+      setProfileMsg({ type: "ok", text: tp.savedOk });
     } else {
       const data = await res.json().catch(() => ({}));
-      setProfileMsg({ type: "err", text: data.error ?? "Erro ao salvar perfil." });
+      setProfileMsg({ type: "err", text: data.error ?? tp.savedErr });
     }
   }
 
@@ -161,7 +151,7 @@ export default function ProfilePage() {
       await signOut({ callbackUrl: "/login" });
     } else {
       const data = await res.json().catch(() => ({}));
-      setDeleteMsg({ type: "err", text: data.error ?? "Erro ao excluir conta." });
+      setDeleteMsg({ type: "err", text: data.error ?? tp.deleteErr });
     }
   }
 
@@ -169,11 +159,11 @@ export default function ProfilePage() {
     e.preventDefault();
     setPwMsg(null);
     if (pwForm.next !== pwForm.confirm) {
-      setPwMsg({ type: "err", text: "As senhas novas não coincidem." });
+      setPwMsg({ type: "err", text: tp.pwNoMatch });
       return;
     }
     if (pwForm.next.length < 8) {
-      setPwMsg({ type: "err", text: "A nova senha deve ter no mínimo 8 caracteres." });
+      setPwMsg({ type: "err", text: tp.pwTooShort });
       return;
     }
     setPwSaving(true);
@@ -185,10 +175,10 @@ export default function ProfilePage() {
     setPwSaving(false);
     if (res.ok) {
       setPwForm({ current: "", next: "", confirm: "" });
-      setPwMsg({ type: "ok", text: "Senha alterada com sucesso." });
+      setPwMsg({ type: "ok", text: tp.pwOk });
     } else {
       const data = await res.json().catch(() => ({}));
-      setPwMsg({ type: "err", text: data.error ?? "Erro ao alterar senha." });
+      setPwMsg({ type: "err", text: data.error ?? tp.pwErr });
     }
   }
 
@@ -207,9 +197,9 @@ export default function ProfilePage() {
   const joined = new Date(user.createdAt).toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
 
   const STATS = [
-    { label: "Viagens",     value: user.stats.trips,       icon: Plane,   color: "text-primary-600",  bg: "bg-primary-50"  },
-    { label: "Relatos",     value: user.stats.experiences,  icon: BookOpen,color: "text-violet-600",   bg: "bg-violet-50"   },
-    { label: "Roteiros",    value: user.stats.routes,       icon: Route,   color: "text-orange-600",   bg: "bg-orange-50"   },
+    { label: tp.statsTrips,       value: user.stats.trips,       icon: Plane,    color: "text-primary-600", bg: "bg-primary-50" },
+    { label: tp.statsExperiences, value: user.stats.experiences,  icon: BookOpen, color: "text-violet-600",  bg: "bg-violet-50"  },
+    { label: tp.statsRoutes,      value: user.stats.routes,       icon: Route,    color: "text-orange-600",  bg: "bg-orange-50"  },
   ];
 
   return (
@@ -230,7 +220,7 @@ export default function ProfilePage() {
             </button>
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="text-xl font-black text-gray-900 truncate">{user.name ?? "Sem nome"}</h1>
+            <h1 className="text-xl font-black text-gray-900 truncate">{user.name ?? tp.noName}</h1>
             <p className="text-sm text-gray-500 mt-0.5 flex items-center gap-1.5">
               <Mail className="h-3.5 w-3.5 shrink-0" />
               {user.email}
@@ -247,7 +237,7 @@ export default function ProfilePage() {
                   <DollarSign className="h-3 w-3" />{user.currency}
                 </span>
               )}
-              <span className="text-xs text-gray-400">Membro desde {joined}</span>
+              <span className="text-xs text-gray-400">{tp.memberSince} {joined}</span>
             </div>
           </div>
           <button
@@ -278,19 +268,19 @@ export default function ProfilePage() {
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-5">
           <h2 className="font-bold text-gray-800 flex items-center gap-2">
             <User className="h-4 w-4 text-primary-500" />
-            Editar perfil
+            {tp.editProfileTitle}
           </h2>
           <form onSubmit={handleProfileSave} className="space-y-4">
             <div className="space-y-1.5">
-              <Label>Nome</Label>
+              <Label>{tp.fieldName}</Label>
               <Input
                 value={profileForm.name}
                 onChange={(e) => setProfileForm((p) => ({ ...p, name: e.target.value }))}
-                placeholder="Seu nome completo"
+                placeholder={tp.namePlaceholder}
               />
             </div>
             <div className="space-y-1.5">
-              <Label>URL da foto de perfil</Label>
+              <Label>{tp.fieldImage}</Label>
               <Input
                 value={profileForm.image}
                 onChange={(e) => setProfileForm((p) => ({ ...p, image: e.target.value }))}
@@ -300,25 +290,25 @@ export default function ProfilePage() {
               {profileForm.image && (
                 <div className="mt-2 flex items-center gap-3">
                   <Avatar name={profileForm.name} image={profileForm.image} size="sm" />
-                  <span className="text-xs text-gray-400">Pré-visualização</span>
+                  <span className="text-xs text-gray-400">{tp.preview}</span>
                 </div>
               )}
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="flex items-center gap-1.5"><Globe className="h-3.5 w-3.5 text-gray-400" />País de origem</Label>
+                <Label className="flex items-center gap-1.5"><Globe className="h-3.5 w-3.5 text-gray-400" />{tp.fieldCountry}</Label>
                 <select
                   value={profileForm.country}
                   onChange={(e) => setProfileForm((p) => ({ ...p, country: e.target.value }))}
                   className="w-full h-10 px-3 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-200"
                 >
-                  <option value="">Selecionar...</option>
+                  <option value="">{tp.selectCountry}</option>
                   {COUNTRIES.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div className="space-y-1.5">
-                <Label className="flex items-center gap-1.5"><DollarSign className="h-3.5 w-3.5 text-gray-400" />Moeda preferida</Label>
+                <Label className="flex items-center gap-1.5"><DollarSign className="h-3.5 w-3.5 text-gray-400" />{tp.fieldCurrency}</Label>
                 <select
                   value={profileForm.currency}
                   onChange={(e) => setProfileForm((p) => ({ ...p, currency: e.target.value }))}
@@ -330,11 +320,11 @@ export default function ProfilePage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="flex items-center gap-1.5"><FileText className="h-3.5 w-3.5 text-gray-400" />Bio <span className="text-gray-400 font-normal">(opcional · até 300 caracteres)</span></Label>
+              <Label className="flex items-center gap-1.5"><FileText className="h-3.5 w-3.5 text-gray-400" />{tp.fieldBio} <span className="text-gray-400 font-normal">({tp.bioHint})</span></Label>
               <textarea
                 value={profileForm.bio}
                 onChange={(e) => setProfileForm((p) => ({ ...p, bio: e.target.value }))}
-                placeholder="Conte um pouco sobre você como viajante..."
+                placeholder={tp.bioPlaceholder}
                 maxLength={300}
                 rows={3}
                 className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-200 resize-none"
@@ -359,7 +349,7 @@ export default function ProfilePage() {
             <div className="flex items-center gap-3 pt-1">
               <Button type="submit" disabled={profileSaving} size="sm" className="gap-2">
                 <Save className="h-4 w-4" />
-                {profileSaving ? "Salvando..." : "Salvar"}
+                {profileSaving ? tp.saving : t.common.save}
               </Button>
               <Button
                 type="button"
@@ -367,7 +357,7 @@ export default function ProfilePage() {
                 size="sm"
                 onClick={() => { setEditingProfile(false); setProfileMsg(null); }}
               >
-                Cancelar
+                {t.common.cancel}
               </Button>
             </div>
           </form>
@@ -378,11 +368,11 @@ export default function ProfilePage() {
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-5">
         <h2 className="font-bold text-gray-800 flex items-center gap-2">
           <Lock className="h-4 w-4 text-gray-500" />
-          Alterar senha
+          {tp.changePwTitle}
         </h2>
         <form onSubmit={handlePasswordSave} className="space-y-4">
           <div className="space-y-1.5">
-            <Label>Senha atual</Label>
+            <Label>{tp.currentPw}</Label>
             <Input
               type="password"
               value={pwForm.current}
@@ -393,7 +383,7 @@ export default function ProfilePage() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <Label>Nova senha</Label>
+              <Label>{tp.newPw}</Label>
               <Input
                 type="password"
                 value={pwForm.next}
@@ -403,7 +393,7 @@ export default function ProfilePage() {
               />
             </div>
             <div className="space-y-1.5">
-              <Label>Confirmar nova senha</Label>
+              <Label>{tp.confirmPw}</Label>
               <Input
                 type="password"
                 value={pwForm.confirm}
@@ -430,7 +420,7 @@ export default function ProfilePage() {
 
           <Button type="submit" disabled={pwSaving} variant="outline" size="sm" className="gap-2">
             <Lock className="h-4 w-4" />
-            {pwSaving ? "Alterando..." : "Alterar senha"}
+            {pwSaving ? tp.changing : tp.changePwBtn}
           </Button>
         </form>
       </div>
@@ -439,10 +429,10 @@ export default function ProfilePage() {
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
         <h2 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
           <LogOut className="h-4 w-4 text-red-400" />
-          Sessão
+          {tp.sessionTitle}
         </h2>
         <p className="text-sm text-gray-500 mb-4">
-          Você está logado como <span className="font-semibold text-gray-700">{user.email}</span>. Ao sair, será redirecionado para a tela de login.
+          {tp.sessionDesc} <span className="font-semibold text-gray-700">{user.email}</span>. {tp.sessionDesc2}
         </p>
         <Button
           variant="outline"
@@ -451,7 +441,7 @@ export default function ProfilePage() {
           className="gap-2 border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
         >
           <LogOut className="h-4 w-4" />
-          Sair da conta
+          {tp.signOut}
         </Button>
       </div>
 
@@ -460,11 +450,9 @@ export default function ProfilePage() {
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-4">
           <h2 className="font-bold text-gray-800 flex items-center gap-2">
             <Share2 className="h-4 w-4 text-blue-500" />
-            Indique amigos
+            {tp.referralTitle}
           </h2>
-          <p className="text-sm text-gray-500 -mt-1">
-            Compartilhe seu link e veja quem entrou no RoteiroApp pelo seu convite.
-          </p>
+          <p className="text-sm text-gray-500 -mt-1">{tp.referralDesc}</p>
 
           <div className="flex items-center gap-2 p-3 rounded-2xl bg-blue-50 border border-blue-100">
             <code className="flex-1 text-sm font-mono text-blue-700 truncate">
@@ -481,7 +469,7 @@ export default function ProfilePage() {
               className="shrink-0 flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-colors"
             >
               {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-              {copied ? "Copiado!" : "Copiar"}
+              {copied ? tp.copied : tp.copy}
             </button>
           </div>
 
@@ -489,9 +477,9 @@ export default function ProfilePage() {
             <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gray-50 border border-gray-100">
               <Users className="h-4 w-4 text-gray-400" />
               <span className="text-sm font-bold text-gray-800">{referral.referredCount}</span>
-              <span className="text-sm text-gray-500">{referral.referredCount === 1 ? "amigo convidado" : "amigos convidados"}</span>
+              <span className="text-sm text-gray-500">{referral.referredCount === 1 ? tp.friendSingular : tp.friendPlural}</span>
             </div>
-            <div className="text-xs text-gray-400">Código: <span className="font-bold font-mono text-gray-600">{referral.code}</span></div>
+            <div className="text-xs text-gray-400">{tp.codeLabel}: <span className="font-bold font-mono text-gray-600">{referral.code}</span></div>
           </div>
         </div>
       )}
@@ -500,18 +488,18 @@ export default function ProfilePage() {
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-6">
         <h2 className="font-bold text-gray-800 flex items-center gap-2">
           <ShieldAlert className="h-4 w-4 text-violet-500" />
-          Privacidade e seus dados
+          {tp.privacyTitle}
         </h2>
         <p className="text-xs text-gray-400 -mt-2">
-          Em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei 13.709/2018).{" "}
-          <Link href="/privacy" className="text-primary-600 hover:underline">Ver política de privacidade</Link>
+          {tp.privacyDesc}{" "}
+          <Link href="/privacy" className="text-primary-600 hover:underline">{tp.privacyLink}</Link>
         </p>
 
         {/* Export */}
         <div className="flex items-start justify-between gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100">
           <div>
-            <p className="text-sm font-semibold text-gray-800">Exportar meus dados</p>
-            <p className="text-xs text-gray-500 mt-0.5">Baixe um arquivo JSON com todas as viagens, experiências e roteiros vinculados à sua conta.</p>
+            <p className="text-sm font-semibold text-gray-800">{tp.exportTitle}</p>
+            <p className="text-xs text-gray-500 mt-0.5">{tp.exportDesc}</p>
           </div>
           <Button
             variant="outline"
@@ -521,7 +509,7 @@ export default function ProfilePage() {
             className="gap-2 shrink-0"
           >
             <Download className="h-3.5 w-3.5" />
-            {exportLoading ? "Gerando..." : "Baixar"}
+            {exportLoading ? tp.generating : tp.download}
           </Button>
         </div>
 
@@ -529,15 +517,13 @@ export default function ProfilePage() {
         <div className="p-4 rounded-2xl bg-red-50 border border-red-100 space-y-3">
           <div className="flex items-center gap-2">
             <Trash2 className="h-4 w-4 text-red-500 shrink-0" />
-            <p className="text-sm font-semibold text-red-700">Excluir conta permanentemente</p>
+            <p className="text-sm font-semibold text-red-700">{tp.deleteTitle}</p>
           </div>
-          <p className="text-xs text-red-500">
-            Esta ação é irreversível. Todos os seus dados (viagens, despesas, documentos, relatos e roteiros) serão apagados definitivamente.
-          </p>
+          <p className="text-xs text-red-500">{tp.deleteDesc}</p>
           <form onSubmit={handleDeleteAccount} className="space-y-3">
             <Input
               type="password"
-              placeholder="Digite sua senha para confirmar"
+              placeholder={tp.deletePwPlaceholder}
               value={deleteConfirm}
               onChange={(e) => setDeleteConfirm(e.target.value)}
               className="border-red-200 focus:border-red-400 bg-white text-sm"
@@ -558,7 +544,7 @@ export default function ProfilePage() {
               className="gap-2 bg-red-600 hover:bg-red-700 text-white border-0"
             >
               <Trash2 className="h-3.5 w-3.5" />
-              {deleting ? "Excluindo..." : "Excluir minha conta"}
+              {deleting ? tp.deleting : tp.deleteBtn}
             </Button>
           </form>
         </div>

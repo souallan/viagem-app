@@ -25,12 +25,12 @@ interface Experience {
   createdAt: string;
 }
 
-const MOOD_CONFIG: Record<string, { emoji: string; label: string; bg: string; text: string; border: string }> = {
-  AMAZING:     { emoji: "✨", label: "Incrível",    bg: "bg-purple-100", text: "text-purple-700", border: "border-purple-200" },
-  GREAT:       { emoji: "😃", label: "Ótima",       bg: "bg-green-100",  text: "text-green-700",  border: "border-green-200"  },
-  GOOD:        { emoji: "😊", label: "Boa",         bg: "bg-blue-100",   text: "text-blue-700",   border: "border-blue-200"   },
-  MIXED:       { emoji: "🤔", label: "Mista",       bg: "bg-amber-100",  text: "text-amber-700",  border: "border-amber-200"  },
-  CHALLENGING: { emoji: "💪", label: "Desafiadora", bg: "bg-red-100",    text: "text-red-700",    border: "border-red-200"    },
+const MOOD_CONFIG: Record<string, { emoji: string; bg: string; text: string; border: string }> = {
+  AMAZING:     { emoji: "✨", bg: "bg-purple-100", text: "text-purple-700", border: "border-purple-200" },
+  GREAT:       { emoji: "😃", bg: "bg-green-100",  text: "text-green-700",  border: "border-green-200"  },
+  GOOD:        { emoji: "😊", bg: "bg-blue-100",   text: "text-blue-700",   border: "border-blue-200"   },
+  MIXED:       { emoji: "🤔", bg: "bg-amber-100",  text: "text-amber-700",  border: "border-amber-200"  },
+  CHALLENGING: { emoji: "💪", bg: "bg-red-100",    text: "text-red-700",    border: "border-red-200"    },
 };
 
 function readingTime(content: string): number {
@@ -50,8 +50,10 @@ function StarRating({ rating, size = "sm" }: { rating: number | null; size?: "sm
 }
 
 function FeaturedCard({ exp, onDelete }: { exp: Experience; onDelete: (id: string) => void }) {
+  const { t } = useLanguage();
   const mood = exp.mood ? MOOD_CONFIG[exp.mood] : null;
-  const tags = exp.tags ? exp.tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
+  const moodLabel = exp.mood ? (t.experiences.moods as Record<string, string>)[exp.mood] ?? exp.mood : null;
+  const tags = exp.tags ? exp.tags.split(",").map((tag) => tag.trim()).filter(Boolean) : [];
   const minutes = readingTime(exp.content);
 
   return (
@@ -76,7 +78,7 @@ function FeaturedCard({ exp, onDelete }: { exp: Experience; onDelete: (id: strin
         {/* Top badges */}
         <div className="absolute top-4 left-4 right-4 flex items-start justify-between">
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold tracking-wide">
-            ⭐ Destaque
+            {t.experiences.featured}
           </span>
           <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <Link
@@ -106,13 +108,13 @@ function FeaturedCard({ exp, onDelete }: { exp: Experience; onDelete: (id: strin
             <span className="text-white/30">·</span>
             <span className="flex items-center gap-1.5 text-white/70 text-xs font-medium">
               <Clock className="h-3 w-3" />
-              {minutes} min de leitura
+              {minutes} {t.experiences.readMin}
             </span>
             {mood && (
               <>
                 <span className="text-white/30">·</span>
                 <span className={cn("inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold border", mood.bg, mood.text, mood.border)}>
-                  {mood.emoji} {mood.label}
+                  {mood.emoji} {moodLabel}
                 </span>
               </>
             )}
@@ -146,8 +148,10 @@ function FeaturedCard({ exp, onDelete }: { exp: Experience; onDelete: (id: strin
 }
 
 function ExperienceCard({ exp, onDelete }: { exp: Experience; onDelete: (id: string) => void }) {
+  const { t } = useLanguage();
   const mood = exp.mood ? MOOD_CONFIG[exp.mood] : null;
-  const tags = exp.tags ? exp.tags.split(",").map((t) => t.trim()).filter(Boolean) : [];
+  const moodLabel = exp.mood ? (t.experiences.moods as Record<string, string>)[exp.mood] ?? exp.mood : null;
+  const tags = exp.tags ? exp.tags.split(",").map((tag) => tag.trim()).filter(Boolean) : [];
   const excerpt = exp.excerpt || exp.content.slice(0, 100) + (exp.content.length > 100 ? "…" : "");
   const minutes = readingTime(exp.content);
 
@@ -174,7 +178,7 @@ function ExperienceCard({ exp, onDelete }: { exp: Experience; onDelete: (id: str
           {mood && (
             <div className="absolute top-3 left-3">
               <span className={cn("inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border backdrop-blur-sm", mood.bg, mood.text, mood.border)}>
-                {mood.emoji} {mood.label}
+                {mood.emoji} {moodLabel}
               </span>
             </div>
           )}
@@ -243,13 +247,15 @@ function ExperienceCard({ exp, onDelete }: { exp: Experience; onDelete: (id: str
   );
 }
 
-const MOOD_FILTERS = [
-  { value: "ALL", label: "Todas" },
-  ...Object.entries(MOOD_CONFIG).map(([k, v]) => ({ value: k, label: `${v.emoji} ${v.label}` })),
-];
-
 export default function ExperiencesPage() {
   const { t } = useLanguage();
+  const MOOD_FILTERS = [
+    { value: "ALL", label: t.experiences.filterAll },
+    ...Object.entries(MOOD_CONFIG).map(([k, v]) => ({
+      value: k,
+      label: `${v.emoji} ${(t.experiences.moods as Record<string, string>)[k] ?? k}`,
+    })),
+  ];
   const router = useRouter();
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
@@ -328,12 +334,12 @@ export default function ExperiencesPage() {
                   </div>
                   <div className="text-center bg-white/5 border border-white/10 rounded-2xl px-4 py-3">
                     <p className="text-2xl font-black text-white leading-none">{totalMinutes}</p>
-                    <p className="text-[10px] text-slate-400 font-semibold mt-0.5 uppercase tracking-wide">min lidos</p>
+                    <p className="text-[10px] text-slate-400 font-semibold mt-0.5 uppercase tracking-wide">{t.experiences.readMin}</p>
                   </div>
                 </div>
               )}
               <Button onClick={() => router.push("/experiences/new")} className="gap-2 shrink-0">
-                <Plus className="h-4 w-4" /> Novo Relato
+                <Plus className="h-4 w-4" /> {t.experiences.newExperience}
               </Button>
             </div>
           </div>
@@ -393,12 +399,12 @@ export default function ExperiencesPage() {
           <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary-50 to-violet-50 border border-primary-100 flex items-center justify-center mx-auto mb-5 shadow-sm">
             <BookOpen className="h-9 w-9 text-primary-400" />
           </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">Nenhum relato ainda</h3>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">{t.experiences.noExperiences}</h3>
           <p className="text-gray-500 mb-8 max-w-sm mx-auto text-sm leading-relaxed">
-            Comece documentando sua primeira aventura. Cada viagem tem uma história para contar.
+            {t.experiences.noExperiencesDesc}
           </p>
           <Button onClick={() => router.push("/experiences/new")} className="gap-2">
-            <Plus className="h-4 w-4" /> Escrever primeiro relato
+            <Plus className="h-4 w-4" /> {t.experiences.newExperience}
           </Button>
         </div>
       )}
@@ -420,7 +426,7 @@ export default function ExperiencesPage() {
             <p className="text-sm text-gray-500">
               {filtered.length} relato{filtered.length !== 1 ? "s" : ""}
               {search ? ` para "${search}"` : ""}
-              {moodFilter !== "ALL" && ` · ${MOOD_CONFIG[moodFilter]?.label ?? moodFilter}`}
+              {moodFilter !== "ALL" && ` · ${(t.experiences.moods as Record<string, string>)[moodFilter] ?? moodFilter}`}
             </p>
           )}
 

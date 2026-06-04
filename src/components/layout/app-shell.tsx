@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Sidebar } from "./sidebar";
 import { NotificationBell } from "./notification-bell";
 import Link from "next/link";
 import { Plane } from "lucide-react";
+import { useLanguage } from "@/contexts/language-context";
 
 export function AppShell({
   isAdmin,
@@ -15,6 +16,7 @@ export function AppShell({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const { t } = useLanguage();
 
   // Close sidebar when route changes (listen to popstate + custom navigation)
   useEffect(() => {
@@ -68,7 +70,7 @@ export function AppShell({
           <button
             onClick={() => setOpen(true)}
             className="w-9 h-9 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/8 transition-colors"
-            aria-label="Abrir menu"
+            aria-label={t.sidebar.openMenu}
           >
             <Menu className="h-5 w-5" />
           </button>

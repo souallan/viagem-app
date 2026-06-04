@@ -71,7 +71,7 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
             <button
               onClick={onClose}
               className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:text-white hover:bg-white/8 transition-colors"
-              aria-label="Fechar menu"
+              aria-label={t.sidebar.closeMenu}
             >
               <X className="h-4 w-4" />
             </button>
@@ -81,7 +81,7 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
 
       {/* Nav */}
       <nav className="relative z-10 flex-1 px-3 py-4 space-y-0.5">
-        <p className="text-[9px] font-bold text-slate-700 uppercase tracking-widest px-2.5 pb-2">Menu</p>
+        <p className="text-[9px] font-bold text-slate-700 uppercase tracking-widest px-2.5 pb-2">{t.sidebar.menu}</p>
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -147,7 +147,7 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
             <div className="w-6 h-6 rounded-md flex items-center justify-center shrink-0 bg-white/4 group-hover:bg-red-500/15 transition-colors">
               <LogOut className="h-3.5 w-3.5" />
             </div>
-            <span>Sair da conta</span>
+            <span>{t.sidebar.logout}</span>
           </button>
         </div>
 
