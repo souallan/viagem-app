@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { logger } from "@/lib/logger";
 
 async function verifyTrip(tripId: string, userId: string) {
   return prisma.trip.findFirst({ where: { id: tripId, userId } });
@@ -64,7 +65,7 @@ export async function POST(
     return NextResponse.json(item, { status: 201 });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    console.error("[accommodations POST]", msg);
+    logger.error("accommodations POST failed", { msg });
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

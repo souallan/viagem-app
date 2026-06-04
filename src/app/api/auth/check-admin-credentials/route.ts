@@ -7,7 +7,7 @@ import { rateLimit, getIp } from "@/lib/rate-limit";
 
 // Stricter rate limit for admin login: 3 attempts per IP per 15 minutes
 export async function POST(req: NextRequest) {
-  const rl = rateLimit({ key: `admin-login:${getIp(req)}`, limit: 3, windowMs: 15 * 60 * 1000 });
+  const rl = await rateLimit({ key: `admin-login:${getIp(req)}`, limit: 3, windowMs: 15 * 60 * 1000 });
   if (!rl.success) {
     return NextResponse.json(
       { error: "Muitas tentativas. Aguarde 15 minutos." },

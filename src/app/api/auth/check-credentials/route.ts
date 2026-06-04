@@ -7,7 +7,7 @@ import { rateLimit, getIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   // 10 attempts per IP per 15 minutes
-  const rl = rateLimit({ key: `login:${getIp(req)}`, limit: 10, windowMs: 15 * 60 * 1000 });
+  const rl = await rateLimit({ key: `login:${getIp(req)}`, limit: 10, windowMs: 15 * 60 * 1000 });
   if (!rl.success) {
     return NextResponse.json(
       { error: "Muitas tentativas. Aguarde alguns minutos." },

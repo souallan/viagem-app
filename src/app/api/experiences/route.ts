@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { stripHtml } from "@/lib/sanitize";
+import { logger } from "@/lib/logger";
 
 export async function GET() {
   const session = await auth();
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
     });
     return NextResponse.json(experience, { status: 201 });
   } catch (err) {
-    console.error("Experience create error:", err);
+    logger.error("Experience create error", { err: String(err) });
     return NextResponse.json({ error: "Erro ao salvar" }, { status: 500 });
   }
 }

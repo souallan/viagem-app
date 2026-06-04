@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { logger } from "@/lib/logger";
 
 function detectContinent(destination: string): string {
   const d = destination.toLowerCase();
@@ -101,7 +102,7 @@ export async function POST(
     });
     return NextResponse.json(route, { status: 201 });
   } catch (err) {
-    console.error("Share route error:", err);
+    logger.error("Share route error", { err: String(err) });
     return NextResponse.json({ error: "Erro ao compartilhar roteiro" }, { status: 500 });
   }
 }

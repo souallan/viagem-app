@@ -5,7 +5,7 @@ import { verifyResetToken } from "@/lib/otp";
 import { rateLimit, getIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
-  const rl = rateLimit({ key: `reset:${getIp(req)}`, limit: 5, windowMs: 15 * 60 * 1000 });
+  const rl = await rateLimit({ key: `reset:${getIp(req)}`, limit: 5, windowMs: 15 * 60 * 1000 });
   if (!rl.success) {
     return NextResponse.json({ error: "Muitas tentativas." }, { status: 429 });
   }

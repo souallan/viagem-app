@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { logger } from "@/lib/logger";
 
 export const revalidate = 3600;
 
@@ -24,7 +25,7 @@ export async function GET(req: Request) {
       headers: { "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=600" },
     });
   } catch (err) {
-    console.error("Exchange rate fetch failed:", err);
+    logger.error("Exchange rate fetch failed", { err: String(err) });
     return NextResponse.json({ error: "Não foi possível obter a cotação." }, { status: 502 });
   }
 }
