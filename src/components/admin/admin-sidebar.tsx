@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Users, FileText, BarChart3, Shield,
   ArrowLeft, Plane, Settings, Mail, X, ScrollText, GitBranch,
-  Megaphone, MessageSquare,
+  Megaphone, MessageSquare, Activity,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +19,7 @@ const NAV = [
   { href: "/backoffice/referrals", label: "Referrals", icon: GitBranch },
   { href: "/backoffice/content", label: "Conteúdo", icon: FileText },
   { href: "/backoffice/stats", label: "Estatísticas", icon: BarChart3 },
+  { href: "/backoffice/monitoring", label: "Monitoramento", icon: Activity },
   { href: "/backoffice/newsletter", label: "Newsletter", icon: Mail },
   { href: "/backoffice/settings", label: "Configurações", icon: Settings },
 ];
