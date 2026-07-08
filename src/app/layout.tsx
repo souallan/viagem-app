@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import { GATracker } from "@/components/analytics/ga-tracker";
+import { NativeBootstrap } from "@/components/native/native-bootstrap";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -102,6 +103,7 @@ export default function RootLayout({
         )}
       </head>
       <body className={inter.className}>
+        <NativeBootstrap />
         {GA_ID && (
           <Suspense fallback={null}>
             <GATracker gaId={GA_ID} />

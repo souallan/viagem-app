@@ -56,3 +56,20 @@
 - **Como validar:** `npx tsc --noEmit` → 0 erros. Instalar como PWA (Chrome → Instalar) deve usar ícone PNG; DevTools device com notch mostra barra/FAB fora das áreas seguras.
 - **Commit:** `feat(mobile): safe-area aplicada, ícones raster, CSP e gate do SW (Fase 1.2–1.5)`
 - **Status:** ✅ concluído — **Fase 1 concluída**
+
+---
+
+## [2026-07-08] Fase 3 · Capacitor — shell nativo Android + bootstrap
+- **Objetivo:** transformar o projeto num app nativo de verdade (Android já scaffoldado; iOS depende de Mac).
+- **O que foi feito:**
+  - Instalados `@capacitor/core`, `@capacitor/cli` (dev), `@capacitor/android`, `@capacitor/ios` e plugins: `app`, `status-bar`, `splash-screen`, `keyboard`, `network`, `preferences`, `share`.
+  - Criado `capacitor.config.ts` (Modelo A): `appId=com.roteiroapp.app`, `appName=RoteiroApp`, `server.url=https://roteiroapp.com`, `webDir=mobile/www`, config de SplashScreen/Keyboard/backgroundColor.
+  - Criado fallback `mobile/www/index.html` (tela de abertura/offline).
+  - `npx cap add android` → projeto nativo em `android/` com os 7 plugins detectados; config nativa confirmada (`server.url` correto).
+  - Criado `src/components/native/native-bootstrap.tsx` (client) e ligado no `layout.tsx`: só no app nativo ajusta StatusBar (escura), esconde SplashScreen, trata botão voltar do Android e marca `is-offline` no `<html>` via Network.
+- **Arquivos:** `capacitor.config.ts`, `mobile/www/index.html`, `android/**` (projeto nativo), `src/components/native/native-bootstrap.tsx`, `src/app/layout.tsx`, `package.json`/`package-lock.json`.
+- **Decisões/porquê:** Modelo A (WebView remoto) para reuso máximo — o app carrega roteiroapp.com. `@capacitor/ios` instalado, mas `npx cap add ios` deve rodar **no Mac** (gera `ios/` + pod install). Plugins importados dinamicamente e gateados por `isNativeApp()` → não afetam a web.
+- **Como validar:** `npm run build` completou sem erros com o Capacitor integrado. Para rodar no Android: Android Studio → `npx cap open android` (requer SDK).
+- **O que falta do usuário:** Android Studio+SDK para buildar o APK; Mac para iOS; logo em alta resolução para ícones/splash finais; decisão de `appId` (default `com.roteiroapp.app`).
+- **Commit:** `feat(mobile): Capacitor + Android nativo + bootstrap de plugins (Fase 3)`
+- **Status:** ✅ scaffold concluído (Android); iOS pendente de Mac

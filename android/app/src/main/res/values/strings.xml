@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">RoteiroApp</string>
+    <string name="title_activity_main">RoteiroApp</string>
+    <string name="package_name">com.roteiroapp.app</string>
+    <string name="custom_url_scheme">com.roteiroapp.app</string>
+</resources>

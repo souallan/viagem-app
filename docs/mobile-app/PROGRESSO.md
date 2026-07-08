@@ -12,7 +12,7 @@
 | 0 | Fundação do projeto | 🟡 Em andamento | Backup + branch + docs ✅; contas/Mac pendentes |
 | 1 | Hardening PWA | ✅ Concluída | viewport+safe-area, ícones raster, CSP, gate SW |
 | 2 | UX mobile/tablet | ⚪ Não iniciada | bottom-nav planejado |
-| 3 | Integração Capacitor | 🟡 Em andamento | — |
+| 3 | Integração Capacitor | 🟡 Android scaffoldado | Capacitor+Android+plugins ✅; iOS depende de Mac |
 | 4 | Recursos nativos | ⚪ Não iniciada | — |
 | 5 | Backend/infra | ⚪ Não iniciada | — |
 | 6 | Identidade visual | ⚪ Não iniciada | — |
@@ -36,8 +36,15 @@ Legenda: ✅ concluída · 🟡 em andamento · ⚪ não iniciada · 🔴 bloque
 - [x] Passo 4: CSP liberou câmbio/geocode/clima/tiles (conserta web também)
 - [x] Passo 5: `src/lib/native.ts` + service worker gateado sob Capacitor
 
+**Fase 3 — Capacitor** 🟡
+- [x] Capacitor core+cli, plataformas (Android add; iOS dep instalada), 7 plugins core
+- [x] `capacitor.config.ts` (appId `com.roteiroapp.app`, `server.url` roteiroapp.com), fallback `mobile/www`
+- [x] `native-bootstrap.tsx` (StatusBar, SplashScreen, back button Android, Network) ligado no layout
+- [ ] iOS (`npx cap add ios`) — **requer Mac**
+- [ ] Build/rodar APK — requer Android Studio + SDK
+
 ## ⏭️ Próximo passo
-- **Fase 3:** instalar Capacitor, configurar `appId`/`server.url` e adicionar plataforma Android; plugins core. Depois **Fase 2** (bottom-nav) e **Fase 4** (offline React Query).
+- **Fase 2:** bottom navigation mobile. Depois **Fase 4:** offline React Query. iOS/APK quando houver Mac/SDK.
 
 ## ⛔ Pendências que travam fases futuras
 - **Mac para build iOS** (Fase 3) — decidir físico vs. nuvem (CI)
