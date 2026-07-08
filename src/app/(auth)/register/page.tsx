@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { darkInputClass, autofillStyle } from "@/app/(auth)/_auth-input";
+import { trackEvent } from "@/lib/analytics";
 
 function getPasswordStrength(pw: string): { level: 0 | 1 | 2 | 3; label: string; color: string } {
   if (pw.length === 0) return { level: 0, label: "", color: "" };
@@ -69,6 +70,7 @@ function RegisterContent() {
         return;
       }
 
+      trackEvent("sign_up", { method: "email" });
       router.push("/login?registered=1");
     } catch {
       setError("Erro de conexão. Tente novamente.");

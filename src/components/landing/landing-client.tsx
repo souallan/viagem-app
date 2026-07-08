@@ -7,6 +7,7 @@ import {
   Globe, BookOpen, Route, BedDouble, Lightbulb, Camera,
 } from "lucide-react";
 import { landingI18n, type LandingLang } from "@/lib/landing-i18n";
+import { trackEvent } from "@/lib/analytics";
 
 // ── Imagens (public/screenshots/) ────────────────────────────────
 // roteiros.png       1690×878  hero principal
@@ -148,6 +149,7 @@ export function LandingClient({ stats }: Props) {
   async function handleNewsletter(e: React.FormEvent) {
     e.preventDefault(); setNlState("loading");
     const res = await fetch("/api/newsletter", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: nlEmail }) });
+    if (res.ok) trackEvent("newsletter_signup");
     setNlState(res.ok ? "success" : "error");
   }
 
