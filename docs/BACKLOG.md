@@ -65,7 +65,7 @@
 Foco: menos cliques até o objetivo. Economias mapeadas: criar viagem **6→3**, achar reserva na viagem **5→1-2**, add gasto **6→4**, add hospedagem **6→4**.
 | Status | Prioridade | Item | Economia |
 |---|---|---|---|
-| ⬜ | P0 | **13 abas da viagem** (`trip-tabs.tsx`): núcleo de **5 + "Mais"**, seção **"Reservas"** (Hospedagem+Transporte+Documentos), barra **sticky** | Hick/Fitts |
+| ✅ | P0 | **13 abas da viagem** → núcleo (Visão/Itinerário/Orçamento) + **Reservas ▾** + **Mais ▾**, alvos ≥44px, barra **sticky** | Hick/Fitts |
 | ⬜ | P0 | **Bloco "Agora/Próximo evento"** no overview da viagem — nº de confirmação/voo a **1 toque** e **offline** | 3+ → 1 toque |
 | ⬜ | P1 | **Quick-add global** de itens dentro da viagem (sem caçar a aba) | 6 → 4 |
 | ⬜ | P1 | **Criar viagem 6→3**: auto-adicionar destino ao selecionar sugestão + remover bloqueio de validação | −3 toques |

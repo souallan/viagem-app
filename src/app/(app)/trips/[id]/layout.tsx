@@ -94,8 +94,8 @@ export default async function TripLayout({
         </div>
       </div>
 
-      {/* ── Tab navigation ── */}
-      <div className="mb-6">
+      {/* ── Tab navigation (sticky ao rolar) ── */}
+      <div className="sticky top-14 md:top-0 z-20 bg-background/95 backdrop-blur-sm mb-6 py-1">
         <TripTabs tripId={id} />
         <div className="h-px bg-gray-200 mt-1" />
       </div>
