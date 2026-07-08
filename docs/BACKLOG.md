@@ -61,6 +61,19 @@
 
 ---
 
+## 🧭 UX (Théo) — `docs/auditorias/ux-2026-07-08.md`
+Foco: menos cliques até o objetivo. Economias mapeadas: criar viagem **6→3**, achar reserva na viagem **5→1-2**, add gasto **6→4**, add hospedagem **6→4**.
+| Status | Prioridade | Item | Economia |
+|---|---|---|---|
+| ⬜ | P0 | **13 abas da viagem** (`trip-tabs.tsx`): núcleo de **5 + "Mais"**, seção **"Reservas"** (Hospedagem+Transporte+Documentos), barra **sticky** | Hick/Fitts |
+| ⬜ | P0 | **Bloco "Agora/Próximo evento"** no overview da viagem — nº de confirmação/voo a **1 toque** e **offline** | 3+ → 1 toque |
+| ⬜ | P1 | **Quick-add global** de itens dentro da viagem (sem caçar a aba) | 6 → 4 |
+| ⬜ | P1 | **Criar viagem 6→3**: auto-adicionar destino ao selecionar sugestão + remover bloqueio de validação | −3 toques |
+| ⬜ | P2 | Botão "Adicionar" no topo → mover para alcance do polegar (FAB/rodapé) | Fitts |
+| ⬜ | P2 | `data` default = hoje em "adicionar gasto" | −1 toque |
+| ⬜ | — | Editar/excluir hospedagem em `opacity-0 group-hover` → visível no toque *(também Aria)* | — |
+| ⬜ | Backlog | Sitemap proposto + onboarding de ativação *(toca a Nova)* | — |
+
 ## 📱 Fases do app mobile — `docs/mobile-app/PROGRESSO.md`
 | Fase | Status |
 |---|---|
