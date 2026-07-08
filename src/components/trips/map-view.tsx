@@ -15,7 +15,7 @@ L.Icon.Default.mergeOptions({
 export interface MapPlace {
   label: string;
   location: string;
-  category: "destination" | "accommodation" | "activity" | "event";
+  category: "destination" | "accommodation" | "activity" | "event" | "transport";
   icon: string;
   day?: number;
 }
@@ -31,7 +31,28 @@ const categoryColor: Record<string, string> = {
   accommodation: "#7c3aed",
   activity: "#059669",
   event: "#d97706",
+  transport: "#0284c7",
 };
+
+function directionsUrl(lat: number, lng: number, origin?: { lat: number; lng: number } | null): string {
+  const o = origin ? `&origin=${origin.lat},${origin.lng}` : "";
+  return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}${o}&travelmode=driving`;
+}
+function transitUrl(lat: number, lng: number, origin?: { lat: number; lng: number } | null): string {
+  const o = origin ? `&origin=${origin.lat},${origin.lng}` : "";
+  return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}${o}&travelmode=transit`;
+}
+function wazeUrl(lat: number, lng: number): string {
+  return `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`;
+}
+function makeUserIcon() {
+  return L.divIcon({
+    html: `<div style="width:18px;height:18px;border-radius:50%;background:#2563eb;border:3px solid white;box-shadow:0 0 0 4px rgba(37,99,235,0.25),0 2px 6px rgba(0,0,0,0.35)"></div>`,
+    className: "",
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+  });
+}
 
 const DEST_COLORS = [
   "#2563eb", "#0891b2", "#7c3aed", "#db2777",
@@ -106,6 +127,34 @@ function FitBounds({ positions }: { positions: [number, number][] }) {
   return null;
 }
 
+function FlyTo({ pos }: { pos: { lat: number; lng: number } | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (pos) map.flyTo([pos.lat, pos.lng], 14);
+  }, [map, pos]);
+  return null;
+}
+
+/** Botões de rota dentro do popup (Google Maps / transporte público / Waze) */
+function RouteLinks({ lat, lng, origin }: { lat: number; lng: number; origin: { lat: number; lng: number } | null }) {
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
+      <a href={directionsUrl(lat, lng, origin)} target="_blank" rel="noreferrer"
+        style={{ fontSize: 11, fontWeight: 700, color: "#fff", background: "#2563eb", padding: "4px 8px", borderRadius: 8, textDecoration: "none" }}>
+        🧭 Rota
+      </a>
+      <a href={transitUrl(lat, lng, origin)} target="_blank" rel="noreferrer"
+        style={{ fontSize: 11, fontWeight: 700, color: "#0369a1", background: "#e0f2fe", padding: "4px 8px", borderRadius: 8, textDecoration: "none" }}>
+        🚌 Transporte
+      </a>
+      <a href={wazeUrl(lat, lng)} target="_blank" rel="noreferrer"
+        style={{ fontSize: 11, fontWeight: 700, color: "#334155", background: "#f1f5f9", padding: "4px 8px", borderRadius: 8, textDecoration: "none" }}>
+        Waze
+      </a>
+    </div>
+  );
+}
+
 export default function MapView({
   destinations,
   places,
@@ -116,6 +165,19 @@ export default function MapView({
   const [destMarkers, setDestMarkers] = useState<(GeocodedPlace & { destIndex: number })[]>([]);
   const [placeMarkers, setPlaceMarkers] = useState<GeocodedPlace[]>([]);
   const [ready, setReady] = useState(false);
+  const [userLoc, setUserLoc] = useState<{ lat: number; lng: number } | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [geoError, setGeoError] = useState(false);
+
+  function locate() {
+    if (typeof navigator === "undefined" || !navigator.geolocation) { setGeoError(true); return; }
+    setLocating(true); setGeoError(false);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => { setUserLoc({ lat: pos.coords.latitude, lng: pos.coords.longitude }); setLocating(false); },
+      () => { setGeoError(true); setLocating(false); },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -181,6 +243,12 @@ export default function MapView({
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           />
           {ready && <FitBounds positions={positions} />}
+          <FlyTo pos={userLoc} />
+          {userLoc && (
+            <Marker position={[userLoc.lat, userLoc.lng]} icon={makeUserIcon()}>
+              <Popup>Você está aqui</Popup>
+            </Marker>
+          )}
 
           {/* Destination route polyline */}
           {destMarkers.length > 1 && (
@@ -213,6 +281,7 @@ export default function MapView({
               <Popup>
                 <p className="font-bold text-sm">{m.label}</p>
                 <p className="text-xs text-blue-600 font-semibold">Destino {m.destIndex + 1}</p>
+                <RouteLinks lat={m.lat} lng={m.lng} origin={userLoc} />
               </Popup>
             </Marker>
           ))}
@@ -234,10 +303,26 @@ export default function MapView({
                 <p className="font-semibold text-sm">{m.label}</p>
                 {m.day != null && <p className="text-xs text-sky-600 font-medium">Dia {m.day}</p>}
                 <p className="text-xs text-gray-500">{m.location}</p>
+                <RouteLinks lat={m.lat} lng={m.lng} origin={userLoc} />
               </Popup>
             </Marker>
           ))}
         </MapContainer>
+
+        {/* Botão "Minha localização" (geolocation) */}
+        <button
+          onClick={locate}
+          className="absolute top-3 right-3 z-[1000] inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg bg-white/95 text-gray-700 border border-gray-200 shadow-md hover:bg-white transition-colors"
+          title="Minha localização"
+        >
+          <span>{locating ? "⏳" : "📍"}</span>
+          {locating ? "Localizando…" : "Minha localização"}
+        </button>
+        {geoError && (
+          <p className="absolute top-14 right-3 z-[1000] text-[11px] bg-red-50 text-red-600 border border-red-100 px-2 py-1 rounded-md shadow-sm">
+            Não foi possível obter a localização
+          </p>
+        )}
       </div>
 
       {/* Destination legend */}

@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import { ExternalLink, MapPin, BedDouble, CalendarDays, Layers } from "lucide-react";
+import { ExternalLink, MapPin, BedDouble, CalendarDays, Layers, Plane, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
 import type { MapPlace } from "@/components/trips/map-view";
@@ -32,13 +32,20 @@ interface Accommodation {
   address: string | null;
 }
 
+interface Transport {
+  id: string;
+  type: string;
+  from: string;
+  to: string;
+}
+
 interface Trip {
   id: string;
   title: string;
   destination: string;
 }
 
-type Filter = "all" | "destinations" | "accommodations" | "activities";
+type Filter = "all" | "destinations" | "accommodations" | "activities" | "transports";
 
 const activityTypeIcon: Record<string, string> = {
   ACTIVITY: "🎯",
@@ -47,6 +54,15 @@ const activityTypeIcon: Record<string, string> = {
   ACCOMMODATION: "🏨",
   EVENT: "🎪",
   OTHER: "📌",
+};
+
+const transportTypeIcon: Record<string, string> = {
+  FLIGHT: "✈️",
+  BUS: "🚌",
+  TRAIN: "🚆",
+  CAR: "🚗",
+  BOAT: "⛴️",
+  OTHER: "🚏",
 };
 
 function buildGoogleMapsUrl(destination: string, places: MapPlace[]): string {
@@ -66,19 +82,23 @@ export default function MapPage() {
   const [trip, setTrip] = useState<Trip | null>(null);
   const [activities, setActivities] = useState<Activity[]>([]);
   const [accommodations, setAccommodations] = useState<Accommodation[]>([]);
+  const [transports, setTransports] = useState<Transport[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<Filter>("all");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function load() {
-      const [t, a, h] = await Promise.all([
+      const [t, a, h, tr] = await Promise.all([
         fetch(`/api/trips/${id}`).then((r) => r.json()),
         fetch(`/api/trips/${id}/activities`).then((r) => r.json()),
         fetch(`/api/trips/${id}/accommodations`).then((r) => r.json()),
+        fetch(`/api/trips/${id}/transports`).then((r) => r.json()),
       ]);
       setTrip(t);
       setActivities(Array.isArray(a) ? a : []);
       setAccommodations(Array.isArray(h) ? h : []);
+      setTransports(Array.isArray(tr) ? tr : []);
       setLoading(false);
     }
     load();
@@ -123,22 +143,47 @@ export default function MapPage() {
       })),
   [activities, dateToDay]);
 
-  // Filtered data passed to MapView
-  const filteredDestinations = filter === "accommodations" || filter === "activities" ? [] : destinations;
-  const filteredPlaces = useMemo(() => {
-    if (filter === "all") return [...accomPlaces, ...activityPlaces];
-    if (filter === "accommodations") return accomPlaces;
-    if (filter === "activities") return activityPlaces;
-    return []; // destinations only
-  }, [filter, accomPlaces, activityPlaces]);
+  const transportPlaces: MapPlace[] = useMemo(() => {
+    const seen = new Set<string>();
+    const out: MapPlace[] = [];
+    for (const tr of transports) {
+      const icon = transportTypeIcon[tr.type] ?? "🚏";
+      for (const loc of [tr.from, tr.to]) {
+        const key = (loc || "").trim().toLowerCase();
+        if (!key || seen.has(key)) continue;
+        seen.add(key);
+        out.push({ label: loc, location: loc, category: "transport", icon });
+      }
+    }
+    return out;
+  }, [transports]);
 
-  const allPlaces = useMemo(() => [...accomPlaces, ...activityPlaces], [accomPlaces, activityPlaces]);
+  // Filtered data passed to MapView (por categoria + busca por texto)
+  const filteredDestinations = useMemo(() => {
+    const inCat = (filter === "accommodations" || filter === "activities" || filter === "transports") ? [] : destinations;
+    const q = search.trim().toLowerCase();
+    return q ? inCat.filter((d) => d.toLowerCase().includes(q)) : inCat;
+  }, [filter, destinations, search]);
+
+  const filteredPlaces = useMemo(() => {
+    let list: MapPlace[];
+    if (filter === "all") list = [...accomPlaces, ...activityPlaces, ...transportPlaces];
+    else if (filter === "accommodations") list = accomPlaces;
+    else if (filter === "activities") list = activityPlaces;
+    else if (filter === "transports") list = transportPlaces;
+    else list = [];
+    const q = search.trim().toLowerCase();
+    return q ? list.filter((p) => p.label.toLowerCase().includes(q) || p.location.toLowerCase().includes(q)) : list;
+  }, [filter, accomPlaces, activityPlaces, transportPlaces, search]);
+
+  const allPlaces = useMemo(() => [...accomPlaces, ...activityPlaces, ...transportPlaces], [accomPlaces, activityPlaces, transportPlaces]);
 
   const FILTERS: { id: Filter; label: string; Icon: React.ElementType; count: number; color: string }[] = [
     { id: "all",           label: t.map.filterAll,            Icon: Layers,      count: destinations.length + allPlaces.length, color: "primary" },
     { id: "destinations",  label: t.map.filterCities,         Icon: MapPin,      count: destinations.length,  color: "blue"   },
     { id: "accommodations",label: t.map.filterAccommodations, Icon: BedDouble,   count: accomPlaces.length,   color: "purple" },
     { id: "activities",    label: t.map.filterActivities,     Icon: CalendarDays,count: activityPlaces.length, color: "green"  },
+    { id: "transports",    label: "Transportes",              Icon: Plane,       count: transportPlaces.length, color: "cyan"   },
   ];
 
   const activeStyle: Record<string, string> = {
@@ -146,6 +191,7 @@ export default function MapPage() {
     blue:    "bg-blue-600 text-white border-blue-600 shadow-sm shadow-blue-200",
     purple:  "bg-violet-600 text-white border-violet-600 shadow-sm shadow-violet-200",
     green:   "bg-emerald-600 text-white border-emerald-600 shadow-sm shadow-emerald-200",
+    cyan:    "bg-cyan-600 text-white border-cyan-600 shadow-sm shadow-cyan-200",
   };
 
   if (loading || !trip) {
@@ -183,6 +229,17 @@ export default function MapPage() {
 
       {/* ── Filter buttons (below the map) ── */}
       <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-3">
+        {/* Busca por texto */}
+        <div className="relative mb-3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar local (hotel, restaurante, aeroporto…)"
+            className="w-full h-10 pl-9 pr-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-500/15"
+          />
+        </div>
+
         <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2.5 px-1">
           {t.map.showOnMap}
         </p>
@@ -219,6 +276,7 @@ export default function MapPage() {
           {filter === "destinations"  && t.map.filterDescDestinations}
           {filter === "accommodations"&& t.map.filterDescAccommodations}
           {filter === "activities"    && t.map.filterDescActivities}
+          {filter === "transports"    && "Aeroportos e estações dos seus transportes. Toque num marcador para traçar a rota."}
         </p>
       </div>
 

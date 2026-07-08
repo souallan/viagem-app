@@ -88,7 +88,7 @@
 | 🟡 | **Compartilhar/ver a mesma viagem (grupo)** | Fundação existe (`TripMember` + members API + collab UI); falta acesso dono-ou-membro em todas as rotas, aparecer no dashboard do convidado, papéis e (fase 2) tempo real |
 | ⬜ | **Divisão de contas do grupo** (estilo Splitwise) | Novo; depende de membros. `Expense.paidById` + `ExpenseShare` + simplificação de dívidas + tela "Acertar contas" |
 | ✅ | **Mesma base mobile↔web** | Já atendido: Capacitar Modelo A usa o mesmo backend/DB; offline é cache (online-first). Só abrir tarefa se quiser **edição offline com sync** |
-| 🟡 | **Mapa interativo + rota** (`/map`) | Já plota hospedagens/atividades + filtros + rota Google Maps. Falta: transportes/aeroportos, busca por texto, rota por marcador (Waze), "me localizar" (geolocation), filtro por dia |
+| 🟢 | **Mapa interativo + rota** (`/map`) | ✅ transportes/aeroportos no mapa, ✅ busca por texto, ✅ rota por marcador (Google Maps/transit/Waze), ✅ "me localizar" (geolocation). Falta só: filtro por dia do itinerário |
 | ⬜ | **Otimizar trajeto por distância** | Novo: nearest-neighbor + 2-opt sobre os locais do dia; botão "Otimizar trajeto" no itinerário |
 | ⬜ | **Anexos por item (foto/upload)** | Expande câmera/upload (Fase 4/5): nº de reserva, bilhete, ingresso, check-in por item; depende de Cloudinary |
 | ⬜ | **Guia de transporte público** | Deep-link Google Maps transit + Citymapper/Moovit por cidade (não construir do zero) |
