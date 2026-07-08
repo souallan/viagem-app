@@ -74,7 +74,7 @@
 ## 💰 Monetização & Produto (freemium — ideias avaliadas)
 | Status | Item |
 |---|---|
-| ⬜ | Definir **freemium**: grátis até ~3 viagens (roadmap) · Premium libera os itens abaixo |
+| ✅ | **Freemium já implementado**: `User.plan` + `src/lib/plans.ts` (FREE=3 viagens/20 ativ/1 rota/5 relatos) + gating no `/api/trips` (403). Falta só o **Stripe** para efetivar o upgrade (bloqueado em conta/chaves) |
 | ✅ | **Exportar roteiro em PDF** — já existe em `/summary` (Imprimir/Salvar PDF); agora a moldura do app some na impressão (`print:hidden`) |
 | ⬜ | **Viagem em grupo / compartilhamento em tempo real** (usa `TripMember`, já no schema) como premium |
 | ⬜ | **Armazenamento ilimitado de PDFs/fotos de reservas** (liga com upload Cloudinary da Fase 5) |
