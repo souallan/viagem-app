@@ -48,7 +48,7 @@ export function NotificationBell() {
         className="relative w-9 h-9 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/8 transition-colors"
         aria-label={`${count} notificações`}
       >
-        <Bell className="h-4.5 w-4.5" />
+        <Bell className="h-5 w-5" />
         {count > 0 && (
           <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 ring-1 ring-[#111827]" />
         )}
@@ -85,14 +85,14 @@ export function NotificationBell() {
                     </div>
                     <Link href={n.href} onClick={() => setOpen(false)} className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-slate-200 leading-snug">{n.title}</p>
-                      <p className="text-[10px] text-slate-600 mt-0.5 truncate">{n.subtitle}</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5 truncate">{n.subtitle}</p>
                     </Link>
                     <button
                       onClick={() => setDismissed((d) => new Set([...d, n.id]))}
-                      className="opacity-0 group-hover:opacity-100 text-slate-700 hover:text-slate-400 transition-all shrink-0 mt-1"
+                      className="shrink-0 w-8 h-8 -mt-1 -mr-1 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                       aria-label="Dispensar"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="h-4 w-4" />
                     </button>
                   </div>
                 );

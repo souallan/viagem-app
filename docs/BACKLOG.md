@@ -37,8 +37,8 @@
 | ✅ | Alta | Contraste do menu escuro — rótulo "menu" e copyright (slate-700/800 → slate-300/400) |
 | ⬜ | Alta | Contraste — demais textos slate-500/600/700 sobre navy (notificações, subtítulos) |
 | ⬜ | Alta | **Alvos de toque < 44px** — abas da viagem (`trip-tabs.tsx`), sino/menu, ícones sociais/idioma do sidebar |
-| ⬜ | Média | Ações só no hover → sempre visíveis (dismiss de notificação) |
-| ⬜ | Média | `<Select>` sem chevron visível (`appearance-none` sem ícone) |
+| ✅ | Média | Ações só no hover → sempre visíveis (dismiss de notificação) |
+| ✅ | Média | `<Select>` sem chevron visível (`appearance-none` sem ícone) |
 | ⬜ | Média | Dialog sem foco-trap / `aria-modal` |
 | ⬜ | Média | Telas apertadas: calendário de hospedagem (`text-[8px]`), 13 abas em scroll sem affordance |
 | ⬜ | Baixa | Drift de marca: UI usa `sky-*` em vez do token `primary` (#1A5FCC) |
