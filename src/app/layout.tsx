@@ -111,10 +111,9 @@ export default function RootLayout({
         )}
         {children}
         <script dangerouslySetInnerHTML={{ __html: `
-          // Registra o service worker só na WEB. Dentro do app nativo (Capacitor)
-          // o shell nativo cuida do cache/offline — o SW web é ignorado.
-          var __isNative = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
-          if ('serviceWorker' in navigator && !__isNative) {
+          // Registra o service worker (web e app nativo — o WebView carrega o
+          // https origin, então o SW dá cache/offline dos dados também no app).
+          if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
               navigator.serviceWorker.register('/sw.js').catch(() => {});
             });

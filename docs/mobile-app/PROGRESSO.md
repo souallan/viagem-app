@@ -11,9 +11,9 @@
 |---|---|---|---|
 | 0 | Fundação do projeto | 🟡 Em andamento | Backup + branch + docs ✅; contas/Mac pendentes |
 | 1 | Hardening PWA | ✅ Concluída | viewport+safe-area, ícones raster, CSP, gate SW |
-| 2 | UX mobile/tablet | ⚪ Não iniciada | bottom-nav planejado |
+| 2 | UX mobile/tablet | 🟡 Bottom-nav ✅ | falta tablet/telas apertadas/touch pass |
 | 3 | Integração Capacitor | 🟡 Android scaffoldado | Capacitor+Android+plugins ✅; iOS depende de Mac |
-| 4 | Recursos nativos | ⚪ Não iniciada | — |
+| 4 | Recursos nativos | 🟡 Offline ✅ | SW offline ✅; câmera/push/share dependem de chaves |
 | 5 | Backend/infra | ⚪ Não iniciada | — |
 | 6 | Identidade visual | ⚪ Não iniciada | — |
 | 7 | QA e testes | ⚪ Não iniciada | — |
@@ -43,8 +43,16 @@ Legenda: ✅ concluída · 🟡 em andamento · ⚪ não iniciada · 🔴 bloque
 - [ ] iOS (`npx cap add ios`) — **requer Mac**
 - [ ] Build/rodar APK — requer Android Studio + SDK
 
+**Fase 2 — UX mobile** 🟡
+- [x] Bottom navigation mobile (`bottom-nav.tsx`) + FAB reposicionado
+- [ ] Layouts de tablet (master-detail), telas apertadas (accommodation/compare), touch pass (hover→tap), dnd-kit
+
+**Fase 4 — Recursos nativos** 🟡
+- [x] Offline: service worker com SWR em `/api` (web + nativo)
+- [ ] Câmera/upload (Cloudinary), push (FCM/APNs), share nativo, biometria — **dependem de chaves/backend**
+
 ## ⏭️ Próximo passo
-- **Fase 2:** bottom navigation mobile. Depois **Fase 4:** offline React Query. iOS/APK quando houver Mac/SDK.
+- Ler relatórios da **Nova** e **Aria** (`docs/auditorias/`) e priorizar. Continuar **Fase 2** (tablet/touch) e **Fase 4** nativa quando houver chaves (Cloudinary/FCM) e Mac/SDK.
 
 ## ⛔ Pendências que travam fases futuras
 - **Mac para build iOS** (Fase 3) — decidir físico vs. nuvem (CI)

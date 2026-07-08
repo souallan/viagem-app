@@ -260,7 +260,7 @@ export default function DashboardPage() {
       )}
 
       {hasTrips && (
-        <div className="fixed bottom-safe right-6 sm:hidden z-50">
+        <div className="fixed bottom-safe-nav right-6 sm:hidden z-50">
           <Link href="/trips/new" className="w-14 h-14 rounded-full bg-sky-500 hover:bg-sky-400 text-white flex items-center justify-center shadow-xl transition-colors" aria-label={t.dashboard.newTrip}>
             <Plus className="h-6 w-6" />
           </Link>

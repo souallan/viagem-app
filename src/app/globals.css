@@ -96,6 +96,8 @@
   }
   /* Distância a partir da base já somando a área segura inferior (ex.: FAB) */
   .bottom-safe { bottom: calc(env(safe-area-inset-bottom, 0px) + 1.5rem); }
+  /* FAB acima da bottom nav (altura 3.5rem + folga) + área segura */
+  .bottom-safe-nav { bottom: calc(env(safe-area-inset-bottom, 0px) + 4.5rem); }
   /* Altura de tela cheia estável no mobile (usa dvh quando suportado) */
   .min-h-screen-safe {
     min-height: 100vh;

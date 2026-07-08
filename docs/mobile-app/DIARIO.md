@@ -73,3 +73,30 @@
 - **O que falta do usuário:** Android Studio+SDK para buildar o APK; Mac para iOS; logo em alta resolução para ícones/splash finais; decisão de `appId` (default `com.roteiroapp.app`).
 - **Commit:** `feat(mobile): Capacitor + Android nativo + bootstrap de plugins (Fase 3)`
 - **Status:** ✅ scaffold concluído (Android); iOS pendente de Mac
+
+---
+
+## [2026-07-08] Fase 2 · Bottom navigation mobile
+- **Objetivo:** navegação principal ao alcance do polegar (padrão nativo) no celular.
+- **O que foi feito:**
+  - Criado `src/components/layout/bottom-nav.tsx`: barra inferior fixa (`md:hidden`), 5 destinos (Viagens, Rotas, Dicas, Relatos, Perfil) com ícone+label, estado ativo por `usePathname`, `pb-safe` (home indicator), `aria-current`.
+  - Ligada no `app-shell.tsx`; conteúdo ganhou `pb-[calc(3.5rem+safe)]` no mobile para não ficar sob a barra.
+  - FAB do dashboard subiu para `.bottom-safe-nav` (acima da barra); utilitário novo em `globals.css`.
+- **Arquivos:** `src/components/layout/bottom-nav.tsx`, `app-shell.tsx`, `src/app/(app)/dashboard/page.tsx`, `globals.css`.
+- **Decisões/porquê:** reutiliza rotas/labels/ícones da `sidebar.tsx` (consistência). Labels via i18n existentes (`t.nav.*`). Reversível — a Aria pode refinar copy/itens.
+- **Como validar:** `tsc` 0 erros, `next build` OK. No mobile: barra fixa, item ativo destacado, FAB acima da barra.
+- **Commit:** `feat(mobile): bottom navigation mobile (Fase 2)`
+- **Status:** ✅ concluído
+
+---
+
+## [2026-07-08] Fase 4 · Offline via service worker (dados de viagem)
+- **Objetivo:** acesso offline aos dados críticos (reservas, itinerário, documentos) — a dor central da viagem. Vale para web e app.
+- **O que foi feito:**
+  - Reescrito `public/sw.js`: **stale-while-revalidate para GET `/api/*`** (serve cache na hora, atualiza em background; offline mostra último dado conhecido). `/api/auth/*` nunca cacheado. Navegação/assets seguem network-first + fallback `/offline`. Cache versão `v3` + `roteiroapp-api-v1`.
+  - **Revisada a decisão da Fase 1.5**: o SW agora fica **ativo também no app nativo** (removido o gate em `layout.tsx`). Motivo: no Modelo A o WebView carrega o https origin real, então o SW É o mecanismo de offline no app — desligá-lo removeria o offline. `src/lib/native.ts` segue em uso pelo `native-bootstrap`.
+- **Arquivos:** `public/sw.js`, `src/app/layout.tsx`.
+- **Decisões/porquê:** React Query está instalado mas **não é usado** como data layer (páginas usam `fetch`+`useState`), então persistência via React Query exigiria refactor grande — o SW entrega offline com risco baixo e cobre web+nativo. Refactor para React Query fica como melhoria futura.
+- **Como validar:** DevTools → Application → Service Workers ativo; Network offline → dados já visitados continuam abrindo. `next build` OK.
+- **Commit:** `feat(mobile): offline via service worker (SWR em /api) (Fase 4)`
+- **Status:** ✅ concluído (offline básico); recursos nativos de câmera/push ficam para próximos passos (dependem de chaves/backend)

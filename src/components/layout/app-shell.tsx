@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 import { Sidebar } from "./sidebar";
+import { BottomNav } from "./bottom-nav";
 import { NotificationBell } from "./notification-bell";
 import Link from "next/link";
 import { Plane } from "lucide-react";
@@ -90,7 +91,13 @@ export function AppShell({
           </div>
         </header>
 
-        {children}
+        {/* Espaço inferior no mobile para o conteúdo não ficar sob a bottom nav */}
+        <div className="flex-1 pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0">
+          {children}
+        </div>
+
+        {/* Bottom navigation — só mobile */}
+        <BottomNav />
       </div>
     </div>
   );
