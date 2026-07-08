@@ -82,6 +82,13 @@
 
 > **Já implementado / descartado (triagem 2026-07-08):** paleta azul+branco (tranquilidade) ✅ · ícones intuitivos avião/mala/cifrão/calendário (lucide) ✅ · **Figma** — não adotado: prototipamos via prévia HTML (`docs/mobile-app/preview.html`) + agentes Aria/Théo · ASO/afiliados/influenciadores/social já mapeados pela Nova.
 
+## 🧩 Ideias de produto avaliadas — `docs/IDEIAS.md`
+| Status | Item | Nota |
+|---|---|---|
+| 🟡 | **Compartilhar/ver a mesma viagem (grupo)** | Fundação existe (`TripMember` + members API + collab UI); falta acesso dono-ou-membro em todas as rotas, aparecer no dashboard do convidado, papéis e (fase 2) tempo real |
+| ⬜ | **Divisão de contas do grupo** (estilo Splitwise) | Novo; depende de membros. `Expense.paidById` + `ExpenseShare` + simplificação de dívidas + tela "Acertar contas" |
+| ✅ | **Mesma base mobile↔web** | Já atendido: Capacitar Modelo A usa o mesmo backend/DB; offline é cache (online-first). Só abrir tarefa se quiser **edição offline com sync** |
+
 ## 🧭 UX (Théo) — `docs/auditorias/ux-2026-07-08.md`
 Foco: menos cliques até o objetivo. Economias mapeadas: criar viagem **6→3**, achar reserva na viagem **5→1-2**, add gasto **6→4**, add hospedagem **6→4**.
 | Status | Prioridade | Item | Economia |
