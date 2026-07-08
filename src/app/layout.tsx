@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import { GATracker } from "@/components/analytics/ga-tracker";
@@ -35,6 +35,16 @@ export const metadata: Metadata = {
     creator: "@roteiroapp",
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+};
+
+// Viewport separado (Next 15). `viewportFit: "cover"` habilita os env(safe-area-inset-*)
+// usados nas barras fixas e no FAB — essencial em celulares com notch/ilha dinâmica e
+// dentro do WebView nativo (Capacitor). Zoom mantido por acessibilidade.
+export const viewport: Viewport = {
+  themeColor: "#1A5FCC",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 const GA_ID  = process.env.NEXT_PUBLIC_GA_ID;
