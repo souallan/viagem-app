@@ -25,7 +25,7 @@ export function BottomNav() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 inset-x-0 z-40 pb-safe border-t border-white/8"
+      className="md:hidden print:hidden fixed bottom-0 inset-x-0 z-40 pb-safe border-t border-white/8"
       style={{ background: "linear-gradient(0deg, #0E1520 0%, #111827 100%)" }}
       aria-label="Navegação principal"
     >

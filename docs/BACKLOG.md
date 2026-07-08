@@ -75,7 +75,7 @@
 | Status | Item |
 |---|---|
 | ⬜ | Definir **freemium**: grátis até ~3 viagens (roadmap) · Premium libera os itens abaixo |
-| ⬜ | **Exportar roteiro em PDF** (premium) |
+| ✅ | **Exportar roteiro em PDF** — já existe em `/summary` (Imprimir/Salvar PDF); agora a moldura do app some na impressão (`print:hidden`) |
 | ⬜ | **Viagem em grupo / compartilhamento em tempo real** (usa `TripMember`, já no schema) como premium |
 | ⬜ | **Armazenamento ilimitado de PDFs/fotos de reservas** (liga com upload Cloudinary da Fase 5) |
 | ⬜ | **Stripe**: avaliar assinatura mensal **e** "compra única por viagem" |
