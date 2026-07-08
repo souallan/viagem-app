@@ -338,6 +338,203 @@ Passaporte válido por 6 meses após retorno. Nenhum visto necessário para bras
 
 **Dica**: organize todo o roteiro dia a dia no RoteiroApp — incluindo reservas de atrações, transportes entre cidades e controle de gastos em euros.`,
   },
+  {
+    slug: "roteiro-lisboa-7-dias",
+    title: "Roteiro Lisboa 7 dias: o guia completo para brasileiros",
+    excerpt: "Sete dias em Lisboa sem perder nada importante: Alfama, Belém, Sintra, Cascais e as melhores pastelarias da cidade. Com custo estimado e dicas de transporte.",
+    date: "2026-05-01",
+    readTime: "10 min",
+    category: "Roteiros",
+    emoji: "🇵🇹",
+    content: `Lisboa é o destino favorito dos brasileiros na Europa — e não é à toa. Mesma língua, gastronomia familiar, custo acessível e uma beleza atemporal que mistura história e modernidade. Sete dias é o tempo ideal para explorar a cidade sem correr.
+
+## Dia 1 — Alfama e o coração histórico
+
+Comece pelo bairro mais antigo da cidade. Suba ao Castelo de São Jorge de manhã (chegue antes das 10h para evitar filas). Desça pelas ruelas de Alfama e pare no Museu do Azulejo, um dos mais subestimados da Europa. No fim da tarde, veja o pôr do sol no Miradouro da Graça: menos turistas que o Portas do Sol e vista melhor.
+
+## Dia 2 — Belém
+
+Pegue o elétrico 15E ou o trem de Cais do Sodré (15 min). Torre de Belém, Mosteiro dos Jerônimos (reserve online) e os Pastéis de Belém — a fila anda rápido. Volte pelo Chiado para jantar na Tasca do Chico.
+
+## Dia 3 — Sintra
+
+Acorde cedo: os ônibus para o Palácio da Pena lotam depois das 10h. Compre os ingressos online. Palácio da Pena, Castelo dos Mouros e Palácio Nacional de Sintra. Volte à tarde e explore o Mercado da Ribeira.
+
+## Dia 4 — Mouraria e Feira da Ladra
+
+Mouraria é o berço do fado, com restaurantes incríveis sem a marcação turística. A Feira da Ladra acontece só terças e sábados — peças únicas por preços imbatíveis. Tarde livre para o Museu Nacional do Azulejo ou um passeio de barco no Tejo.
+
+## Dia 5 — Cascais e a Linha de Estoril
+
+Trem direto de Cais do Sodré (40 min, €2,50). Cascais é uma vila costeira elegante, com praias, restaurantes de peixe e o Boca do Inferno. Almoço de peixe fresco junto ao porto.
+
+## Dia 6 — LX Factory e Bairro Alto
+
+LX Factory é o programa perfeito: mercado, design, gastronomia e livrarias numa fábrica recuperada. À noite, o Bairro Alto acorda — bares pequenos, vinho acessível e a cena cultural mais autêntica da cidade.
+
+## Dia 7 — Parque das Nações e compras
+
+Zona moderna construída para a Expo 98. Oceanário de Lisboa (reservar online), Pavilhão do Conhecimento e arquitetura impressionante. Tarde para lembranças — evite a Rua Augusta e prefira lojas no Príncipe Real.
+
+## Orçamento estimado (por pessoa, 7 dias)
+
+- Voo Brasil–Lisboa (ida e volta): R$ 3.500 – R$ 6.000
+- Hospedagem (6 noites, hotel 3 estrelas): €480 – €800
+- Alimentação: €30–50/dia
+- Transporte local: €30
+- Atrações: €80 – €120
+- **Total estimado: R$ 7.000 – R$ 14.000**
+
+## Dica prática
+
+Compre o cartão Viva Viagem (€0,50) e carregue com créditos — funciona no metro, tram e barco. Organize o roteiro dia a dia no RoteiroApp para não perder nenhuma reserva.`,
+  },
+  {
+    slug: "melhores-destinos-brasil-2026",
+    title: "Melhores destinos nacionais para viajar no Brasil em 2026",
+    excerpt: "De Minas Gerais ao Pará, os destinos brasileiros em alta em 2026 com custo médio, melhor época e o que não pode perder em cada um.",
+    date: "2026-05-08",
+    readTime: "8 min",
+    category: "Destinos",
+    emoji: "🇧🇷",
+    content: `O Brasil tem uma diversidade geográfica e cultural com que poucos países no mundo conseguem competir. Em 2026, uma nova geração de destinos ganha destaque — além dos clássicos.
+
+## Chapada dos Veadeiros (GO)
+
+Um dos segredos mais bem guardados do país: cachoeiras cristalinas, cânions e o maior cerrado contínuo do mundo. Melhor época: maio a setembro (seca). Cidade base: Alto Paraíso de Goiás. Custo médio: R$ 200–300/dia por pessoa.
+
+## Serra da Canastra (MG)
+
+Nascente do Rio São Francisco, cachoeiras e o queijo artesanal mais famoso do Brasil. Minas é a revelação de 2026 no turismo nacional. Acesse por São Roque de Minas. Melhor época: março a outubro. Custo: R$ 150–250/dia.
+
+## Fernando de Noronha (PE)
+
+A Baía do Sancho é eleita repetidamente uma das melhores praias do mundo. Noronha exige planejamento: TPA (Taxa de Preservação Ambiental) por dia e voos a partir de Recife. Reserve com 6+ meses. Custo: R$ 800–1.500/dia.
+
+## Lençóis Maranhenses (MA)
+
+Entre junho e setembro, lagoas azuis e verdes surgem entre dunas brancas — paisagem de outro mundo. Acesse por Barreirinhas (voos para São Luís + traslado). Custo: R$ 300–500/dia.
+
+## Alter do Chão (PA)
+
+O "Caribe amazônico", com praias de rio de água cristalina. Chegada por Santarém. Melhor época: agosto a novembro (praias expostas). Custo: R$ 200–350/dia.
+
+## Bonito (MS)
+
+Ecoturismo de alta qualidade: flutuação em rios cristalinos, cachoeiras e grutas. Passeios regulamentados com número limitado de visitantes — reserve com antecedência. Custo: R$ 350–600/dia.
+
+## Costa do Descobrimento (BA)
+
+Porto Seguro, Trancoso e Arraial d'Ajuda formam um dos destinos baianos mais completos. Melhor época: dezembro a março. Custo: R$ 250–450/dia.
+
+## Por que viajar pelo Brasil em 2026?
+
+Com o dólar e o euro elevados, o Brasil ficou relativamente mais acessível. Destinos emergentes ainda têm infraestrutura mais barata que os clássicos. Planeje com o RoteiroApp e evite os gastos surpresa.`,
+  },
+  {
+    slug: "mochilao-europa-barato",
+    title: "Mochilão pela Europa com orçamento baixo: guia para brasileiros",
+    excerpt: "Como fazer um mochilão pela Europa gastando menos de R$ 500 por dia. Transporte, hospedagem, alimentação e os países mais baratos para visitar.",
+    date: "2026-05-15",
+    readTime: "9 min",
+    category: "Finanças",
+    emoji: "🎒",
+    content: `Fazer um mochilão pela Europa é mais acessível do que parece — se você souber onde e como gastar. Com planejamento, dá para viver bem com €50–70 por dia.
+
+## Os países mais baratos da Europa
+
+- **Hungria (Budapeste)**: hostels ótimos a partir de €15/noite. A cidade mais subestimada da Europa.
+- **Polônia (Cracóvia, Varsóvia)**: refeições por €4–8, transporte barato, história incrível.
+- **República Tcheca (Praga)**: ainda acessível apesar da popularidade.
+- **Balcãs (Sérvia, Bósnia, Montenegro)**: destinos emergentes, com vida noturna por preços irrisórios.
+- **Portugal**: o mais barato da Europa Ocidental para brasileiros — e sem barreira linguística.
+
+## Transporte: a maior fatia do orçamento
+
+- **Flixbus**: ônibus confortáveis com Wi-Fi entre cidades por €5–30.
+- **Passes Interrail**: valem a pena se você planeja 8+ viagens de trem.
+- **Ryanair e Wizz Air**: passagens por €10–40 — reserve com 2–3 meses de antecedência.
+- **BlaBlaCar**: caronas compartilhadas entre cidades por valores mínimos.
+
+## Hospedagem sem gastar muito
+
+- **Hostels com quartos privados**: melhor custo-benefício (Hostelworld ou Booking).
+- **Couchsurfing**: gratuito — requer perfil bem construído e boas avaliações.
+- **Ofertas de última hora**: para destinos menos concorridos, esperar pode valer.
+
+## Alimentação com inteligência
+
+- Compre pão, frutas e frios no supermercado para café e lanches (economiza €15+/dia).
+- Almoce no restaurante local, fora das ruas turísticas (€8–12).
+- Jantar leve ou use a cozinha compartilhada do hostel.
+
+## Exemplo de orçamento diário (Budapeste)
+
+- Hostel privado: €20
+- Alimentação: €18
+- Transporte local: €5
+- Atração (museu/parque): €8
+- **Total: €51/dia (~R$ 290)**
+
+## Planejamento é o diferencial
+
+Organizar roteiro, hospedagem, transporte e orçamento sem planilha é um caos. Use o RoteiroApp para centralizar tudo: atividades por dia, custos em euros, documentos e lista de malas.`,
+  },
+  {
+    slug: "roteiro-japao-10-dias",
+    title: "Roteiro Japão 10 dias: Tóquio, Kyoto e Osaka para brasileiros",
+    excerpt: "O roteiro clássico do Japão em 10 dias — Tóquio, Kyoto e Osaka. Com custos reais, dicas de transporte, onde comer e o que não deixar de fazer.",
+    date: "2026-05-22",
+    readTime: "11 min",
+    category: "Roteiros",
+    emoji: "🇯🇵",
+    content: `O Japão explodiu em popularidade entre brasileiros — e não é surpresa: país seguro, limpo, com gastronomia incrível e uma cultura única. Este roteiro de 10 dias cobre o triângulo clássico.
+
+## O básico antes de partir
+
+- **Visto**: não é necessário para brasileiros (até 90 dias, turismo).
+- **Passaporte**: válido por 6+ meses após o retorno.
+- **IC Card (Suica ou Pasmo)**: cartão de transporte recarregável — compre no aeroporto de chegada.
+- **Melhor época**: março-abril (cerejeiras) ou outubro-novembro (outono). Evite a Golden Week.
+
+## Dias 1–4: Tóquio
+
+Uma megalópole que desafia qualquer expectativa. Reserve ao menos 4 dias.
+
+- Dia 1: Shibuya, Harajuku e Yoyogi Park
+- Dia 2: Shinjuku (Kabukicho e Golden Gai à noite), Templo Meiji
+- Dia 3: Akihabara, Asakusa (Sensoji) e o mercado Nakamise
+- Dia 4: Excursão ao Monte Fuji ou Nikko (reserve com agência)
+
+## Dias 5–7: Kyoto
+
+A Kyoto tradicional, a antítese moderna de Tóquio (Shinkansen 2h).
+
+- Dia 5: Arashiyama (bambuzal, Tenryu-ji, bicicleta)
+- Dia 6: Caminho da Filosofia, Ginkaku-ji e bairro Gion
+- Dia 7: Fushimi Inari-taisha (vá antes das 8h) e Castelo Nijo
+
+## Dias 8–10: Osaka
+
+A capital da gastronomia japonesa — mais descontraída e barata que Tóquio.
+
+- Dia 8: Dotonbori, Takoyaki e o Glico Man
+- Dia 9: Castelo de Osaka, Kuromon Market e Shinsekai
+- Dia 10: Excursão a Nara (1h de trem), com cervos livres pelo parque
+
+## Custo estimado (por pessoa, 10 dias)
+
+- Voo Brasil–Japão (ida e volta): R$ 5.000 – R$ 9.000
+- Japan Rail Pass 7 dias: ¥50.000 (~R$ 1.700) — compre ANTES de chegar
+- Hospedagem (9 noites, hotel + hostel): ¥15.000 – ¥25.000/noite
+- Alimentação: ¥3.000 – ¥6.000/dia
+- Atrações: ¥5.000 – ¥10.000
+- **Total estimado: R$ 14.000 – R$ 22.000**
+
+## Dica de ouro
+
+Conbinis (Lawson, FamilyMart, 7-Eleven) são os melhores amigos do viajante no Japão: onigiri, ramen, bentô e sobremesas por ¥200–600. Organize tudo no RoteiroApp e controle os gastos em ienes.`,
+  },
 ];
 
 type Props = { params: Promise<{ slug: string }> };

@@ -81,7 +81,7 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
 
       {/* Nav */}
       <nav className="relative z-10 flex-1 px-3 py-4 space-y-0.5">
-        <p className="text-[9px] font-bold text-slate-700 uppercase tracking-widest px-2.5 pb-2">{t.sidebar.menu}</p>
+        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest px-2.5 pb-2">{t.sidebar.menu}</p>
         {navItems.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -217,9 +217,9 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
           </div>
 
           {/* Copyright */}
-          <p className="text-[9px] text-slate-800 leading-snug">
+          <p className="text-[10px] text-slate-500 leading-snug">
             © {SITE_CONFIG.copyright.year}{" "}
-            <span className="text-slate-600 font-semibold">{SITE_CONFIG.copyright.owner}</span>
+            <span className="text-slate-300 font-semibold">{SITE_CONFIG.copyright.owner}</span>
             {" · "}{SITE_CONFIG.copyright.text}
           </p>
         </div>

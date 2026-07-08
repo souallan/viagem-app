@@ -1,0 +1,365 @@
+<title>RoteiroApp — Prévia Mobile</title>
+<style>
+  :root {
+    /* App (identidade fixa — mundo escuro do produto) */
+    --navy: #0E1520; --navy-2: #111827; --elevated: #141d2b;
+    --primary: #1A5FCC; --primary-bright: #2570E8; --primary-300: #85ADFD; --primary-400: #5585FA;
+    --ocean: #0D7BA3; --sky: #38BDF8;
+    --txt: #E7ECF3; --muted: #93A1B5; --dim: #5D6B80; --line: rgba(255,255,255,.07);
+    --emerald: #34D399; --amber: #F5B33F;
+    /* Page chrome — tema claro/escuro */
+    --page: #E9EDF2; --page-2: #DDE3EB; --ink: #1b2330; --ink-soft: #566072; --card-line: rgba(20,30,48,.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --page: #070B12; --page-2: #0b111b; --ink: #E7ECF3; --ink-soft: #93A1B5; --card-line: rgba(255,255,255,.08); }
+  }
+  :root[data-theme="light"] { --page: #E9EDF2; --page-2: #DDE3EB; --ink: #1b2330; --ink-soft: #566072; --card-line: rgba(20,30,48,.12); }
+  :root[data-theme="dark"]  { --page: #070B12; --page-2: #0b111b; --ink: #E7ECF3; --ink-soft: #93A1B5; --card-line: rgba(255,255,255,.08); }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, color-mix(in srgb, var(--primary) 12%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--page) 0%, var(--page-2) 100%);
+    display: flex; flex-direction: column; align-items: center;
+    padding: clamp(20px, 4vw, 48px) 16px 64px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header do palco ── */
+  .stage-head { width: 100%; max-width: 900px; text-align: center; margin-bottom: clamp(20px, 3vw, 36px); }
+  .kicker {
+    font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--primary); margin: 0 0 8px;
+  }
+  .stage-head h1 { font-size: clamp(22px, 4vw, 30px); font-weight: 800; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+  .stage-head p { color: var(--ink-soft); font-size: 14px; margin: 8px auto 0; max-width: 52ch; line-height: 1.5; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 18px; }
+  .chip {
+    font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 999px;
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: color-mix(in srgb, var(--ink) 78%, var(--primary));
+    border: 1px solid var(--card-line);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .chip b { color: var(--emerald); }
+
+  /* ── Aparelho ── */
+  .device {
+    position: relative; width: 380px; max-width: 94vw;
+    background: linear-gradient(145deg, #2a2f38, #14171d);
+    border-radius: 54px; padding: 12px;
+    box-shadow: 0 40px 90px -30px rgba(0,0,0,.65), 0 2px 0 rgba(255,255,255,.08) inset, 0 0 0 2px rgba(0,0,0,.4);
+  }
+  .screen {
+    position: relative; height: 760px; max-height: 78vh; overflow: hidden;
+    border-radius: 44px; background: var(--navy); color: var(--txt);
+    display: flex; flex-direction: column;
+  }
+  /* Dynamic island */
+  .island {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 108px; height: 30px; background: #000; border-radius: 999px; z-index: 40;
+  }
+  /* Status bar */
+  .statusbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 24px 4px; font-size: 13px; font-weight: 600; color: var(--txt); z-index: 30;
+  }
+  .statusbar .ico { display: inline-flex; gap: 5px; align-items: center; }
+
+  /* App top bar */
+  .topbar {
+    display: flex; align-items: center; gap: 10px; padding: 6px 16px 10px; border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-2) 100%);
+  }
+  .iconbtn {
+    width: 40px; height: 40px; border-radius: 12px; border: 0; background: transparent; color: var(--muted);
+    display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .iconbtn:hover { color: #fff; background: rgba(255,255,255,.06); }
+  .brand { display: flex; align-items: center; gap: 8px; }
+  .brand .logo {
+    width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--primary), var(--primary-bright));
+    box-shadow: 0 3px 10px rgba(26,95,204,.45);
+  }
+  .brand .name { font-size: 15px; font-weight: 800; letter-spacing: -.01em; }
+  .grow { margin-left: auto; }
+  .dot { position: relative; }
+  .dot::after { content:""; position: absolute; top: 8px; right: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--amber); border: 2px solid var(--navy-2); }
+
+  /* Área de conteúdo rolável */
+  .content { flex: 1; overflow-y: auto; padding: 16px 16px 84px; scrollbar-width: none; }
+  .content::-webkit-scrollbar { display: none; }
+  .screenview { display: none; animation: fade .28s ease; }
+  .screenview.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .screenview { animation: none; } }
+
+  .greet { font-size: 13px; color: var(--muted); }
+  .greet b { color: var(--txt); }
+  .h-sec { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--dim); margin: 20px 2px 10px; display: flex; align-items: center; gap: 7px; }
+
+  /* Hero "próxima viagem" */
+  .hero {
+    position: relative; border-radius: 20px; overflow: hidden; padding: 18px; margin-top: 14px;
+    background: linear-gradient(135deg, #0d3b6e 0%, #0d6f97 55%, #0f8fb0 100%);
+    box-shadow: 0 12px 30px -12px rgba(13,111,151,.6);
+  }
+  .hero::after { content:""; position:absolute; inset:0; background: radial-gradient(120% 90% at 100% 0%, rgba(255,255,255,.18), transparent 55%); pointer-events:none; }
+  .hero .tag { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: #bfe6f5; }
+  .hero h2 { margin: 6px 0 2px; font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+  .hero .meta { font-size: 12.5px; color: #d6ecf6; }
+  .hero .count {
+    margin-top: 14px; display: inline-flex; align-items: baseline; gap: 6px;
+    background: rgba(0,0,0,.22); padding: 7px 12px; border-radius: 999px;
+  }
+  .hero .count b { font-size: 17px; font-weight: 800; }
+  .hero .count span { font-size: 11.5px; color: #cfe8f4; }
+
+  /* Stat chips */
+  .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 14px; }
+  .stat { background: var(--elevated); border: 1px solid var(--line); border-radius: 14px; padding: 12px 10px; text-align: center; }
+  .stat .n { font-size: 19px; font-weight: 800; }
+  .stat .l { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+
+  /* Trip cards */
+  .card { background: var(--elevated); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; margin-bottom: 12px; }
+  .card .cover { height: 92px; position: relative; }
+  .cover .badge {
+    position: absolute; top: 10px; left: 10px; font-size: 10.5px; font-weight: 700; padding: 4px 9px; border-radius: 999px;
+    background: rgba(0,0,0,.35); backdrop-filter: blur(4px); display: inline-flex; align-items: center; gap: 5px;
+  }
+  .card .body { padding: 12px 13px 14px; }
+  .card .body h3 { margin: 0 0 3px; font-size: 15.5px; font-weight: 700; letter-spacing: -.01em; }
+  .card .body .sub { font-size: 12px; color: var(--muted); }
+  .card .body .foot { display: flex; align-items: center; gap: 12px; margin-top: 10px; font-size: 11.5px; color: var(--dim); }
+  .card .body .foot .k { display: inline-flex; align-items: center; gap: 5px; }
+
+  .rowitem { display: flex; gap: 12px; align-items: center; background: var(--elevated); border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin-bottom: 10px; }
+  .rowitem .ic { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; flex: none; background: color-mix(in srgb, var(--primary) 22%, transparent); color: var(--primary-300); }
+  .rowitem .tx h4 { margin: 0; font-size: 14px; font-weight: 700; }
+  .rowitem .tx p { margin: 2px 0 0; font-size: 12px; color: var(--muted); line-height: 1.35; }
+  .rowitem .chev { margin-left: auto; color: var(--dim); flex: none; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .relato { border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background: var(--elevated); }
+  .relato .ph { height: 84px; }
+  .relato .b { padding: 10px; }
+  .relato .mood { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--sky); }
+  .relato h4 { margin: 3px 0 0; font-size: 13px; font-weight: 700; line-height: 1.25; }
+
+  /* Perfil */
+  .profile-top { display: flex; flex-direction: column; align-items: center; padding: 12px 0 6px; }
+  .avatar { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; font-size: 27px; font-weight: 800; color: #fff;
+    background: linear-gradient(135deg, var(--primary), var(--ocean)); box-shadow: 0 8px 22px -8px rgba(26,95,204,.7); }
+  .profile-top h2 { margin: 12px 0 2px; font-size: 18px; font-weight: 800; }
+  .profile-top .em { font-size: 12.5px; color: var(--muted); }
+  .set { display: flex; align-items: center; gap: 12px; padding: 14px 4px; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 600; }
+  .set .ic { color: var(--muted); } .set .chev { margin-left: auto; color: var(--dim); }
+  .set.danger { color: #f87171; } .set.danger .ic { color: #f87171; }
+
+  /* FAB */
+  .fab {
+    position: absolute; right: 16px; bottom: calc(64px + 14px); width: 54px; height: 54px; border-radius: 50%; z-index: 35;
+    background: linear-gradient(135deg, var(--sky), var(--ocean)); color: #fff; border: 0; cursor: pointer;
+    display: grid; place-items: center; box-shadow: 0 12px 26px -8px rgba(13,123,163,.75);
+  }
+
+  /* Bottom nav */
+  .bottomnav {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 64px; z-index: 36;
+    display: flex; border-top: 1px solid var(--line);
+    background: linear-gradient(0deg, var(--navy) 0%, var(--navy-2) 100%);
+    padding-bottom: 6px; /* simula home indicator/safe-area */
+  }
+  .tab { flex: 1; background: transparent; border: 0; cursor: pointer; color: var(--dim);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+  .tab span { font-size: 10px; font-weight: 600; }
+  .tab.active { color: var(--primary-400); }
+  .home-ind { position: absolute; bottom: 7px; left: 50%; transform: translateX(-50%); width: 120px; height: 4px; border-radius: 999px; background: rgba(255,255,255,.5); z-index: 37; }
+
+  .foot-note { color: var(--ink-soft); font-size: 12.5px; margin-top: 24px; text-align: center; max-width: 46ch; line-height: 1.5; }
+  svg { display: block; }
+</style>
+
+<div class="stage-head">
+  <p class="kicker">Prévia navegável · Fase 2</p>
+  <h1>RoteiroApp no celular</h1>
+  <p>Protótipo do app nativo com o design real. Toque na barra inferior para navegar entre as telas. Atualizo esta prévia conforme o app evolui.</p>
+  <div class="chips">
+    <span class="chip"><b>✓</b> Bottom navigation</span>
+    <span class="chip"><b>✓</b> Safe-areas</span>
+    <span class="chip"><b>✓</b> Offline dos dados</span>
+    <span class="chip"><b>✓</b> Shell Android</span>
+  </div>
+</div>
+
+<div class="device" role="img" aria-label="Prévia do RoteiroApp em um celular">
+  <div class="screen">
+    <div class="island"></div>
+
+    <div class="statusbar">
+      <span>9:41</span>
+      <span class="ico">
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="4.5" width="3" height="7.5" rx="1"/><rect x="9" y="2" width="3" height="10" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 4.5a10 10 0 0 1 14 0M3.5 7a6.5 6.5 0 0 1 9 0M6 9.5a3 3 0 0 1 4 0"/></svg>
+        <svg width="24" height="12" viewBox="0 0 24 12" fill="none"><rect x="1" y="1" width="20" height="10" rx="2.5" stroke="currentColor" stroke-width="1.3" opacity=".5"/><rect x="2.5" y="2.5" width="15" height="7" rx="1.2" fill="currentColor"/><rect x="22" y="4" width="1.5" height="4" rx="1" fill="currentColor" opacity=".6"/></svg>
+      </span>
+    </div>
+
+    <!-- Top bar -->
+    <div class="topbar">
+      <button class="iconbtn" aria-label="Menu"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <div class="brand">
+        <div class="logo"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></div>
+        <span class="name">RoteiroApp</span>
+      </div>
+      <button class="iconbtn grow dot" aria-label="Notificações"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></button>
+    </div>
+
+    <div class="content">
+      <!-- VIAGENS -->
+      <section class="screenview active" data-view="viagens">
+        <p class="greet">Boa viagem, <b>Allan</b> ✈️</p>
+        <div class="hero">
+          <div class="tag">Próxima viagem</div>
+          <h2>Portugal &amp; Espanha</h2>
+          <div class="meta">12–24 Ago · Lisboa · Porto · Madri · Barcelona</div>
+          <div class="count"><b>21</b><span>dias restantes</span></div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="n">3</div><div class="l">viagens</div></div>
+          <div class="stat"><div class="n">5</div><div class="l">países</div></div>
+          <div class="stat"><div class="n">R$ 8,4k</div><div class="l">orçamento</div></div>
+        </div>
+
+        <div class="h-sec"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2.2" stroke-linecap="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg> Próximas</div>
+        <div class="card">
+          <div class="cover" style="background:linear-gradient(135deg,#0d3b6e,#0f8fb0)"><span class="badge">🇵🇹 🇪🇸 Confirmada</span></div>
+          <div class="body"><h3>Portugal &amp; Espanha</h3><div class="sub">12–24 Ago 2026 · 13 dias</div>
+            <div class="foot"><span class="k">📍 4 destinos</span><span class="k">🏨 5 estadias</span><span class="k">🎟️ 8 atividades</span></div></div>
+        </div>
+        <div class="card">
+          <div class="cover" style="background:linear-gradient(135deg,#4c1d95,#7c3aed)"><span class="badge">🇯🇵 Planejando</span></div>
+          <div class="body"><h3>Japão</h3><div class="sub">Nov 2026 · Tóquio · Kyoto · Osaka</div>
+            <div class="foot"><span class="k">📍 3 destinos</span><span class="k">🗒️ rascunho</span></div></div>
+        </div>
+
+        <div class="h-sec">Concluídas</div>
+        <div class="card" style="opacity:.72">
+          <div class="cover" style="background:linear-gradient(135deg,#334155,#0f766e)"><span class="badge">🇨🇱 Concluída</span></div>
+          <div class="body"><h3>Chile &amp; Patagônia</h3><div class="sub">Jan 2026 · 10 dias</div></div>
+        </div>
+      </section>
+
+      <!-- ROTAS -->
+      <section class="screenview" data-view="rotas">
+        <p class="greet">Roteiros prontos da <b>comunidade</b></p>
+        <div class="h-sec">Em alta</div>
+        <div class="card">
+          <div class="cover" style="background:linear-gradient(135deg,#7c2d12,#ea580c)"><span class="badge">10 dias</span></div>
+          <div class="body"><h3>Sul da Itália</h3><div class="sub">Nápoles · Costa Amalfitana · Puglia</div>
+            <div class="foot"><span class="k">👤 Marina</span><span class="k">❤️ 128</span><span class="k">↧ clonar</span></div></div>
+        </div>
+        <div class="card">
+          <div class="cover" style="background:linear-gradient(135deg,#164e63,#0891b2)"><span class="badge">14 dias</span></div>
+          <div class="body"><h3>Patagônia Selvagem</h3><div class="sub">Torres del Paine · El Chaltén</div>
+            <div class="foot"><span class="k">👤 Rafa</span><span class="k">❤️ 96</span></div></div>
+        </div>
+        <div class="card">
+          <div class="cover" style="background:linear-gradient(135deg,#065f46,#10b981)"><span class="badge">econômico</span></div>
+          <div class="body"><h3>Tailândia mochilão</h3><div class="sub">Bangkok · Chiang Mai · Ilhas</div>
+            <div class="foot"><span class="k">👤 Duda</span><span class="k">❤️ 210</span></div></div>
+        </div>
+      </section>
+
+      <!-- DICAS -->
+      <section class="screenview" data-view="dicas">
+        <p class="greet">Dicas para viajar <b>melhor e mais barato</b></p>
+        <div class="h-sec">Para você</div>
+        <div class="rowitem"><div class="ic">💸</div><div class="tx"><h4>5 formas de economizar em passagens</h4><p>Alertas de preço, datas flexíveis e milhas.</p></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
+        <div class="rowitem"><div class="ic">🛂</div><div class="tx"><h4>Documentos para a Europa</h4><p>Passaporte, seguro e o que muda em 2026.</p></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
+        <div class="rowitem"><div class="ic">📱</div><div class="tx"><h4>Apps essenciais da viagem</h4><p>Mapas offline, câmbio, tradutor e transporte.</p></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
+        <div class="rowitem"><div class="ic">🎒</div><div class="tx"><h4>Como fazer a mala perfeita</h4><p>Lista por clima e a regra dos 5-4-3-2-1.</p></div><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
+      </section>
+
+      <!-- RELATOS -->
+      <section class="screenview" data-view="relatos">
+        <p class="greet">Histórias reais de quem <b>já foi</b></p>
+        <div class="h-sec">Em destaque</div>
+        <div class="grid2">
+          <div class="relato"><div class="ph" style="background:linear-gradient(135deg,#be185d,#f43f5e)"></div><div class="b"><div class="mood">Nostálgico</div><h4>Perdido nas ruas de Kyoto</h4></div></div>
+          <div class="relato"><div class="ph" style="background:linear-gradient(135deg,#0369a1,#38bdf8)"></div><div class="b"><div class="mood">Aventura</div><h4>Praias secretas da Albânia</h4></div></div>
+          <div class="relato"><div class="ph" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)"></div><div class="b"><div class="mood">Cultural</div><h4>3 dias no Marrocos</h4></div></div>
+          <div class="relato"><div class="ph" style="background:linear-gradient(135deg,#ca8a04,#f59e0b)"></div><div class="b"><div class="mood">Relax</div><h4>Vulcões e ócio nos Açores</h4></div></div>
+        </div>
+      </section>
+
+      <!-- PERFIL -->
+      <section class="screenview" data-view="perfil">
+        <div class="profile-top">
+          <div class="avatar">A</div>
+          <h2>Allan Souza</h2>
+          <div class="em">allan@roteiroapp.com</div>
+        </div>
+        <div class="stats" style="margin-top:16px">
+          <div class="stat"><div class="n">3</div><div class="l">viagens</div></div>
+          <div class="stat"><div class="n">5</div><div class="l">países</div></div>
+          <div class="stat"><div class="n">2</div><div class="l">relatos</div></div>
+        </div>
+        <div class="h-sec">Conta</div>
+        <div class="set"><span class="ic">🌐</span> Idioma <span style="margin-left:auto;color:var(--muted);font-weight:600">PT 🇧🇷</span></div>
+        <div class="set"><span class="ic">🔔</span> Notificações <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
+        <div class="set"><span class="ic">🔒</span> Privacidade <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></div>
+        <div class="set danger"><span class="ic">⎋</span> Sair</div>
+      </section>
+    </div>
+
+    <!-- FAB (só na tela Viagens) -->
+    <button class="fab" id="fab" aria-label="Nova viagem"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+
+    <!-- Bottom nav -->
+    <nav class="bottomnav" aria-label="Navegação">
+      <button class="tab active" data-tab="viagens">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        <span>Viagens</span>
+      </button>
+      <button class="tab" data-tab="rotas">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg>
+        <span>Rotas</span>
+      </button>
+      <button class="tab" data-tab="dicas">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4"/><path d="M15.1 14c.2-1 .6-1.7 1.4-2.5A4.6 4.6 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.8.8 1.2 1.5 1.4 2.5"/></svg>
+        <span>Dicas</span>
+      </button>
+      <button class="tab" data-tab="relatos">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5a1 1 0 0 1 1-1h6a3 3 0 0 1 3 3 3 3 0 0 1 3-3h6a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3H3a1 1 0 0 1-1-1z"/><path d="M12 6v15"/></svg>
+        <span>Relatos</span>
+      </button>
+      <button class="tab" data-tab="perfil">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/><path d="M6.2 18.8a4 4 0 0 1 3.8-2.8h4a4 4 0 0 1 3.8 2.8"/></svg>
+        <span>Perfil</span>
+      </button>
+    </nav>
+    <div class="home-ind"></div>
+  </div>
+</div>
+
+<p class="foot-note">Prévia de design — não é o app ao vivo. Reflete a navegação e o visual que estão sendo construídos na branch <code>mobile-app</code>.</p>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const views = document.querySelectorAll('.screenview');
+  const fab = document.getElementById('fab');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    const name = t.dataset.tab;
+    tabs.forEach(x => x.classList.toggle('active', x === t));
+    views.forEach(v => v.classList.toggle('active', v.dataset.view === name));
+    fab.style.display = (name === 'viagens') ? 'grid' : 'none';
+    document.querySelector('.content').scrollTop = 0;
+  }));
+</script>

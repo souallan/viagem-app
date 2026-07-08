@@ -100,3 +100,17 @@
 - **Como validar:** DevTools → Application → Service Workers ativo; Network offline → dados já visitados continuam abrindo. `next build` OK.
 - **Commit:** `feat(mobile): offline via service worker (SWR em /api) (Fase 4)`
 - **Status:** ✅ concluído (offline básico); recursos nativos de câmera/push ficam para próximos passos (dependem de chaves/backend)
+
+---
+
+## [2026-07-08] Prévia visual + quick wins das auditorias
+- **Objetivo:** dar ao usuário uma forma de acompanhar o app visualmente e corrigir os achados mais valiosos/seguros das auditorias.
+- **O que foi feito:**
+  - **Prévia navegável** em `docs/mobile-app/preview.html` (protótipo do app num celular simulado, com o design real e 5 telas) → publicada como Artifact.
+  - **Bug 404 do blog** (achado da Nova): a página de detalhe `blog/[slug]/page.tsx` só tinha 8 artigos; adicionados os 4 que faltavam (lisboa-7-dias, brasil-2026, mochilao-europa, japao-10-dias) no formato `## `. Agora 12 páginas SSG, sem 404.
+  - **Contraste** (Aria): rótulo "menu" e copyright do sidebar (slate-700/800 → slate-300/400).
+  - **BACKLOG central** em `docs/BACKLOG.md` — registro único de tudo que falta (fases + Nova + Aria + bugs), atualizado a cada sessão.
+- **Arquivos:** `docs/mobile-app/preview.html`, `docs/BACKLOG.md`, `src/app/blog/[slug]/page.tsx`, `src/components/layout/sidebar.tsx`.
+- **Como validar:** `tsc` 0 erros, `next build` OK (72 páginas estáticas). Abrir a prévia (Artifact) e navegar pelas abas.
+- **Commit:** `fix+docs: bug 404 do blog, contraste, prévia mobile e BACKLOG central`
+- **Status:** ✅ concluído. Demais quick wins (touch targets, select chevron, dismiss, h-4.5, GA4, afiliados) rastreados no BACKLOG.
