@@ -49,6 +49,51 @@ O app mobile (Capacitor, Modelo A) **carrega o mesmo `roteiroapp.com`** e usa o 
 
 ---
 
+---
+
+# Rodada 2 — mapa, rotas, anexos, transporte (2026-07-08)
+
+## 4. Mapa interativo: ver locais e traçar rota até o ponto
+
+**Status: GRANDE PARTE JÁ EXISTE.** Em `/trips/[id]/map` (`src/components/trips/map-view.tsx` + `map/page.tsx`): plota **hospedagens e atividades** com ícones/categorias, tem **filtros** (todos/destinos/hospedagens/atividades) e **botão de rota no Google Maps com waypoints** (`/maps/dir/?api=1&destination=...&waypoints=...`).
+
+**O que falta / melhorias:**
+- Plotar também **transportes** (aeroportos/estações — campos `from`/`to`).
+- **Busca por texto** ("hotel", "restaurante", "aeroporto") além dos filtros por categoria.
+- **"Traçar rota" por marcador** (um destino específico): Google Maps `dir/?api=1&destination=...`; alternativa **Waze** (`https://waze.com/ul?q=...`).
+- **"Me localizar"** (geolocation nativa — Fase 4) → rota a partir da posição atual; opção "perto de mim".
+- **Filtrar o mapa por dia** do itinerário.
+
+## 5. Ordenar atrações por distância (melhor trajeto, economizar tempo)
+
+**Status: NOVO.** O mapa já monta rota com waypoints, mas **não otimiza a ordem**.
+
+**Como implementar:** geocodificar os locais (Nominatim, já usado) → distâncias **haversine** → **nearest-neighbor + 2-opt** (N pequeno por dia, ≤~10) → botão **"Otimizar trajeto do dia"** que reordena as atividades a partir de um ponto de partida (a hospedagem daquele dia). Avançado: considerar **horário de funcionamento** e janelas de visita. Integra direto com o itinerário. Alto valor.
+
+## 6. Anexos: foto da reserva / upload de documento por item
+
+**Status: JÁ PLANEJADO (câmera/upload Cloudinary — Fase 4/5); esta ideia EXPANDE.**
+Hoje Documentos são só URL. A ideia é **anexar imagem por item**: nº de reserva no hotel, bilhete de transporte, ingresso de atividade, comprovante de check-in.
+
+**Como implementar:** tabela `Attachment(itemType, itemId, url, kind)` ou campo `attachmentUrl` por item; captura por **câmera no mobile** (`@capacitor/camera`) + upload para **Cloudinary** (depende das chaves). Casa com o "**armazenamento ilimitado de PDFs/fotos**" do premium.
+
+## 7. Guia de transporte público (estilo Citymapper)
+
+**Status: NOVO e AMBICIOSO.** Construir do zero exige dados de transporte (GTFS) e roteirização — inviável agora.
+
+**Recomendação: integrar via deep-link, não construir:**
+- Botão **"Como chegar (transporte público)"** por local → **Google Maps em modo transit** (`.../dir/?api=1&destination=...&travelmode=transit`).
+- Card **"Transporte local"** por cidade com links para **Citymapper** (cidades suportadas), **Moovit** e o app do metrô local.
+- Complemento: sugerir o **cartão de transporte** da cidade (Suica/Japão, Oyster/Londres, Viva Viagem/Lisboa) — já citado nos artigos do blog.
+
+## Complementos sugeridos (rodada 2)
+- **Waze** além do Google Maps nos deep-links de rota.
+- **"Perto de mim"** com geolocation: lista locais planejados por proximidade.
+- **Tempo estimado de deslocamento** entre atividades (Google/OSRM) — reforça a ideia 5.
+- **Mapa offline**: cache de tiles com Leaflet/OSM é complexo — registrar como pesquisa; alternativa simples: guardar endereço/coords para abrir no app de mapas nativo (que tem offline próprio).
+
+---
+
 ## Outras melhorias sugeridas (bônus)
 - **Notificações de grupo:** avisar membros sobre mudanças/lembretes (usa o push da Fase 4).
 - **Timeline de atividade da viagem:** "quem adicionou o quê" (bom para grupo).
