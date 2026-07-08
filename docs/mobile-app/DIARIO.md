@@ -41,3 +41,18 @@
 - **Como validar:** `npx tsc --noEmit` e `npm run build` sem erros; no DevTools (device com notch, ex. iPhone 14 Pro) a barra superior e o FAB não ficam sob a ilha dinâmica quando os utilitários forem aplicados (aplicação nos componentes é o Passo 2).
 - **Commit:** `feat(mobile): viewport-fit cover + utilitários de safe-area (Fase 1.1)`
 - **Status:** ✅ concluído
+
+---
+
+## [2026-07-08] Fase 1 · Passos 2–5 — Safe-area aplicada, ícones raster, CSP e gate do SW
+- **Objetivo:** concluir o Hardening PWA — deixar o app instalável de verdade e compatível com o WebView nativo.
+- **O que foi feito:**
+  - **1.2** Safe-area aplicada: top bar mobile (`app-shell.tsx`) agora usa `min-h-[3.5rem] pt-safe` (cresce sob o notch sem espremer o conteúdo); FAB do dashboard usa `bottom-safe` (não colide com o home indicator).
+  - **1.3** Ícones raster gerados a partir de `public/icon.svg` via `sharp` (`scripts/generate-icons.mjs`): `public/icons/icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `public/apple-touch-icon.png`. Manifest e `layout.tsx` atualizados para usar PNGs (lojas/iOS exigem raster). Adicionado `"id": "/"` no manifest.
+  - **1.4** CSP reconciliada em `next.config.mjs`: `connect-src` liberou `open.er-api.com`, `nominatim.openstreetmap.org`, `api.open-meteo.com`; `img-src` liberou `*.tile.openstreetmap.org` e `cdnjs.cloudflare.com`. Conserta câmbio/mapa/clima também na web.
+  - **1.5** Criado `src/lib/native.ts` (`isNativeApp`, `getNativePlatform`) sem depender do pacote em build-time; registro do service worker em `layout.tsx` agora é **pulado dentro do app nativo**.
+- **Arquivos:** `src/components/layout/app-shell.tsx`, `src/app/(app)/dashboard/page.tsx`, `scripts/generate-icons.mjs`, `public/icons/*`, `public/apple-touch-icon.png`, `public/manifest.json`, `src/app/layout.tsx`, `next.config.mjs`, `src/lib/native.ts`, `package.json` (devDep `sharp`).
+- **Decisões/porquê:** ícones gerados do SVG-fonte atual (o usuário pode trocar `public/icon.svg` por arte de alta resolução e rodar `node scripts/generate-icons.mjs` de novo). CSP: optou-se por liberar os domínios (mudança mínima, conserta a web) em vez de criar proxies agora. SW gateado via `window.Capacitor` — no modelo WebView remoto o bridge é injetado mesmo com conteúdo remoto.
+- **Como validar:** `npx tsc --noEmit` → 0 erros. Instalar como PWA (Chrome → Instalar) deve usar ícone PNG; DevTools device com notch mostra barra/FAB fora das áreas seguras.
+- **Commit:** `feat(mobile): safe-area aplicada, ícones raster, CSP e gate do SW (Fase 1.2–1.5)`
+- **Status:** ✅ concluído — **Fase 1 concluída**

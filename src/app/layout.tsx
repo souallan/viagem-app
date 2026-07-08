@@ -16,8 +16,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   manifest: "/manifest.json",
   icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
-    apple: "/icon.svg",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icons/icon-192.png", type: "image/png", sizes: "192x192" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
   appleWebApp: { capable: true, statusBarStyle: "default", title: "RoteiroApp" },
   openGraph: {
@@ -106,7 +109,10 @@ export default function RootLayout({
         )}
         {children}
         <script dangerouslySetInnerHTML={{ __html: `
-          if ('serviceWorker' in navigator) {
+          // Registra o service worker só na WEB. Dentro do app nativo (Capacitor)
+          // o shell nativo cuida do cache/offline — o SW web é ignorado.
+          var __isNative = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+          if ('serviceWorker' in navigator && !__isNative) {
             window.addEventListener('load', () => {
               navigator.serviceWorker.register('/sw.js').catch(() => {});
             });

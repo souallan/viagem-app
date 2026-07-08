@@ -64,7 +64,7 @@ export function AppShell({
       <div className="flex-1 md:ml-64 flex flex-col min-h-screen">
 
         {/* Mobile top bar */}
-        <header className="md:hidden sticky top-0 z-30 flex items-center gap-3 px-4 h-14 border-b border-white/5"
+        <header className="md:hidden sticky top-0 z-30 flex items-center gap-3 px-4 min-h-[3.5rem] pt-safe border-b border-white/5"
           style={{ background: "linear-gradient(180deg, #0E1520 0%, #111827 100%)" }}
         >
           <button
