@@ -7,8 +7,10 @@ import {
   Calendar, MapPin, DollarSign, FileText,
   Activity, Map, BarChart2, ExternalLink, Globe,
   Hotel, Star, Compass, Newspaper,
-  Plane, TrendingUp, Package, Pencil,
+  Plane, TrendingUp, Package, Pencil, Clock, ArrowRight,
 } from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import WeatherWidget from "@/components/trips/weather-widget";
 import ImmigrationAlerts from "@/components/trips/immigration-alerts";
 import ShareRouteButton from "@/components/trips/share-route-button";
@@ -35,6 +37,9 @@ export default async function TripOverviewPage({
           items: { where: { isPacked: true }, select: { id: true } },
         },
       },
+      activities: { select: { id: true, title: true, date: true, startTime: true, location: true, city: true, bookingRef: true } },
+      accommodations: { select: { id: true, name: true, checkIn: true, checkOut: true, confirmationNumber: true, address: true } },
+      transports: { select: { id: true, type: true, from: true, to: true, departureTime: true, carrier: true, bookingRef: true, seat: true } },
     },
   });
 
@@ -51,6 +56,30 @@ export default async function TripOverviewPage({
   if (trip.startDate && trip.endDate) {
     durationDays = Math.max(1, Math.ceil((trip.endDate.getTime() - trip.startDate.getTime()) / 86400000));
   }
+
+  // ── Agora & próximo evento (Théo/UX): reserva/voo a 0 toque, offline via cache do SW ──
+  const now = new Date();
+  type Ev = { at: Date; kind: "checkin" | "checkout" | "transport" | "activity"; title: string; detail?: string; href: string };
+  const base = `/trips/${id}`;
+  const events: Ev[] = [];
+  for (const a of trip.accommodations) {
+    events.push({ at: a.checkIn, kind: "checkin", title: `Check-in · ${a.name}`, detail: a.confirmationNumber ? `Confirmação ${a.confirmationNumber}` : a.address ?? undefined, href: `${base}/accommodation` });
+    events.push({ at: a.checkOut, kind: "checkout", title: `Check-out · ${a.name}`, detail: a.address ?? undefined, href: `${base}/accommodation` });
+  }
+  for (const tr of trip.transports) {
+    const det = [transportLabel(tr.type), tr.bookingRef ? `Reserva ${tr.bookingRef}` : null, tr.seat ? `Assento ${tr.seat}` : null].filter(Boolean).join(" · ");
+    events.push({ at: tr.departureTime, kind: "transport", title: `${tr.from} → ${tr.to}`, detail: det || undefined, href: `${base}/transport` });
+  }
+  for (const ac of trip.activities) {
+    const det = [ac.location || ac.city, ac.bookingRef ? `Reserva ${ac.bookingRef}` : null].filter(Boolean).join(" · ");
+    events.push({ at: combineDateTime(ac.date, ac.startTime), kind: "activity", title: ac.title, detail: det || undefined, href: `${base}/itinerary` });
+  }
+  const nextEvent = events
+    .filter((e) => e.at.getTime() >= now.getTime())
+    .sort((a, b) => a.at.getTime() - b.at.getTime())[0] ?? null;
+  const ongoingStay = trip.accommodations.find((a) => a.checkIn.getTime() <= now.getTime() && now.getTime() <= a.checkOut.getTime()) ?? null;
+  const kindIcon = { checkin: Hotel, checkout: Hotel, transport: Plane, activity: Activity } as const;
+  const NextIcon = nextEvent ? kindIcon[nextEvent.kind] : null;
 
   const travelResources = [
     { name: "TripAdvisor", icon: Star, color: "text-green-600 bg-green-50 border-green-100", desc: "Avaliações e atrações", url: `https://www.tripadvisor.com/Search?q=${dest}` },
@@ -113,6 +142,50 @@ export default async function TripOverviewPage({
           <p className="mt-4 text-primary-100 text-sm leading-relaxed border-t border-white/15 pt-4">{trip.description}</p>
         )}
       </div>
+
+      {/* ── Agora & próximo evento ── */}
+      {(ongoingStay || nextEvent) && (
+        <div className="rounded-2xl border border-primary-200 bg-gradient-to-br from-primary-50 to-white p-4 sm:p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-7 h-7 rounded-lg bg-primary-100 flex items-center justify-center">
+              <Clock className="h-4 w-4 text-primary-600" />
+            </div>
+            <h3 className="text-sm font-bold text-gray-900">Agora &amp; próximo</h3>
+          </div>
+
+          {ongoingStay && (
+            <div className="flex items-start gap-3 mb-2 px-3 py-2.5 rounded-xl bg-white border border-gray-100">
+              <Hotel className="h-4 w-4 text-purple-500 mt-0.5 shrink-0" />
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-600">Agora</p>
+                <p className="text-sm font-semibold text-gray-900 truncate">Hospedado em {ongoingStay.name}</p>
+                {ongoingStay.confirmationNumber && (
+                  <p className="text-xs text-gray-500 truncate">Confirmação {ongoingStay.confirmationNumber}</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {nextEvent && NextIcon && (
+            <Link
+              href={nextEvent.href}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white border border-gray-100 hover:border-primary-200 hover:shadow-sm transition-all group"
+            >
+              <div className="w-9 h-9 rounded-xl bg-primary-50 flex items-center justify-center shrink-0">
+                <NextIcon className="h-4 w-4 text-primary-600" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-primary-600">
+                  {nextEvent.kind === "activity" ? "Próxima atividade" : "Próximo"} · {whenLabel(nextEvent.at, now)}
+                </p>
+                <p className="text-sm font-semibold text-gray-900 truncate">{nextEvent.title}</p>
+                {nextEvent.detail && <p className="text-xs text-gray-500 truncate">{nextEvent.detail}</p>}
+              </div>
+              <ArrowRight className="h-4 w-4 text-gray-300 group-hover:text-primary-500 shrink-0" />
+            </Link>
+          )}
+        </div>
+      )}
 
       {/* ── Stats grid ── */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
@@ -247,6 +320,28 @@ export default async function TripOverviewPage({
 
     </div>
   );
+}
+
+function combineDateTime(date: Date, time: string | null): Date {
+  if (!time) return date;
+  const [h, m] = time.split(":").map(Number);
+  const d = new Date(date);
+  if (!Number.isNaN(h)) d.setHours(h, Number.isNaN(m) ? 0 : m, 0, 0);
+  return d;
+}
+
+function transportLabel(type: string): string {
+  return (({ FLIGHT: "Voo", BUS: "Ônibus", TRAIN: "Trem", CAR: "Carro", BOAT: "Barco", OTHER: "Transporte" }) as Record<string, string>)[type] ?? "Transporte";
+}
+
+function whenLabel(at: Date, now: Date): string {
+  const time = format(at, "HH:mm");
+  const hasTime = time !== "00:00";
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  if (at.toDateString() === now.toDateString()) return hasTime ? `Hoje · ${time}` : "Hoje";
+  if (at.toDateString() === tomorrow.toDateString()) return hasTime ? `Amanhã · ${time}` : "Amanhã";
+  return format(at, hasTime ? "d MMM · HH:mm" : "d MMM", { locale: ptBR });
 }
 
 function BigStatCard({
