@@ -61,6 +61,27 @@
 
 ---
 
+## 🚀 Lançamento & conteúdo (ideias avaliadas 2026-07-08)
+| Status | Item |
+|---|---|
+| ⬜ | Pré-lançamento: página/**waitlist de early-access do app** com recompensa premium ("seja um dos primeiros a testar") |
+| ⬜ | Conteúdo **build-in-public** + reels de "perrengues de viagem" (TikTok/IG) |
+| ⬜ | **Micro-influenciadores** testando em viagem real (nômades) — troca por divulgação |
+| ⬜ | **Tráfego pago** segmentado (IG/TikTok: interesses viagem/turismo) — após validar retenção |
+
+*(ASO e afiliados no orgânico já constam na seção Nova.)*
+
+## 💰 Monetização & Produto (freemium — ideias avaliadas)
+| Status | Item |
+|---|---|
+| ⬜ | Definir **freemium**: grátis até ~3 viagens (roadmap) · Premium libera os itens abaixo |
+| ⬜ | **Exportar roteiro em PDF** (premium) |
+| ⬜ | **Viagem em grupo / compartilhamento em tempo real** (usa `TripMember`, já no schema) como premium |
+| ⬜ | **Armazenamento ilimitado de PDFs/fotos de reservas** (liga com upload Cloudinary da Fase 5) |
+| ⬜ | **Stripe**: avaliar assinatura mensal **e** "compra única por viagem" |
+
+> **Já implementado / descartado (triagem 2026-07-08):** paleta azul+branco (tranquilidade) ✅ · ícones intuitivos avião/mala/cifrão/calendário (lucide) ✅ · **Figma** — não adotado: prototipamos via prévia HTML (`docs/mobile-app/preview.html`) + agentes Aria/Théo · ASO/afiliados/influenciadores/social já mapeados pela Nova.
+
 ## 🧭 UX (Théo) — `docs/auditorias/ux-2026-07-08.md`
 Foco: menos cliques até o objetivo. Economias mapeadas: criar viagem **6→3**, achar reserva na viagem **5→1-2**, add gasto **6→4**, add hospedagem **6→4**.
 | Status | Prioridade | Item | Economia |
