@@ -3,14 +3,15 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 async function getTrip(id: string, userId: string) {
-  return prisma.trip.findFirst({ where: { id, OR: [{ userId }, { members: { some: { userId } } }] } });
+  return prisma.trip.findFirst({ where: { id, OR: [{ userId }, { members: { some: { userId, role: "EDITOR" } } }] } });
 }
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id } = await params;
-  const trip = await getTrip(id, session.user.id);
+  const uid = session.user.id;
+  const trip = await prisma.trip.findFirst({ where: { id, OR: [{ userId: uid }, { members: { some: { userId: uid } } }] } });
   if (!trip) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const items = await prisma.tripPrepItem.findMany({

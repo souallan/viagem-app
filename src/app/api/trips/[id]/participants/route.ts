@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { stripHtml } from "@/lib/sanitize";
 
 async function verifyTrip(tripId: string, userId: string) {
-  return prisma.trip.findFirst({ where: { id: tripId, OR: [{ userId }, { members: { some: { userId } } }] } });
+  return prisma.trip.findFirst({ where: { id: tripId, OR: [{ userId }, { members: { some: { userId, role: "EDITOR" } } }] } });
 }
 
 export async function GET(
@@ -15,7 +15,8 @@ export async function GET(
   if (!session?.user?.id) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
 
   const { id } = await params;
-  const trip = await verifyTrip(id, session.user.id);
+  const uid = session.user.id;
+  const trip = await prisma.trip.findFirst({ where: { id, OR: [{ userId: uid }, { members: { some: { userId: uid } } }] } });
   if (!trip) return NextResponse.json({ error: "Viagem não encontrada" }, { status: 404 });
 
   const participants = await prisma.tripParticipant.findMany({
