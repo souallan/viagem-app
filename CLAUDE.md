@@ -67,6 +67,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `Accommodation` | |
 | `Transport` | |
 | `Expense` | |
+| `TripParticipant` | |
+| `ExpenseShare` | |
 | `Document` | |
 | `PackingList` | |
 | `PackingItem` | |
@@ -144,6 +146,7 @@ Registered routes:
 - `/trips/[id]/journal` — DELETE, GET, POST, PUT
 - `/trips/[id]/members` — DELETE, GET, POST
 - `/trips/[id]/packing` — DELETE, GET, PATCH, POST, PUT
+- `/trips/[id]/participants` — DELETE, GET, POST
 - `/trips/[id]/prep` — DELETE, GET, PATCH, POST
 - `/trips/[id]` — DELETE, GET, PUT
 - `/trips/[id]/share` — DELETE, POST
