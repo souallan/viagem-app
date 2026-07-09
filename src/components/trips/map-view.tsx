@@ -46,6 +46,14 @@ function transitUrl(lat: number, lng: number, origin?: { lat: number; lng: numbe
 function wazeUrl(lat: number, lng: number): string {
   return `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`;
 }
+function gmapsFromCoords(coords: { lat: number; lng: number }[]): string {
+  const dest = coords[coords.length - 1];
+  const wps = coords.slice(0, -1).slice(0, 9).map((c) => `${c.lat},${c.lng}`).join("|");
+  const d = `${dest.lat},${dest.lng}`;
+  return wps
+    ? `https://www.google.com/maps/dir/?api=1&destination=${d}&waypoints=${wps}&travelmode=driving`
+    : `https://www.google.com/maps/dir/?api=1&destination=${d}`;
+}
 function makeUserIcon() {
   return L.divIcon({
     html: `<div style="width:18px;height:18px;border-radius:50%;background:#2563eb;border:3px solid white;box-shadow:0 0 0 4px rgba(37,99,235,0.25),0 2px 6px rgba(0,0,0,0.35)"></div>`,
@@ -242,6 +250,11 @@ export default function MapView({
     dayRoutes[day] = { ordered, km: pathDistanceKm(ordered.map((p) => ({ lat: p.lat, lng: p.lng }))) };
   }
 
+  const optimizedCoords = optimize ? days.flatMap((d) => dayRoutes[d].ordered) : [];
+  const optimizedGmapsUrl = optimizedCoords.length >= 2
+    ? gmapsFromCoords(optimizedCoords.map((p) => ({ lat: p.lat, lng: p.lng })))
+    : null;
+
   return (
     <div className="space-y-3">
       <div className="relative rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
@@ -339,6 +352,17 @@ export default function MapView({
           </p>
         )}
       </div>
+
+      {optimizedGmapsUrl && (
+        <a
+          href={optimizedGmapsUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors"
+        >
+          🧭 Abrir trajeto otimizado no Google Maps
+        </a>
+      )}
 
       {/* Destination legend */}
       {destMarkers.length > 0 && (

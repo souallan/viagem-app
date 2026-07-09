@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import { ExternalLink, MapPin, BedDouble, CalendarDays, Layers, Plane, Search, Route } from "lucide-react";
+import { ExternalLink, MapPin, BedDouble, CalendarDays, Layers, Plane, Search, Route, Bus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
 import type { MapPlace } from "@/components/trips/map-view";
@@ -223,7 +223,7 @@ export default function MapPage() {
           >
             <Route className="h-3.5 w-3.5" /> {optimize ? "Trajeto otimizado" : "Otimizar trajeto"}
           </button>
-          {hasAny && (
+          {hasAny && !optimize && (
             <a
               href={buildGoogleMapsUrl(trip.destination, allPlaces)}
               target="_blank"
@@ -297,6 +297,36 @@ export default function MapPage() {
       {!hasAny && (
         <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-6 text-center text-sm text-gray-500">
           {t.map.noLocationsExtended}
+        </div>
+      )}
+
+      {/* ── Transporte público local ── */}
+      {destinations.length > 0 && (
+        <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-lg bg-cyan-50 flex items-center justify-center">
+              <Bus className="h-4 w-4 text-cyan-600" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-gray-900">Transporte público local</h3>
+              <p className="text-xs text-gray-400">Como se locomover em cada destino</p>
+            </div>
+          </div>
+          <div className="space-y-2">
+            {destinations.map((dest, i) => {
+              const city = dest.split(",")[0].trim();
+              const q = encodeURIComponent(city + " transporte público");
+              return (
+                <div key={i} className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-semibold text-gray-800 min-w-[84px]">{city}</span>
+                  <a href={`https://www.google.com/maps/search/?api=1&query=${q}`} target="_blank" rel="noreferrer" className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100 transition-colors">Google Maps</a>
+                  <a href="https://citymapper.com/?lang=pt" target="_blank" rel="noreferrer" className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100 transition-colors">Citymapper</a>
+                  <a href="https://moovitapp.com/" target="_blank" rel="noreferrer" className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-orange-50 text-orange-600 border border-orange-100 hover:bg-orange-100 transition-colors">Moovit</a>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-[10px] text-gray-400 mt-2.5">Citymapper e Moovit abrem o app (se a cidade for suportada). Para um local específico, use o botão “🚌 Transporte” no marcador do mapa.</p>
         </div>
       )}
 
