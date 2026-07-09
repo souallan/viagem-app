@@ -223,7 +223,7 @@ Packing item toggle uses `PATCH { itemId, isPacked }`.
 ### UI Components
 
 Custom components in `src/components/ui/` — hand-written, shadcn-compatible API, **no Radix UI**.
-Available: `badge`, `button`, `card`, `currency-input`, `dialog`, `input`, `label`, `location-input`, `select`, `textarea`.
+Available: `badge`, `button`, `card`, `currency-input`, `dialog`, `input`, `label`, `location-input`, `photo-upload`, `select`, `textarea`.
 
 `Dialog` uses a backdrop + `Escape` key handler (no Radix).
 `cn()` in `src/lib/utils.ts` combines clsx + tailwind-merge.
