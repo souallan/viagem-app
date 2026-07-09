@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { LocationInput } from "@/components/ui/location-input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { PhotoUpload } from "@/components/ui/photo-upload";
 import { CurrencyInput } from "@/components/ui/currency-input";
 import { Dialog, DialogHeader, DialogTitle, DialogBody, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { affiliates } from "@/lib/affiliates";
@@ -35,6 +36,7 @@ interface Accommodation {
   cost: number | null;
   currency: string;
   notes: string | null;
+  attachmentUrl: string | null;
 }
 
 function getCurrencySymbol(code: string): string {
@@ -466,7 +468,7 @@ function AccommodationDetail({
 
 const EMPTY_FORM = {
   name: "", type: "HOTEL", address: "", checkIn: "", checkInTime: "", checkOut: "", checkOutTime: "",
-  confirmationNumber: "", phone: "", website: "", cost: "", currency: "BRL", notes: "",
+  confirmationNumber: "", phone: "", website: "", cost: "", currency: "BRL", notes: "", attachmentUrl: "",
 };
 
 // ── Affiliate banner ──────────────────────────────────────────
@@ -547,7 +549,7 @@ export default function AccommodationPage() {
       checkIn: ciDate, checkInTime: ciTime, checkOut: coDate, checkOutTime: coTime,
       confirmationNumber: item.confirmationNumber ?? "", phone: item.phone ?? "",
       website: item.website ?? "", cost: item.cost != null ? String(item.cost) : "",
-      currency: item.currency ?? "BRL", notes: item.notes ?? "",
+      currency: item.currency ?? "BRL", notes: item.notes ?? "", attachmentUrl: item.attachmentUrl ?? "",
     });
     setEditingId(item.id);
     setOpen(true);
@@ -741,6 +743,11 @@ export default function AccommodationPage() {
                         # {item.confirmationNumber}
                       </span>
                     )}
+                    {item.attachmentUrl && (
+                      <a href={item.attachmentUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-xs font-semibold text-primary-600 bg-primary-50 border border-primary-100 px-2.5 py-1 rounded-lg hover:bg-primary-100 transition-colors">
+                        📷 Comprovante
+                      </a>
+                    )}
                     {item.phone && (
                       <span className="flex items-center gap-1 text-xs text-gray-500 bg-gray-50 border border-gray-100 px-2.5 py-1 rounded-lg">
                         <Phone className="h-3 w-3" /> {item.phone}
@@ -830,6 +837,15 @@ export default function AccommodationPage() {
             <div className="space-y-2">
               <Label>{t.accommodation.formNotes}</Label>
               <Textarea name="notes" value={form.notes} onChange={handleChange} rows={2} />
+            </div>
+            <div className="space-y-2">
+              <Label>Comprovante (foto)</Label>
+              <PhotoUpload onUploaded={(url) => setForm((p) => ({ ...p, attachmentUrl: url }))} label="Foto da reserva" />
+              {form.attachmentUrl && (
+                <a href={form.attachmentUrl} target="_blank" rel="noreferrer" className="inline-block text-xs font-semibold text-primary-600 hover:underline">
+                  Ver comprovante anexado ↗
+                </a>
+              )}
             </div>
           </form>
         </DialogBody>

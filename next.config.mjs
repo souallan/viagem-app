@@ -15,7 +15,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://images.unsplash.com https://res.cloudinary.com https://www.google-analytics.com https://*.tile.openstreetmap.org https://cdnjs.cloudflare.com",
       "font-src 'self'",
-      "connect-src 'self' https://api.frankfurter.app https://open.er-api.com https://nominatim.openstreetmap.org https://api.open-meteo.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://o*.ingest.sentry.io",
+      "connect-src 'self' https://api.frankfurter.app https://open.er-api.com https://nominatim.openstreetmap.org https://api.open-meteo.com https://api.cloudinary.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net https://o*.ingest.sentry.io",
       "frame-ancestors 'none'",
     ].join("; "),
   },

@@ -158,6 +158,7 @@ model Accommodation {
   cost               Float?
   currency           String   @default("BRL")
   notes              String?
+  attachmentUrl      String?
   createdAt          DateTime @default(now())
 
   trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)

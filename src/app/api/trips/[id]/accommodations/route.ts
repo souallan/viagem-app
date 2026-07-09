@@ -40,7 +40,7 @@ export async function POST(
 
   try {
     const body = await req.json();
-    const { name, type, address, checkIn, checkOut, confirmationNumber, phone, website, cost, currency, notes } = body;
+    const { name, type, address, checkIn, checkOut, confirmationNumber, phone, website, cost, currency, notes, attachmentUrl } = body;
 
     if (!name || !checkIn || !checkOut) {
       return NextResponse.json({ error: "Nome, check-in e check-out são obrigatórios" }, { status: 400 });
@@ -60,6 +60,7 @@ export async function POST(
         cost: cost ? parseFloat(cost) : null,
         currency: currency ?? "BRL",
         notes,
+        attachmentUrl: attachmentUrl || null,
       },
     });
 
@@ -84,7 +85,7 @@ export async function PUT(
 
   try {
     const body = await req.json();
-    const { itemId, name, type, address, checkIn, checkOut, confirmationNumber, phone, website, cost, currency, notes } = body;
+    const { itemId, name, type, address, checkIn, checkOut, confirmationNumber, phone, website, cost, currency, notes, attachmentUrl } = body;
 
     if (!itemId || !name || !checkIn || !checkOut) {
       return NextResponse.json({ error: "ID, nome, check-in e check-out são obrigatórios" }, { status: 400 });
@@ -104,6 +105,7 @@ export async function PUT(
         cost: cost ? parseFloat(cost) : null,
         currency: currency ?? "BRL",
         notes: notes || null,
+        attachmentUrl: attachmentUrl || null,
       },
     });
 

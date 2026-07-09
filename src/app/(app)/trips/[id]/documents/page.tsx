@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { PhotoUpload } from "@/components/ui/photo-upload";
 import { Dialog, DialogHeader, DialogTitle, DialogBody, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
@@ -513,6 +514,7 @@ export default function DocumentsPage() {
               <div className="space-y-2">
                 <Label>{t.documents.formUrl}</Label>
                 <Input name="url" type="url" value={form.url} onChange={handleChange} placeholder="https://..." />
+                <PhotoUpload onUploaded={(url) => setForm((p) => ({ ...p, url }))} label="Tirar foto do documento" />
               </div>
             </div>
             <div className="space-y-2">
