@@ -39,7 +39,7 @@ export async function POST(
 
   try {
     const body = await req.json();
-    const { title, description, type, date, startTime, endTime, city, location, address, bookingRef, cost, notes } = body;
+    const { title, description, type, date, startTime, endTime, city, location, address, bookingRef, cost, notes, attachmentUrl } = body;
 
     if (!title || !date) {
       return NextResponse.json({ error: "Título e data são obrigatórios" }, { status: 400 });
@@ -60,6 +60,7 @@ export async function POST(
         bookingRef,
         cost: cost ? parseFloat(cost) : null,
         notes,
+        attachmentUrl: attachmentUrl || null,
       },
     });
 
@@ -82,7 +83,7 @@ export async function PUT(
 
   try {
     const body = await req.json();
-    const { activityId, title, description, type, date, startTime, endTime, city, location, address, bookingRef, cost, notes } = body;
+    const { activityId, title, description, type, date, startTime, endTime, city, location, address, bookingRef, cost, notes, attachmentUrl } = body;
 
     if (!activityId || !title || !date) {
       return NextResponse.json({ error: "ID, título e data são obrigatórios" }, { status: 400 });
@@ -103,6 +104,7 @@ export async function PUT(
         bookingRef: bookingRef || null,
         cost: cost ? parseFloat(cost) : null,
         notes: notes || null,
+        attachmentUrl: attachmentUrl || null,
       },
     });
 

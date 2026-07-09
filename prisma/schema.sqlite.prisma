@@ -138,6 +138,7 @@ model Activity {
   bookingRef  String?
   cost        Float?
   notes       String?
+  attachmentUrl String?
   createdAt   DateTime @default(now())
 
   trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)

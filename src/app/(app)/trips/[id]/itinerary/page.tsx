@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
+import { PhotoUpload } from "@/components/ui/photo-upload";
 import { CurrencyInput } from "@/components/ui/currency-input";
 import { LocationInput } from "@/components/ui/location-input";
 import { Dialog, DialogHeader, DialogTitle, DialogBody, DialogFooter, DialogClose } from "@/components/ui/dialog";
@@ -38,6 +39,7 @@ interface Activity {
   address: string | null;
   cost: number | null;
   notes: string | null;
+  attachmentUrl: string | null;
 }
 
 // ── Activity type config ─────────────────────────────────────
@@ -660,7 +662,7 @@ function GeneratorDialog({
 
 const EMPTY_FORM = {
   title: "", type: "ACTIVITY", date: "", startTime: "", endTime: "",
-  city: "", location: "", address: "", description: "", cost: "", currency: "BRL", notes: "",
+  city: "", location: "", address: "", description: "", cost: "", currency: "BRL", notes: "", attachmentUrl: "",
 };
 
 export default function ItineraryPage() {
@@ -713,6 +715,7 @@ export default function ItineraryPage() {
       cost: activity.cost != null ? String(activity.cost) : "",
       currency: "BRL",
       notes: activity.notes ?? "",
+      attachmentUrl: activity.attachmentUrl ?? "",
     });
     setEditingId(activity.id);
     setOpen(true);
@@ -1056,6 +1059,15 @@ export default function ItineraryPage() {
             <div className="space-y-2">
               <Label>{t.itinerary.formNotes}</Label>
               <Textarea name="notes" value={form.notes} onChange={handleChange} rows={2} placeholder={t.itinerary.formNotesPh} />
+            </div>
+            <div className="space-y-2">
+              <Label>Ingresso / comprovante (foto)</Label>
+              <PhotoUpload onUploaded={(url) => setForm((p) => ({ ...p, attachmentUrl: url }))} label="Foto do ingresso" />
+              {form.attachmentUrl && (
+                <a href={form.attachmentUrl} target="_blank" rel="noreferrer" className="inline-block text-xs font-semibold text-primary-600 hover:underline">
+                  Ver anexo ↗
+                </a>
+              )}
             </div>
           </form>
         </DialogBody>
