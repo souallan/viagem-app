@@ -154,6 +154,7 @@ Registered routes:
 - `/trips/[id]/transports` — DELETE, GET, POST, PUT
 - `/trips` — GET, POST
 - `/user/export` — GET
+- `/user/group-balances` — GET
 - `/user` — DELETE, GET, PUT
 
 ### Pages
