@@ -159,6 +159,7 @@ Registered routes:
 ### Pages
 
 - `/`
+- `/app`
 - `/backoffice`
 - `/backoffice/announcements`
 - `/backoffice/audit`
