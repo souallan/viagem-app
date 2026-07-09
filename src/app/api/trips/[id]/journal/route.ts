@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { stripHtml } from "@/lib/sanitize";
 
 async function getTrip(id: string, userId: string) {
-  return prisma.trip.findFirst({ where: { id, userId } });
+  return prisma.trip.findFirst({ where: { id, OR: [{ userId }, { members: { some: { userId } } }] } });
 }
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

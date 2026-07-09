@@ -18,8 +18,9 @@ export async function GET(
   }
 
   const { id } = await params;
+  const uid = session.user.id;
   const trip = await prisma.trip.findFirst({
-    where: { id, userId: session.user.id },
+    where: { id, OR: [{ userId: uid }, { members: { some: { userId: uid } } }] },
     include: {
       activities: { orderBy: { date: "asc" } },
       accommodations: { orderBy: { checkIn: "asc" } },

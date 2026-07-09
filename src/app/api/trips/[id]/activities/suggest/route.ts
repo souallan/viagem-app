@@ -118,7 +118,8 @@ export async function POST(
   if (!session?.user?.id) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
 
   const { id } = await params;
-  const trip = await prisma.trip.findFirst({ where: { id, userId: session.user.id } });
+  const uid = session.user.id;
+  const trip = await prisma.trip.findFirst({ where: { id, OR: [{ userId: uid }, { members: { some: { userId: uid } } }] } });
   if (!trip) return NextResponse.json({ error: "Viagem não encontrada" }, { status: 404 });
 
   const { city, date } = await req.json();

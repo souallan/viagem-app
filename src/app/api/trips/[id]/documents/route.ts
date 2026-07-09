@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 async function verifyTrip(tripId: string, userId: string) {
-  return prisma.trip.findFirst({ where: { id: tripId, userId } });
+  return prisma.trip.findFirst({ where: { id: tripId, OR: [{ userId }, { members: { some: { userId } } }] } });
 }
 
 export async function GET(

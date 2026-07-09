@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { logger } from "@/lib/logger";
 
 async function verifyTrip(tripId: string, userId: string) {
-  return prisma.trip.findFirst({ where: { id: tripId, userId } });
+  return prisma.trip.findFirst({ where: { id: tripId, OR: [{ userId }, { members: { some: { userId } } }] } });
 }
 
 export async function GET(

@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 async function getTrip(id: string, userId: string) {
-  return prisma.trip.findFirst({ where: { id, userId } });
+  return prisma.trip.findFirst({ where: { id, OR: [{ userId }, { members: { some: { userId } } }] } });
 }
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

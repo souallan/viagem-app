@@ -85,7 +85,7 @@
 ## 🧩 Ideias de produto avaliadas — `docs/IDEIAS.md`
 | Status | Item | Nota |
 |---|---|---|
-| 🟡 | **Compartilhar/ver a mesma viagem (grupo)** | ✅ viagem compartilhada **aparece no dashboard** do convidado + **overview abre** (leitura dono-ou-membro em /api/trips, layout e overview). Falta: GETs das abas internas (itinerário/orçamento/etc.) dono-ou-membro, papéis de escrita (EDITOR) e tempo real |
+| 🟢 | **Compartilhar/ver a mesma viagem (grupo)** | ✅ Convidado vê a viagem no dashboard e usa **todas as abas de conteúdo** (itinerário, orçamento/divisão, hospedagem, transporte, documentos, malas, preparativos, diário, participantes, mapa) em leitura **e edição**. Owner-only: **excluir viagem**, **gerenciar membros**, **share**. Refinamento futuro: papel VIEWER só-leitura + tempo real |
 | ✅ | **Divisão de contas do grupo** (estilo Splitwise) | Feito: `TripParticipant` + `ExpenseShare` + `Expense.paidById`; API de participantes; despesa com pagador/divisão; **"Acertar contas"** no orçamento (usa `src/lib/split.ts`) |
 | ✅ | **Mesma base mobile↔web** | Já atendido: Capacitar Modelo A usa o mesmo backend/DB; offline é cache (online-first). Só abrir tarefa se quiser **edição offline com sync** |
 | 🟢 | **Mapa interativo + rota** (`/map`) | ✅ transportes/aeroportos no mapa, ✅ busca por texto, ✅ rota por marcador (Google Maps/transit/Waze), ✅ "me localizar" (geolocation). Falta só: filtro por dia do itinerário |

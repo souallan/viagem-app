@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { stripHtml } from "@/lib/sanitize";
 
 async function verifyTrip(tripId: string, userId: string) {
-  return prisma.trip.findFirst({ where: { id: tripId, userId } });
+  return prisma.trip.findFirst({ where: { id: tripId, OR: [{ userId }, { members: { some: { userId } } }] } });
 }
 
 export async function GET(
