@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Plus, Trash2, Pencil, ExternalLink, ArrowRight, Users, X } from "lucide-react";
+import { Plus, Trash2, Pencil, ExternalLink, ArrowRight, Users, X, Check } from "lucide-react";
 import { computeBalances, simplifyDebts } from "@/lib/split";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -169,6 +169,13 @@ export default function BudgetPage() {
     }));
   const balances = participants.length > 0 ? computeBalances(splitExpenses, participants.map((p) => p.id)) : {};
   const settlements = participants.length > 0 ? simplifyDebts(balances) : [];
+  const netValues = participants.map((p) => balances[p.id] ?? 0);
+  const totalToSettle = netValues.filter((v) => v > 0.005).reduce((s, v) => s + v, 0);
+  const debtorsCount = netValues.filter((v) => v < -0.005).length;
+  const creditorsCount = netValues.filter((v) => v > 0.005).length;
+
+  // Iniciais coloridas por participante (avatar sem foto)
+  const initial = (name: string) => name.trim().charAt(0).toUpperCase() || "?";
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -345,37 +352,74 @@ export default function BudgetPage() {
         </div>
 
         {participants.length > 1 && splitExpenses.length > 0 && (
-          <div className="pt-3 border-t border-gray-100 space-y-3">
+          <div className="pt-3 border-t border-gray-100 space-y-4">
             <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Acertar contas</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+
+            {/* Barra de resumo */}
+            <div className="grid grid-cols-3 rounded-2xl overflow-hidden border border-gray-100 text-center">
+              <div className="p-3">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-gray-400">A acertar</p>
+                <p className="text-base font-black text-gray-900 mt-0.5">{formatCurrency(totalToSettle, tripCurrency)}</p>
+              </div>
+              <div className="p-3 border-x border-gray-100 bg-rose-50/50">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-rose-400">Devem</p>
+                <p className="text-base font-black text-rose-600 mt-0.5">{debtorsCount}</p>
+              </div>
+              <div className="p-3 bg-emerald-50/50">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-500">Recebem</p>
+                <p className="text-base font-black text-emerald-600 mt-0.5">{creditorsCount}</p>
+              </div>
+            </div>
+
+            {/* Saldo por pessoa */}
+            <div className="rounded-2xl border border-gray-100 divide-y divide-gray-100 overflow-hidden">
               {participants.map((p) => {
                 const net = balances[p.id] ?? 0;
+                const settled = Math.abs(net) < 0.005;
                 return (
-                  <div key={p.id} className="rounded-xl border border-gray-100 px-3 py-2">
-                    <p className="text-xs font-semibold text-gray-700 truncate">{p.name}</p>
-                    <p className={`text-sm font-bold ${net > 0.005 ? "text-green-600" : net < -0.005 ? "text-red-600" : "text-gray-400"}`}>
-                      {net > 0.005 ? "recebe " : net < -0.005 ? "paga " : "quite"}
-                      {Math.abs(net) > 0.005 ? formatCurrency(Math.abs(net), tripCurrency) : ""}
-                    </p>
+                  <div key={p.id} className="flex items-center gap-3 px-3 py-2.5">
+                    <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-black text-white shrink-0 ${settled ? "bg-gray-300" : net > 0 ? "bg-emerald-500" : "bg-rose-500"}`}>
+                      {initial(p.name)}
+                    </div>
+                    <span className="font-semibold text-gray-900 flex-1 min-w-0 truncate">{p.name}</span>
+                    {settled ? (
+                      <span className="text-xs font-semibold text-gray-400 flex items-center gap-1"><Check className="h-3.5 w-3.5" /> quitado</span>
+                    ) : (
+                      <div className="text-right">
+                        <span className={`block text-[10px] font-bold uppercase tracking-wide ${net > 0 ? "text-emerald-500" : "text-rose-400"}`}>
+                          {net > 0 ? "recebe" : "deve"}
+                        </span>
+                        <span className={`block text-sm font-black ${net > 0 ? "text-emerald-600" : "text-rose-600"}`}>
+                          {formatCurrency(Math.abs(net), tripCurrency)}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 );
               })}
             </div>
-            {settlements.length === 0 ? (
-              <p className="text-xs text-gray-400">Tudo quitado ✅</p>
-            ) : (
-              <div className="space-y-1.5">
-                {settlements.map((s, i) => (
-                  <div key={i} className="flex items-center gap-2 text-sm bg-gray-50 rounded-xl px-3 py-2">
-                    <span className="font-semibold text-gray-800">{nameOf(s.from)}</span>
-                    <ArrowRight className="h-3.5 w-3.5 text-gray-400" />
-                    <span className="font-semibold text-gray-800">{nameOf(s.to)}</span>
-                    <span className="ml-auto font-bold text-primary-600">{formatCurrency(s.amount, tripCurrency)}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-            <p className="text-[10px] text-gray-400">Considera despesas com pagador definido, na moeda da viagem.</p>
+
+            {/* Como acertar (quem paga quem, já com descontos) */}
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Como acertar</p>
+              {settlements.length === 0 ? (
+                <p className="text-sm font-semibold text-emerald-600 flex items-center gap-1.5"><Check className="h-4 w-4" /> Tudo quitado</p>
+              ) : (
+                <div className="space-y-2">
+                  {settlements.map((s, i) => (
+                    <div key={i} className="flex items-center gap-2 rounded-xl bg-gray-50 border border-gray-100 px-3 py-2.5">
+                      <div className="w-7 h-7 rounded-full bg-rose-500 text-white text-xs font-black flex items-center justify-center shrink-0">{initial(nameOf(s.from))}</div>
+                      <span className="text-sm font-semibold text-gray-800 truncate max-w-[5.5rem] sm:max-w-none">{nameOf(s.from)}</span>
+                      <ArrowRight className="h-4 w-4 text-gray-400 shrink-0" />
+                      <div className="w-7 h-7 rounded-full bg-emerald-500 text-white text-xs font-black flex items-center justify-center shrink-0">{initial(nameOf(s.to))}</div>
+                      <span className="text-sm font-semibold text-gray-800 truncate max-w-[5.5rem] sm:max-w-none">{nameOf(s.to)}</span>
+                      <span className="ml-auto text-sm font-black text-primary-600 shrink-0">{formatCurrency(s.amount, tripCurrency)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <p className="text-[10px] text-gray-400">Descontos já aplicados — o mínimo de pagamentos para todos ficarem quites. Considera despesas com pagador definido, na moeda da viagem.</p>
           </div>
         )}
       </div>
