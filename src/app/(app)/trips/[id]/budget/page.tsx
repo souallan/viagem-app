@@ -32,6 +32,12 @@ interface Expense {
 interface Participant {
   id: string;
   name: string;
+  userId?: string | null;
+}
+
+interface Member {
+  userId: string;
+  name: string;
 }
 
 function PartnerCard({ p }: { p: AffiliatePartner }) {
@@ -105,6 +111,7 @@ export default function BudgetPage() {
   const { id } = useParams<{ id: string }>();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [participants, setParticipants] = useState<Participant[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
   const [newParticipant, setNewParticipant] = useState("");
   const [tripBudget, setTripBudget] = useState<number | null>(null);
   const [tripCurrency, setTripCurrency] = useState("BRL");
@@ -119,13 +126,21 @@ export default function BudgetPage() {
   });
 
   async function load() {
-    const [expRes, tripRes, partRes] = await Promise.all([
+    const [expRes, tripRes, partRes, memRes] = await Promise.all([
       fetch(`/api/trips/${id}/expenses`),
       fetch(`/api/trips/${id}`),
       fetch(`/api/trips/${id}/participants`),
+      fetch(`/api/trips/${id}/members`),
     ]);
     if (expRes.ok) setExpenses(await expRes.json());
     if (partRes.ok) setParticipants(await partRes.json());
+    if (memRes.ok) {
+      const m = await memRes.json();
+      const list: Member[] = [];
+      if (m.owner) list.push({ userId: m.owner.id, name: m.owner.name || m.owner.email });
+      for (const mem of m.members ?? []) list.push({ userId: mem.user.id, name: mem.user.name || mem.user.email });
+      setMembers(list);
+    }
     if (tripRes.ok) {
       const trip = await tripRes.json();
       setTripBudget(trip.budget);
@@ -158,6 +173,38 @@ export default function BudgetPage() {
   }
 
   const nameOf = (pid: string) => participants.find((p) => p.id === pid)?.name ?? "?";
+
+  // Adiciona os membros da viagem (grupo) como participantes da divisão, vinculando o userId.
+  async function addFromGroup() {
+    const existing = new Set(participants.map((p) => p.name.trim().toLowerCase()));
+    for (const m of members) {
+      if (existing.has(m.name.trim().toLowerCase())) continue;
+      await fetch(`/api/trips/${id}/participants`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: m.name, userId: m.userId }),
+      });
+    }
+    load();
+  }
+
+  // Quitar: registra um lançamento de acerto (transferência) que zera a dívida do par.
+  async function settleUp(fromId: string, toId: string, amount: number) {
+    await fetch(`/api/trips/${id}/expenses`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: `Acerto: ${nameOf(fromId)} → ${nameOf(toId)}`,
+        category: "TRANSFER",
+        amount,
+        currency: tripCurrency,
+        date: new Date().toISOString().slice(0, 10),
+        paidById: fromId,
+        sharedBy: [toId],
+      }),
+    });
+    load();
+  }
 
   // ── Acertar contas: saldos + transferências mínimas (usa src/lib/split.ts) ──
   const splitExpenses = expenses
@@ -241,8 +288,9 @@ export default function BudgetPage() {
     load();
   }
 
-  const totalSpent = expenses.reduce((s, e) => s + e.amount, 0);
-  const byCategory = expenses.reduce<Record<string, number>>((acc, e) => {
+  const realExpenses = expenses.filter((e) => e.category !== "TRANSFER");
+  const totalSpent = realExpenses.reduce((s, e) => s + e.amount, 0);
+  const byCategory = realExpenses.reduce<Record<string, number>>((acc, e) => {
     acc[e.category] = (acc[e.category] ?? 0) + e.amount;
     return acc;
   }, {});
@@ -350,6 +398,15 @@ export default function BudgetPage() {
             <Plus className="h-4 w-4" /> Adicionar
           </Button>
         </div>
+        {members.length > 0 && (
+          <button
+            type="button"
+            onClick={addFromGroup}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700"
+          >
+            <Users className="h-3.5 w-3.5" /> Adicionar participantes do grupo ({members.length})
+          </button>
+        )}
 
         {participants.length > 1 && splitExpenses.length > 0 && (
           <div className="pt-3 border-t border-gray-100 space-y-4">
@@ -414,6 +471,13 @@ export default function BudgetPage() {
                       <div className="w-7 h-7 rounded-full bg-emerald-500 text-white text-xs font-black flex items-center justify-center shrink-0">{initial(nameOf(s.to))}</div>
                       <span className="text-sm font-semibold text-gray-800 truncate max-w-[5.5rem] sm:max-w-none">{nameOf(s.to)}</span>
                       <span className="ml-auto text-sm font-black text-primary-600 shrink-0">{formatCurrency(s.amount, tripCurrency)}</span>
+                      <button
+                        type="button"
+                        onClick={() => settleUp(s.from, s.to, s.amount)}
+                        className="text-[10px] font-bold px-2.5 py-1.5 rounded-lg bg-emerald-600 text-white shrink-0 hover:bg-emerald-700 transition-colors"
+                      >
+                        Quitar
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -428,7 +492,7 @@ export default function BudgetPage() {
       <CurrencyPartners hasForeignExpenses={expenses.some((e) => e.currency !== tripCurrency && e.currency !== "BRL")} />
 
       {/* Lista de despesas */}
-      {expenses.length === 0 ? (
+      {realExpenses.length === 0 ? (
         <div className="text-center py-16 text-gray-400">
           <div className="text-5xl mb-3">💰</div>
           <p className="font-medium">{t.budget.noExpenses}</p>
@@ -436,7 +500,7 @@ export default function BudgetPage() {
         </div>
       ) : (
         <div className="space-y-2">
-          {expenses.map((expense) => (
+          {realExpenses.map((expense) => (
             <Card key={expense.id}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between gap-3">
