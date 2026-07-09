@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, MapPin, Clock, DollarSign, Calendar, CheckCircle } from "lucide-react";
 import type { Metadata } from "next";
+import { AffiliateBlock } from "@/components/marketing/affiliate-block";
 
 interface DestinationData {
   name: string;
@@ -225,6 +226,13 @@ export default async function DestinoPage({ params }: Props) {
             ))}
           </div>
         </div>
+
+        {/* Parceiros (afiliados) — contextual do destino */}
+        <AffiliateBlock
+          groups={["accommodation", "flights", "tours"]}
+          destination={dest.name}
+          title={`Reserve sua viagem para ${dest.name}`}
+        />
 
         {/* CTA */}
         <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-8 text-white text-center">

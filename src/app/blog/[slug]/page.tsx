@@ -2,6 +2,16 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Clock, Calendar, ArrowRight } from "lucide-react";
+import { AffiliateBlock } from "@/components/marketing/affiliate-block";
+
+const CATEGORY_AFFILIATES: Record<string, ("accommodation" | "flights" | "tours" | "currency" | "insurance" | "esim" | "car")[]> = {
+  "Roteiros": ["accommodation", "flights", "tours"],
+  "Destinos": ["accommodation", "flights"],
+  "Finanças": ["currency", "insurance"],
+  "Segurança": ["insurance"],
+  "Documentos": ["insurance", "esim"],
+  "Planejamento": ["accommodation", "flights"],
+};
 
 const ARTICLES = [
   {
@@ -639,6 +649,9 @@ export default async function BlogArticlePage({ params }: Props) {
         <div className="prose prose-sm max-w-none">
           {renderContent(article.content)}
         </div>
+
+        {/* Parceiros (afiliados) por categoria */}
+        <AffiliateBlock groups={CATEGORY_AFFILIATES[article.category] ?? ["accommodation", "flights"]} />
 
         {/* CTA box */}
         <div className="mt-12 rounded-2xl bg-blue-600 text-white p-6 text-center">
