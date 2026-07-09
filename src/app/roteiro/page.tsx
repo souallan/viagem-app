@@ -1,18 +1,12 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { DESTINATIONS } from "@/lib/destinations";
 
 export const metadata: Metadata = {
-  title: "Roteiros de Viagem — Lisboa, Buenos Aires, Tóquio e mais | RoteiroApp",
-  description: "Roteiros completos dia a dia para os destinos mais amados pelos brasileiros. Lisboa, Buenos Aires, Tóquio e Barcelona — com custos, dicas e itinerário detalhado.",
-  keywords: "roteiro de viagem, roteiro lisboa, roteiro buenos aires, roteiro tokyo, roteiro barcelona, planejar viagem",
+  title: "Roteiros de Viagem — Lisboa, Paris, Nova York e mais | RoteiroApp",
+  description: "Roteiros completos dia a dia para os destinos mais amados pelos brasileiros: Lisboa, Paris, Roma, Madri, Barcelona, Buenos Aires, Santiago, Tóquio, Nova York e Cancún — com custos, dicas e itinerário detalhado.",
+  keywords: "roteiro de viagem, roteiro lisboa, roteiro paris, roteiro roma, roteiro nova york, roteiro buenos aires, roteiro tokyo, planejar viagem",
 };
-
-const DESTINATIONS = [
-  { slug: "lisboa",       name: "Lisboa",       country: "Portugal",  flag: "🇵🇹", highlight: "Sem visto · Mesma língua · Melhor custo da Europa Ocidental" },
-  { slug: "buenos-aires", name: "Buenos Aires",  country: "Argentina", flag: "🇦🇷", highlight: "Câmbio favorável · Gastronomia incrível · Tango" },
-  { slug: "tokyo",        name: "Tóquio",        country: "Japão",     flag: "🇯🇵", highlight: "Sem visto · Destino mais seguro do mundo · Cultura única" },
-  { slug: "barcelona",    name: "Barcelona",     country: "Espanha",   flag: "🇪🇸", highlight: "Gaudí · Praias · Vida noturna · Futebol" },
-];
 
 export default function RoteirosPage() {
   return (
@@ -33,7 +27,7 @@ export default function RoteirosPage() {
         <p className="text-gray-600 text-lg mb-10">Guias completos com itinerário dia a dia, custos reais e dicas de quem já foi.</p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {DESTINATIONS.map(dest => (
+          {Object.values(DESTINATIONS).map(dest => (
             <Link key={dest.slug} href={`/roteiro/${dest.slug}`}
               className="group bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-md transition-all hover:-translate-y-0.5">
               <div className="text-4xl mb-3">{dest.flag}</div>

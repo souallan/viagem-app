@@ -1,0 +1,261 @@
+// Guias de roteiro (/roteiro/[cidade] e índice /roteiro).
+// Fonte única — adicione cidades aqui e elas aparecem no índice, na página e no sitemap.
+
+export interface DestinationData {
+  name: string;
+  country: string;
+  flag: string;
+  heroColor: string;
+  highlight: string;
+  description: string;
+  bestTime: string;
+  avgBudget: string;
+  language: string;
+  visa: string;
+  days: { day: string; title: string; activities: string[] }[];
+  tips: string[];
+  slug: string;
+}
+
+export const DESTINATIONS: Record<string, DestinationData> = {
+  "lisboa": {
+    name: "Lisboa", country: "Portugal", flag: "🇵🇹",
+    heroColor: "from-blue-700 to-blue-900",
+    highlight: "Sem visto · Mesma língua · Melhor custo da Europa Ocidental",
+    description: "A capital portuguesa é o destino favorito dos brasileiros na Europa. Mesma língua, gastronomia familiar, custo acessível e uma beleza histórica única.",
+    bestTime: "Abril–Junho e Setembro–Outubro",
+    avgBudget: "R$ 1.200 – R$ 1.800/dia por pessoa (tudo incluso)",
+    language: "Português (sem barreira!)",
+    visa: "Não precisa de visto (Schengen, até 90 dias)",
+    slug: "lisboa",
+    days: [
+      { day: "Dia 1", title: "Alfama e Castelo", activities: ["Castelo de São Jorge (chegue antes das 10h)", "Museu do Azulejo", "Miradouro da Graça (pôr do sol)", "Jantar no Bairro Alto"] },
+      { day: "Dia 2", title: "Belém", activities: ["Mosteiro dos Jerônimos (reserve online)", "Torre de Belém", "Pastéis de Belém originais", "Museu de Arte Popular"] },
+      { day: "Dia 3", title: "Sintra (excursão)", activities: ["Palácio da Pena (reserve online!)", "Castelo dos Mouros", "Palácio Nacional de Sintra", "Volta pelo Chiado"] },
+      { day: "Dia 4", title: "Cascais e praias", activities: ["Trem de Cais do Sodré (40 min)", "Praia de Cascais", "Boca do Inferno", "Almoço de peixe fresco"] },
+    ],
+    tips: [
+      "Compre o cartão Viva Viagem (€0,50) no metrô — carregue com créditos",
+      "Evite o tram 28 turístico. Use o 15E para Belém (mais espaço, mesmo preço)",
+      "Restaurantes com cardápio em 5 idiomas = 30% mais caro",
+      "Uber funciona bem em Lisboa e costuma ser mais barato que táxi",
+      "Feira da Ladra (Campo de Santa Clara): somente terças e sábados",
+    ],
+  },
+  "buenos-aires": {
+    name: "Buenos Aires", country: "Argentina", flag: "🇦🇷",
+    heroColor: "from-sky-700 to-blue-900",
+    highlight: "Câmbio favorável · Gastronomia incrível · Tango",
+    description: "A Paris da América do Sul. Cultura, gastronomia de altíssimo nível, vida noturna incrível e câmbio favorável para brasileiros.",
+    bestTime: "Setembro–Novembro (primavera argentina)",
+    avgBudget: "R$ 500 – R$ 900/dia por pessoa",
+    language: "Espanhol argentino (muito acessível para brasileiros)",
+    visa: "Não precisa de visto",
+    slug: "buenos-aires",
+    days: [
+      { day: "Dia 1", title: "San Telmo e La Boca", activities: ["Mercado de San Telmo (domingo: feria de artesanato)", "Caminito (La Boca) — vá à tarde, é seguro em horário comercial", "Bife de chorizo no jantar — Buenos Aires é obrigatório"] },
+      { day: "Dia 2", title: "Recoleta e Palermo", activities: ["Cemitério da Recoleta (gratuito, impressionante)", "MALBA — Museu de Arte Latino-Americana", "Palermo Soho: cafés, design e compras", "Show de tango (La Ventana ou Rojo Tango)"] },
+      { day: "Dia 3", title: "Puerto Madero e Centro", activities: ["Puerto Madero (orla modernizada)", "Casa Rosada e Plaza de Mayo", "Café Tortoni (o mais antigo de Buenos Aires)", "Teatro Colón — visita guiada"] },
+      { day: "Dia 4", title: "Tigre (excursão)", activities: ["Trem Mitre de Retiro (1h)", "Delta do Paraná de barco", "Mercado de Frutos", "Lancha pelos canais"] },
+    ],
+    tips: [
+      "Use Wise ou Nomad para saques — câmbio oficial é muito melhor que trocar reais",
+      "Peça 'tabla de quesos y fiambres' como entrada — porção enorme por preço baixo",
+      "Museus são gratuitos às quartas",
+      "Uber funciona mas não aparece no mapa — insira destino e só mostre a localização",
+      "Nunca chame de 'gaucho' um portenho — e 'che' é frequente no dia a dia",
+    ],
+  },
+  "tokyo": {
+    name: "Tóquio", country: "Japão", flag: "🇯🇵",
+    heroColor: "from-red-700 to-rose-900",
+    highlight: "Sem visto · Destino mais seguro do mundo · Cultura única",
+    description: "A maior cidade do mundo é surpreendentemente fácil de explorar. Segura, limpa, gastronômica e culturalmente única — o Japão justifica qualquer investimento.",
+    bestTime: "Março–Abril (cerejeiras) ou Outubro–Novembro (outono)",
+    avgBudget: "R$ 800 – R$ 1.400/dia por pessoa",
+    language: "Japonês — apps de tradução são essenciais",
+    visa: "Não precisa de visto (até 90 dias)",
+    slug: "tokyo",
+    days: [
+      { day: "Dia 1", title: "Shibuya e Shinjuku", activities: ["Cruzamento de Shibuya (veja do Starbucks acima)", "Harajuku e Takeshita Street", "Meiji Shrine", "Shinjuku à noite (Golden Gai)"] },
+      { day: "Dia 2", title: "Akihabara e Asakusa", activities: ["Akihabara (eletrônicos, cultura pop, arcades)", "Templo Senso-ji em Asakusa", "Mercado Nakamise", "Skytree (o mais alto do Japão)"] },
+      { day: "Dia 3", title: "Tsukiji e Ginza", activities: ["Mercado externo de Tsukiji (sushi de manhã cedo)", "Hamarikyu Gardens", "Ginza — vitrine do luxo japonês", "Odaiba à tarde (vista da Baía de Tóquio)"] },
+      { day: "Dia 4", title: "Monte Fuji ou Nikko", activities: ["Trem Chuo para Kawaguchiko (2h)", "Vista do Fuji do Lago Kawaguchi", "Oshino Hakkai (olhos d'água vulcânica)", "Retorno à Tóquio à tarde"] },
+    ],
+    tips: [
+      "IC Card (Suica/Pasmo): compre no aeroporto, funciona em todo transporte e lojas",
+      "Japan Rail Pass: compre ANTES de vir ao Japão — só vende fora do país",
+      "Conbinis (7-Eleven, Lawson): comida excelente, barata, 24h",
+      "Vending machines estão em todo lugar — moedas são úteis aqui",
+      "Não fale no celular no trem — é considerado rude",
+    ],
+  },
+  "barcelona": {
+    name: "Barcelona", country: "Espanha", flag: "🇪🇸",
+    heroColor: "from-orange-600 to-red-800",
+    highlight: "Gaudí · Praias · Vida noturna · Futebol",
+    description: "Gaudi, praias, futebol e tapas. Barcelona é uma das cidades mais completas da Europa — arte, arquitetura, gastronomia e vida noturna em uma só cidade.",
+    bestTime: "Maio–Junho e Setembro",
+    avgBudget: "R$ 1.400 – R$ 2.200/dia por pessoa",
+    language: "Espanhol e Catalão",
+    visa: "Não precisa de visto (Schengen, até 90 dias)",
+    slug: "barcelona",
+    days: [
+      { day: "Dia 1", title: "Gaudí e Eixample", activities: ["Sagrada Família (reserve 1–2 meses antes!)", "Casa Batlló ou Casa Milà", "Passeig de Gràcia", "Tapas no Cervecería Catalana"] },
+      { day: "Dia 2", title: "Bairro Gótico e Las Ramblas", activities: ["Catedral de Barcelona (gratuita de manhã)", "Barri Gòtic a pé", "Mercado de La Boqueria (não compre aqui — é caro)", "Museu Picasso"] },
+      { day: "Dia 3", title: "Parque Güell e Gràcia", activities: ["Parque Güell (reserve ingresso online)", "Bairro de Gràcia (cafés locais, sem turistas)", "Bunkers del Carmel (melhor vista de Barcelona, de graça)", "Barceloneta à tarde"] },
+      { day: "Dia 4", title: "Montjuïc e Poblenou", activities: ["Museu Nacional d'Art de Catalunya", "Fundació Joan Miró", "Vista de Montjuïc", "Poblenou (o bairro criativo)"] },
+    ],
+    tips: [
+      "Reserve Sagrada Família com 1–2 meses de antecedência — esgota muito rápido",
+      "La Boqueria é turística e cara — o Mercado de Santa Caterina é onde os locals compram",
+      "Cuidado com bolsos em Las Ramblas — é a área com mais furtos da cidade",
+      "T-Casual (10 viagens de metrô): R$ 15 — economiza muito vs. bilhete avulso",
+      "O melhor sanduíche de jamón da cidade está no Bar Pinotxo (La Boqueria) — chegue cedo",
+    ],
+  },
+  "paris": {
+    name: "Paris", country: "França", flag: "🇫🇷",
+    heroColor: "from-indigo-700 to-slate-900",
+    highlight: "Torre Eiffel · Louvre · A cidade mais visitada do mundo",
+    description: "A cidade-luz dispensa apresentações: arte, gastronomia, moda e romance em cada esquina. Exige planejamento para fugir das filas nos grandes museus.",
+    bestTime: "Maio–Junho e Setembro–Outubro",
+    avgBudget: "R$ 1.600 – R$ 2.400/dia por pessoa",
+    language: "Francês (leve frases básicas — é bem-visto)",
+    visa: "Não precisa de visto (Schengen, até 90 dias)",
+    slug: "paris",
+    days: [
+      { day: "Dia 1", title: "Torre Eiffel e Sena", activities: ["Torre Eiffel (reserve online — filas enormes)", "Champ de Mars para fotos", "Passeio de barco pelo Sena ao entardecer", "Trocadéro à noite (Eiffel iluminada)"] },
+      { day: "Dia 2", title: "Louvre e Centro", activities: ["Museu do Louvre (reserve horário; entre pela Porte des Lions)", "Jardim das Tulherias", "Île de la Cité e Notre-Dame (por fora)", "Le Marais para jantar"] },
+      { day: "Dia 3", title: "Montmartre e Ópera", activities: ["Sacré-Cœur e vista de Paris", "Praça dos artistas (Place du Tertre)", "Galeries Lafayette (terraço gratuito)", "Ópera Garnier"] },
+      { day: "Dia 4", title: "Versalhes (excursão)", activities: ["Palácio de Versalhes (RER C, reserve online)", "Jardins e Grande Canal", "Trianon e a vila de Maria Antonieta", "Retorno para o Quartier Latin"] },
+    ],
+    tips: [
+      "Compre o Paris Museum Pass se for a 3+ museus — pula filas e economiza",
+      "Museus nacionais são gratuitos no 1º domingo do mês (mais lotados)",
+      "Metrô é o melhor transporte — carnet de 10 tickets sai mais barato",
+      "Cuidado com golpes de 'assinatura' e 'anel de ouro' perto da Torre Eiffel",
+      "Almoçe no 'menu du jour' — muito mais barato que jantar à la carte",
+    ],
+  },
+  "roma": {
+    name: "Roma", country: "Itália", flag: "🇮🇹",
+    heroColor: "from-amber-700 to-red-900",
+    highlight: "Coliseu · Vaticano · História a céu aberto",
+    description: "Um museu a céu aberto: 3 mil anos de história, o Vaticano, fontes barrocas e a melhor massa e gelato do mundo. Reserve as atrações com antecedência.",
+    bestTime: "Abril–Maio e Setembro–Outubro",
+    avgBudget: "R$ 1.200 – R$ 2.000/dia por pessoa",
+    language: "Italiano (fácil para brasileiros)",
+    visa: "Não precisa de visto (Schengen, até 90 dias)",
+    slug: "roma",
+    days: [
+      { day: "Dia 1", title: "Roma Antiga", activities: ["Coliseu (reserve com horário)", "Fórum Romano e Palatino (ingresso combinado)", "Piazza Venezia", "Jantar em Monti"] },
+      { day: "Dia 2", title: "Vaticano", activities: ["Museus do Vaticano e Capela Sistina (reserve semanas antes!)", "Basílica de São Pedro (suba na cúpula)", "Castel Sant'Angelo", "Bairro Prati para comer"] },
+      { day: "Dia 3", title: "Centro Barroco", activities: ["Fontana di Trevi (vá cedo, sem multidão)", "Pantheon (gratuito)", "Piazza Navona", "Escadaria da Piazza di Spagna"] },
+      { day: "Dia 4", title: "Trastevere e Villa Borghese", activities: ["Galleria Borghese (reserva obrigatória)", "Parque de Villa Borghese", "Trastevere a pé", "Gelato no Fatamorgana"] },
+    ],
+    tips: [
+      "Reserve o Vaticano e a Galleria Borghese com semanas de antecedência",
+      "Água de graça nas 'nasoni' (bicas públicas) — leve garrafa",
+      "Coperto (taxa de mesa) é normal na Itália — confira o valor no cardápio",
+      "Evite restaurantes ao lado das atrações — ande 2 quarteirões",
+      "Valide o bilhete de ônibus/metrô ao entrar — a multa é alta",
+    ],
+  },
+  "madri": {
+    name: "Madri", country: "Espanha", flag: "🇪🇸",
+    heroColor: "from-red-700 to-rose-900",
+    highlight: "Prado · Tapas · Vida noturna até o amanhecer",
+    description: "A capital espanhola tem os melhores museus de arte da Europa, praças monumentais, tapas por toda parte e uma vida noturna lendária.",
+    bestTime: "Abril–Junho e Setembro–Outubro",
+    avgBudget: "R$ 1.100 – R$ 1.700/dia por pessoa",
+    language: "Espanhol (acessível para brasileiros)",
+    visa: "Não precisa de visto (Schengen, até 90 dias)",
+    slug: "madri",
+    days: [
+      { day: "Dia 1", title: "Centro histórico", activities: ["Plaza Mayor", "Mercado de San Miguel (petiscos)", "Palácio Real e Catedral de la Almudena", "Puerta del Sol"] },
+      { day: "Dia 2", title: "Triângulo da Arte", activities: ["Museu do Prado (reserve; gratuito no fim da tarde)", "Parque do Retiro e Palácio de Cristal", "Museu Reina Sofía (Guernica)", "Bairro de Las Letras para tapas"] },
+      { day: "Dia 3", title: "Gran Vía e Malasaña", activities: ["Gran Vía (compras e arquitetura)", "Templo de Debod (pôr do sol)", "Malasaña (bairro descolado)", "Chocolate com churros na San Ginés"] },
+      { day: "Dia 4", title: "Toledo (excursão)", activities: ["Trem AVE (30 min) a Toledo", "Catedral de Toledo", "Mirador del Valle", "Doçaria de mazapán"] },
+    ],
+    tips: [
+      "Prado, Reina Sofía e Thyssen têm horários gratuitos — chegue cedo",
+      "O jantar espanhol é tarde (21h–23h) — faça um lanche à tarde",
+      "Metrô cobre tudo; o bilhete de 10 viagens é o melhor custo",
+      "Menú del día no almoço: 3 pratos + bebida por preço fixo",
+      "Evite os restaurantes da Plaza Mayor — caros e turísticos",
+    ],
+  },
+  "nova-york": {
+    name: "Nova York", country: "Estados Unidos", flag: "🇺🇸",
+    heroColor: "from-slate-700 to-slate-900",
+    highlight: "A cidade que nunca dorme · Broadway · Central Park",
+    description: "A capital do mundo: arranha-céus icônicos, Broadway, museus de classe mundial e uma energia incomparável. Exige visto americano e bom planejamento de orçamento.",
+    bestTime: "Abril–Junho e Setembro–Novembro",
+    avgBudget: "R$ 1.800 – R$ 3.000/dia por pessoa",
+    language: "Inglês",
+    visa: "Precisa de visto americano (B1/B2)",
+    slug: "nova-york",
+    days: [
+      { day: "Dia 1", title: "Midtown", activities: ["Times Square", "Top of the Rock ou Empire State (reserve pôr do sol)", "Bryant Park e NY Public Library", "Musical na Broadway (TKTS para desconto)"] },
+      { day: "Dia 2", title: "Central Park e Museus", activities: ["Central Park (alugue bike)", "Metropolitan Museum (MET)", "Museu de História Natural", "Upper West Side para jantar"] },
+      { day: "Dia 3", title: "Downtown e Liberdade", activities: ["Estátua da Liberdade e Ellis Island (reserve o ferry)", "9/11 Memorial e Museum", "Wall Street e Charging Bull", "Passeio pela Brooklyn Bridge ao pôr do sol"] },
+      { day: "Dia 4", title: "SoHo, Village e High Line", activities: ["High Line (parque suspenso)", "Chelsea Market", "SoHo e Greenwich Village", "Washington Square Park"] },
+    ],
+    tips: [
+      "Peça o visto com meses de antecedência — a fila de entrevista é longa",
+      "MetroCard/OMNY: o metrô é a forma mais rápida e barata de se locomover",
+      "Preços não incluem imposto (~8,875%) nem gorjeta (18–20%) — some ao orçamento",
+      "CityPASS vale a pena se for a 3+ atrações pagas",
+      "Muitos museus têm entrada 'pay what you wish' em horários específicos",
+    ],
+  },
+  "santiago": {
+    name: "Santiago", country: "Chile", flag: "🇨🇱",
+    heroColor: "from-cyan-700 to-blue-900",
+    highlight: "Andes · Vinhos · Porta de entrada da Patagônia",
+    description: "Entre a Cordilheira dos Andes e o Pacífico, Santiago combina cidade moderna, vinícolas de classe mundial e bases para esqui, praia e Patagônia.",
+    bestTime: "Setembro–Novembro e Março–Maio",
+    avgBudget: "R$ 600 – R$ 1.000/dia por pessoa",
+    language: "Espanhol chileno",
+    visa: "Não precisa de visto",
+    slug: "santiago",
+    days: [
+      { day: "Dia 1", title: "Centro e miradouros", activities: ["Plaza de Armas e Catedral", "Cerro Santa Lucía", "Bairro Lastarria", "Sky Costanera (vista dos Andes)"] },
+      { day: "Dia 2", title: "Bairros e mercado", activities: ["Cerro San Cristóbal (funicular)", "Bairro Bellavista e Casa de Neruda (La Chascona)", "Mercado Central (almoço de frutos do mar)", "Barrio Italia para compras"] },
+      { day: "Dia 3", title: "Vinícolas (excursão)", activities: ["Vale do Maipo — Concha y Toro ou Undurraga", "Degustação guiada", "Almoço harmonizado", "Retorno para Providencia"] },
+      { day: "Dia 4", title: "Valparaíso (excursão)", activities: ["Bus a Valparaíso (1h30)", "Cerros Concepción e Alegre (arte de rua)", "Ascensores históricos", "Viña del Mar na volta"] },
+    ],
+    tips: [
+      "No inverno (jun–ago) dá para esquiar a 1h30 do centro (Valle Nevado)",
+      "Metrô é limpo e eficiente; cartão Bip! para se locomover",
+      "Peça um 'terremoto' em La Piojera — drink típico (com moderação!)",
+      "Câmbio: leve dólar ou use Wise; casas de câmbio no centro têm boa taxa",
+      "Cuidado com a altitude e o sol forte — protetor sempre",
+    ],
+  },
+  "cancun": {
+    name: "Cancún", country: "México", flag: "🇲🇽",
+    heroColor: "from-teal-600 to-cyan-800",
+    highlight: "Caribe · Cenotes · Ruínas maias · All-inclusive",
+    description: "Praias de água turquesa, resorts all-inclusive, cenotes de água doce e ruínas maias a poucas horas. O Caribe mexicano é sol o ano todo.",
+    bestTime: "Dezembro–Abril (seco); evite set–out (furacões)",
+    avgBudget: "R$ 900 – R$ 2.000/dia por pessoa",
+    language: "Espanhol (inglês nos resorts)",
+    visa: "Não precisa de visto (leve comprovantes de hospedagem/volta)",
+    slug: "cancun",
+    days: [
+      { day: "Dia 1", title: "Praia e Zona Hoteleira", activities: ["Playa Delfines (a foto do 'Cancún')", "Relax na praia do hotel", "Mercado 28 para lembranças", "Jantar no centro (mais barato que a zona hoteleira)"] },
+      { day: "Dia 2", title: "Isla Mujeres", activities: ["Ferry de Puerto Juárez (20 min)", "Playa Norte (uma das melhores do Caribe)", "Passeio de carrinho de golfe pela ilha", "Snorkel no Caribe"] },
+      { day: "Dia 3", title: "Chichén Itzá e cenote", activities: ["Chichén Itzá (saia cedo, ~2h30 de estrada)", "Pirâmide de Kukulcán", "Banho no Cenote Ik Kil", "Valladolid (cidade colonial)"] },
+      { day: "Dia 4", title: "Tulum e Playa del Carmen", activities: ["Ruínas de Tulum à beira-mar", "Cenote Dos Ojos (mergulho)", "Quinta Avenida em Playa del Carmen", "Pôr do sol no Caribe"] },
+    ],
+    tips: [
+      "Resorts all-inclusive compensam se você fica na praia; para passeios, hotel simples + tours sai melhor",
+      "Cenotes: leve protetor biodegradável (os normais são proibidos)",
+      "Alugue carro para Tulum/cenotes — mais liberdade e barato que tours",
+      "Pague em pesos, não em dólar — o câmbio no cartão é melhor",
+      "Evite setembro/outubro (temporada de furacões e chuvas)",
+    ],
+  },
+};

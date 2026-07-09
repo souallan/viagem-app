@@ -1,4 +1,5 @@
 import { MetadataRoute } from "next";
+import { DESTINATIONS } from "@/lib/destinations";
 
 const BASE = "https://roteiroapp.com";
 
@@ -17,7 +18,7 @@ const BLOG_SLUGS = [
   "roteiro-japao-10-dias",
 ];
 
-const ROTEIRO_CIDADES = ["lisboa", "buenos-aires", "tokyo", "barcelona"];
+const ROTEIRO_CIDADES = Object.keys(DESTINATIONS);
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
