@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { optimizeOrder, pathDistanceKm } from "@/lib/route-opt";
 
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -158,9 +159,11 @@ function RouteLinks({ lat, lng, origin }: { lat: number; lng: number; origin: { 
 export default function MapView({
   destinations,
   places,
+  optimize = false,
 }: {
   destinations: string[];
   places: MapPlace[];
+  optimize?: boolean;
 }) {
   const [destMarkers, setDestMarkers] = useState<(GeocodedPlace & { destIndex: number })[]>([]);
   const [placeMarkers, setPlaceMarkers] = useState<GeocodedPlace[]>([]);
@@ -227,6 +230,18 @@ export default function MapView({
   }, {});
   const days = Object.keys(dayGroups).map(Number).sort((a, b) => a - b);
 
+  // Trajeto por dia: ordem cronológica ou otimizada (menor distância) + km
+  const dayRoutes: Record<number, { ordered: GeocodedPlace[]; km: number }> = {};
+  for (const day of days) {
+    const pts = dayGroups[day];
+    let ordered = pts;
+    if (optimize && pts.length > 2) {
+      const idx = optimizeOrder(pts.map((p) => ({ lat: p.lat, lng: p.lng })));
+      ordered = idx.map((i) => pts[i]);
+    }
+    dayRoutes[day] = { ordered, km: pathDistanceKm(ordered.map((p) => ({ lat: p.lat, lng: p.lng }))) };
+  }
+
   return (
     <div className="space-y-3">
       <div className="relative rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
@@ -260,13 +275,13 @@ export default function MapView({
 
           {/* Day route polylines */}
           {days.map((day, idx) => {
-            const pts = dayGroups[day].map<[number, number]>((m) => [m.lat, m.lng]);
+            const pts = dayRoutes[day].ordered.map<[number, number]>((m) => [m.lat, m.lng]);
             if (pts.length < 2) return null;
             return (
               <Polyline
                 key={`route-day-${day}`}
                 positions={pts}
-                pathOptions={{ color: DAY_COLORS[idx % DAY_COLORS.length], weight: 2.5, opacity: 0.7, dashArray: "5 4" }}
+                pathOptions={{ color: DAY_COLORS[idx % DAY_COLORS.length], weight: optimize ? 3.5 : 2.5, opacity: 0.75, dashArray: optimize ? undefined : "5 4" }}
               />
             );
           })}
@@ -354,7 +369,7 @@ export default function MapView({
               style={{ background: `${DAY_COLORS[idx % DAY_COLORS.length]}22`, color: DAY_COLORS[idx % DAY_COLORS.length], border: `1px solid ${DAY_COLORS[idx % DAY_COLORS.length]}44` }}
             >
               <span style={{ width: 8, height: 8, borderRadius: "50%", background: DAY_COLORS[idx % DAY_COLORS.length], display: "inline-block" }} />
-              Dia {day} · {dayGroups[day].length} local{dayGroups[day].length !== 1 ? "is" : ""}
+              Dia {day} · {dayGroups[day].length} local{dayGroups[day].length !== 1 ? "is" : ""}{dayRoutes[day].km > 0 ? ` · ~${dayRoutes[day].km.toFixed(1)} km` : ""}
             </span>
           ))}
         </div>

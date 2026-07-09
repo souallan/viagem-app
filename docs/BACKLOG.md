@@ -89,7 +89,7 @@
 | ✅ | **Divisão de contas do grupo** (estilo Splitwise) | Feito: `TripParticipant` + `ExpenseShare` + `Expense.paidById`; API de participantes; despesa com pagador/divisão; **"Acertar contas"** no orçamento (usa `src/lib/split.ts`) |
 | ✅ | **Mesma base mobile↔web** | Já atendido: Capacitar Modelo A usa o mesmo backend/DB; offline é cache (online-first). Só abrir tarefa se quiser **edição offline com sync** |
 | 🟢 | **Mapa interativo + rota** (`/map`) | ✅ transportes/aeroportos no mapa, ✅ busca por texto, ✅ rota por marcador (Google Maps/transit/Waze), ✅ "me localizar" (geolocation). Falta só: filtro por dia do itinerário |
-| ⬜ | **Otimizar trajeto por distância** | Novo: nearest-neighbor + 2-opt sobre os locais do dia; botão "Otimizar trajeto" no itinerário |
+| ✅ | **Otimizar trajeto por distância** | `src/lib/route-opt.ts` (nearest-neighbor + 2-opt); botão "Otimizar trajeto" no mapa reordena o dia pela menor distância + mostra km/dia na legenda |
 | ⬜ | **Anexos por item (foto/upload)** | Expande câmera/upload (Fase 4/5): nº de reserva, bilhete, ingresso, check-in por item; depende de Cloudinary |
 | ⬜ | **Guia de transporte público** | Deep-link Google Maps transit + Citymapper/Moovit por cidade (não construir do zero) |
 

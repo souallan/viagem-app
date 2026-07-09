@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import { ExternalLink, MapPin, BedDouble, CalendarDays, Layers, Plane, Search } from "lucide-react";
+import { ExternalLink, MapPin, BedDouble, CalendarDays, Layers, Plane, Search, Route } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
 import type { MapPlace } from "@/components/trips/map-view";
@@ -86,6 +86,7 @@ export default function MapPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<Filter>("all");
   const [search, setSearch] = useState("");
+  const [optimize, setOptimize] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -211,21 +212,33 @@ export default function MapPage() {
       {/* ── Header ── */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h2 className="text-lg font-semibold text-gray-900">{t.map.title}</h2>
-        {hasAny && (
-          <a
-            href={buildGoogleMapsUrl(trip.destination, allPlaces)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 border border-red-100 transition-colors"
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => setOptimize((v) => !v)}
+            title="Reordena as atividades de cada dia pela menor distância"
+            className={cn(
+              "inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors",
+              optimize ? "bg-primary-600 text-white border-primary-600" : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
+            )}
           >
-            <ExternalLink className="h-3.5 w-3.5" />
-            {t.map.exportGoogleMaps}
-          </a>
-        )}
+            <Route className="h-3.5 w-3.5" /> {optimize ? "Trajeto otimizado" : "Otimizar trajeto"}
+          </button>
+          {hasAny && (
+            <a
+              href={buildGoogleMapsUrl(trip.destination, allPlaces)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 border border-red-100 transition-colors"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              {t.map.exportGoogleMaps}
+            </a>
+          )}
+        </div>
       </div>
 
       {/* ── Map ── */}
-      <MapView destinations={filteredDestinations} places={filteredPlaces} />
+      <MapView destinations={filteredDestinations} places={filteredPlaces} optimize={optimize} />
 
       {/* ── Filter buttons (below the map) ── */}
       <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-3">
