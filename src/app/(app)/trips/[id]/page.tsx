@@ -26,8 +26,9 @@ export default async function TripOverviewPage({
   const session = await auth();
   const { id } = await params;
 
+  const uid = session!.user!.id!;
   const trip = await prisma.trip.findFirst({
-    where: { id, userId: session!.user!.id! },
+    where: { id, OR: [{ userId: uid }, { members: { some: { userId: uid } } }] },
     include: {
       _count: { select: { activities: true, accommodations: true, transports: true, expenses: true, documents: true } },
       expenses: { select: { amount: true } },

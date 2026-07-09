@@ -10,7 +10,7 @@ export async function GET() {
   }
 
   const trips = await prisma.trip.findMany({
-    where: { userId: session.user.id },
+    where: { OR: [{ userId: session.user.id }, { members: { some: { userId: session.user.id } } }] },
     orderBy: { createdAt: "desc" },
     include: {
       _count: {

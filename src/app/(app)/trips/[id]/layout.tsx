@@ -15,9 +15,10 @@ export default async function TripLayout({
 }) {
   const session = await auth();
   const { id } = await params;
+  const uid = session!.user!.id!;
 
   const trip = await prisma.trip.findFirst({
-    where: { id, userId: session!.user!.id! },
+    where: { id, OR: [{ userId: uid }, { members: { some: { userId: uid } } }] },
   });
 
   if (!trip) notFound();
