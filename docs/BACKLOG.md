@@ -50,15 +50,15 @@
 ## 📈 Marketing (Nova) — `docs/auditorias/marketing-2026-07-08.md`
 | Status | Prioridade | Item |
 |---|---|---|
-| 🟡 | P0 | **Eventos GA4**: `trackEvent` + `sign_up`/`trip_created`/`newsletter_signup`/`app_install_click` ✅ + **tag de plataforma** (web/ios/android) em todo evento ✅; falta clique de afiliado e CTA premium |
+| ✅ | P0 | **Eventos GA4**: `sign_up`/`trip_created`/`newsletter_signup`/`app_install_click`/`affiliate_click`/`upgrade_click` + **tag de plataforma** (web/ios/android) em todo evento |
 | ✅ | P0 | **Ponte web→app**: smart banner mobile (`app-banner.tsx`, oculto até configurar lojas) + página **`/app`** + `apple-itunes-app` (condicional). Preencher `SITE_CONFIG.app` ao publicar |
 | ⬜ | P0 | **Plugar afiliados no conteúdo orgânico** (blog/roteiro/tips) com `rel="sponsored"` + disclosure |
 | ✅ | P1 | `og:image` — `public/og-image.png` (1200×630) + metadata OG/Twitter |
-| ⬜ | P1 | Escalar `/roteiro` de 4 → 20-40 cidades ("roteiro X em N dias") |
+| 🟢 | P1 | Escalar `/roteiro`: **10 cidades** feitas (Lisboa, Paris, Roma, Madri, Barcelona, Buenos Aires, Santiago, Tóquio, Nova York, Cancún) em `lib/destinations.ts`; adicionar mais é só editar o arquivo |
 | ⬜ | P1 | **Stripe** checkout + webhook + premium |
 | ⬜ | P2 | i18n indexável com `hreflang` |
 | ⬜ | P2 | Abrir **Pinterest** (principal fonte de tráfego do nicho no BR) |
-| ⬜ | — | Validação de e-mail RFC 5322 no newsletter |
+| ✅ | — | Validação de e-mail RFC 5322 no newsletter |
 
 ---
 
