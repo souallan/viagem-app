@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Plus, Trash2, Pencil, ExternalLink, ArrowRight } from "lucide-react";
+import { Plus, Trash2, Pencil, ExternalLink, ArrowRight, Users, X } from "lucide-react";
+import { computeBalances, simplifyDebts } from "@/lib/split";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +25,13 @@ interface Expense {
   date: string;
   notes: string | null;
   paidBy: string | null;
+  paidById: string | null;
+  shares: { participantId: string }[];
+}
+
+interface Participant {
+  id: string;
+  name: string;
 }
 
 function PartnerCard({ p }: { p: AffiliatePartner }) {
@@ -96,21 +104,28 @@ export default function BudgetPage() {
   const { t } = useLanguage();
   const { id } = useParams<{ id: string }>();
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [newParticipant, setNewParticipant] = useState("");
   const [tripBudget, setTripBudget] = useState<number | null>(null);
   const [tripCurrency, setTripCurrency] = useState("BRL");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [form, setForm] = useState({
-    title: "", category: "OTHER", amount: "", currency: "BRL", date: "", notes: "", paidBy: "",
+  const [form, setForm] = useState<{
+    title: string; category: string; amount: string; currency: string;
+    date: string; notes: string; paidBy: string; paidById: string; sharedBy: string[];
+  }>({
+    title: "", category: "OTHER", amount: "", currency: "BRL", date: "", notes: "", paidBy: "", paidById: "", sharedBy: [],
   });
 
   async function load() {
-    const [expRes, tripRes] = await Promise.all([
+    const [expRes, tripRes, partRes] = await Promise.all([
       fetch(`/api/trips/${id}/expenses`),
       fetch(`/api/trips/${id}`),
+      fetch(`/api/trips/${id}/participants`),
     ]);
     if (expRes.ok) setExpenses(await expRes.json());
+    if (partRes.ok) setParticipants(await partRes.json());
     if (tripRes.ok) {
       const trip = await tripRes.json();
       setTripBudget(trip.budget);
@@ -120,6 +135,40 @@ export default function BudgetPage() {
   }
 
   useEffect(() => { load(); }, [id]);
+
+  async function addParticipant() {
+    const name = newParticipant.trim();
+    if (!name) return;
+    setNewParticipant("");
+    await fetch(`/api/trips/${id}/participants`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    });
+    load();
+  }
+
+  async function removeParticipant(participantId: string) {
+    await fetch(`/api/trips/${id}/participants`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ participantId }),
+    });
+    load();
+  }
+
+  const nameOf = (pid: string) => participants.find((p) => p.id === pid)?.name ?? "?";
+
+  // ── Acertar contas: saldos + transferências mínimas (usa src/lib/split.ts) ──
+  const splitExpenses = expenses
+    .filter((e) => e.paidById)
+    .map((e) => ({
+      amount: e.amount,
+      paidBy: e.paidById as string,
+      sharedBy: e.shares.map((s) => s.participantId),
+    }));
+  const balances = participants.length > 0 ? computeBalances(splitExpenses, participants.map((p) => p.id)) : {};
+  const settlements = participants.length > 0 ? simplifyDebts(balances) : [];
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -134,9 +183,27 @@ export default function BudgetPage() {
       date: expense.date.slice(0, 10),
       notes: expense.notes ?? "",
       paidBy: expense.paidBy ?? "",
+      paidById: expense.paidById ?? "",
+      sharedBy: expense.shares.map((s) => s.participantId),
     });
     setEditingId(expense.id);
     setOpen(true);
+  }
+
+  function openNew() {
+    setEditingId(null);
+    setForm({
+      title: "", category: "OTHER", amount: "", currency: tripCurrency, date: "",
+      notes: "", paidBy: "", paidById: "", sharedBy: participants.map((p) => p.id),
+    });
+    setOpen(true);
+  }
+
+  function toggleShare(pid: string) {
+    setForm((p) => ({
+      ...p,
+      sharedBy: p.sharedBy.includes(pid) ? p.sharedBy.filter((x) => x !== pid) : [...p.sharedBy, pid],
+    }));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -152,7 +219,7 @@ export default function BudgetPage() {
     if (res.ok) {
       setOpen(false);
       setEditingId(null);
-      setForm({ title: "", category: "OTHER", amount: "", currency: tripCurrency, date: "", notes: "", paidBy: "" });
+      setForm({ title: "", category: "OTHER", amount: "", currency: tripCurrency, date: "", notes: "", paidBy: "", paidById: "", sharedBy: participants.map((p) => p.id) });
       load();
     }
   }
@@ -179,7 +246,7 @@ export default function BudgetPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">{t.budget.title}</h2>
-        <Button onClick={() => setOpen(true)} size="sm" className="gap-2">
+        <Button onClick={openNew} size="sm" className="gap-2">
           <Plus className="h-4 w-4" /> {t.budget.addExpense}
         </Button>
       </div>
@@ -242,6 +309,77 @@ export default function BudgetPage() {
         </div>
       )}
 
+      {/* ── Grupo & divisão de contas ── */}
+      <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-4 space-y-3">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center">
+            <Users className="h-4 w-4 text-primary-600" />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-gray-900">Grupo &amp; divisão de contas</h3>
+            <p className="text-xs text-gray-400">Adicione quem está viajando junto para dividir as despesas.</p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {participants.map((p) => (
+            <span key={p.id} className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-full bg-gray-100 text-gray-700">
+              {p.name}
+              <button onClick={() => removeParticipant(p.id)} className="text-gray-400 hover:text-red-500" aria-label="Remover">
+                <X className="h-3 w-3" />
+              </button>
+            </span>
+          ))}
+        </div>
+        <div className="flex gap-2">
+          <Input
+            value={newParticipant}
+            onChange={(e) => setNewParticipant(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addParticipant(); } }}
+            placeholder="Nome do participante"
+            className="flex-1"
+          />
+          <Button type="button" variant="outline" size="sm" onClick={addParticipant} className="gap-1.5 shrink-0">
+            <Plus className="h-4 w-4" /> Adicionar
+          </Button>
+        </div>
+
+        {participants.length > 1 && splitExpenses.length > 0 && (
+          <div className="pt-3 border-t border-gray-100 space-y-3">
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Acertar contas</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {participants.map((p) => {
+                const net = balances[p.id] ?? 0;
+                return (
+                  <div key={p.id} className="rounded-xl border border-gray-100 px-3 py-2">
+                    <p className="text-xs font-semibold text-gray-700 truncate">{p.name}</p>
+                    <p className={`text-sm font-bold ${net > 0.005 ? "text-green-600" : net < -0.005 ? "text-red-600" : "text-gray-400"}`}>
+                      {net > 0.005 ? "recebe " : net < -0.005 ? "paga " : "quite"}
+                      {Math.abs(net) > 0.005 ? formatCurrency(Math.abs(net), tripCurrency) : ""}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+            {settlements.length === 0 ? (
+              <p className="text-xs text-gray-400">Tudo quitado ✅</p>
+            ) : (
+              <div className="space-y-1.5">
+                {settlements.map((s, i) => (
+                  <div key={i} className="flex items-center gap-2 text-sm bg-gray-50 rounded-xl px-3 py-2">
+                    <span className="font-semibold text-gray-800">{nameOf(s.from)}</span>
+                    <ArrowRight className="h-3.5 w-3.5 text-gray-400" />
+                    <span className="font-semibold text-gray-800">{nameOf(s.to)}</span>
+                    <span className="ml-auto font-bold text-primary-600">{formatCurrency(s.amount, tripCurrency)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            <p className="text-[10px] text-gray-400">Considera despesas com pagador definido, na moeda da viagem.</p>
+          </div>
+        )}
+      </div>
+
       {/* Câmbio partners */}
       <CurrencyPartners hasForeignExpenses={expenses.some((e) => e.currency !== tripCurrency && e.currency !== "BRL")} />
 
@@ -267,7 +405,9 @@ export default function BudgetPage() {
                     </div>
                     <div className="flex gap-4 mt-1 text-sm text-gray-500">
                       <span>{formatDate(expense.date)}</span>
-                      {expense.paidBy && <span>{t.budget.paidBy}: {expense.paidBy}</span>}
+                      {expense.paidById && <span>{t.budget.paidBy}: {nameOf(expense.paidById)}</span>}
+                      {!expense.paidById && expense.paidBy && <span>{t.budget.paidBy}: {expense.paidBy}</span>}
+                      {expense.shares.length > 0 && <span>÷ {expense.shares.length}</span>}
                     </div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
@@ -325,10 +465,40 @@ export default function BudgetPage() {
                 />
               </div>
             </div>
-            <div className="space-y-2">
-              <Label>{t.budget.paidBy}</Label>
-              <Input name="paidBy" value={form.paidBy} onChange={handleChange} placeholder={t.budget.payer} />
-            </div>
+            {participants.length > 0 ? (
+              <>
+                <div className="space-y-2">
+                  <Label>Quem pagou</Label>
+                  <Select name="paidById" value={form.paidById} onChange={handleChange}>
+                    <option value="">— Ninguém / não dividir —</option>
+                    {participants.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Dividir entre</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {participants.map((p) => {
+                      const on = form.sharedBy.includes(p.id);
+                      return (
+                        <button
+                          type="button"
+                          key={p.id}
+                          onClick={() => toggleShare(p.id)}
+                          className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${on ? "bg-primary-600 text-white border-primary-600" : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"}`}
+                        >
+                          {p.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="space-y-2">
+                <Label>{t.budget.paidBy}</Label>
+                <Input name="paidBy" value={form.paidBy} onChange={handleChange} placeholder={t.budget.payer} />
+              </div>
+            )}
             <div className="space-y-2">
               <Label>{t.common.notes}</Label>
               <Textarea name="notes" value={form.notes} onChange={handleChange} rows={2} />

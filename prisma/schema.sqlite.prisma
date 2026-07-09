@@ -98,6 +98,7 @@ model Trip {
 
   owner          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   members        TripMember[]
+  participants   TripParticipant[]
   activities     Activity[]
   accommodations Accommodation[]
   transports     Transport[]
@@ -192,9 +193,36 @@ model Expense {
   date      DateTime
   notes     String?
   paidBy    String?
+  paidById  String?
   createdAt DateTime @default(now())
 
-  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  trip   Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  shares ExpenseShare[]
+}
+
+model TripParticipant {
+  id        String   @id @default(cuid())
+  tripId    String
+  name      String
+  userId    String?
+  createdAt DateTime @default(now())
+
+  trip   Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  shares ExpenseShare[]
+
+  @@index([tripId])
+}
+
+model ExpenseShare {
+  id            String @id @default(cuid())
+  expenseId     String
+  participantId String
+
+  expense     Expense         @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  participant TripParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([expenseId, participantId])
+  @@index([participantId])
 }
 
 // DocumentType values: PASSPORT | VISA | INSURANCE | TICKET | VOUCHER | OTHER

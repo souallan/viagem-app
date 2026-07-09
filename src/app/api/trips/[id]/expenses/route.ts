@@ -20,6 +20,7 @@ export async function GET(
   const expenses = await prisma.expense.findMany({
     where: { tripId: id },
     orderBy: { date: "desc" },
+    include: { shares: { select: { participantId: true } } },
   });
 
   return NextResponse.json(expenses);
@@ -38,7 +39,7 @@ export async function POST(
 
   try {
     const body = await req.json();
-    const { title, category, amount, currency, date, notes, paidBy } = body;
+    const { title, category, amount, currency, date, notes, paidBy, paidById, sharedBy } = body;
 
     if (!title || !amount || !date) {
       return NextResponse.json({ error: "Título, valor e data são obrigatórios" }, { status: 400 });
@@ -54,8 +55,15 @@ export async function POST(
         date: new Date(date),
         notes,
         paidBy,
+        paidById: paidById || null,
       },
     });
+
+    if (Array.isArray(sharedBy) && sharedBy.length > 0) {
+      await prisma.expenseShare.createMany({
+        data: sharedBy.map((pid: string) => ({ expenseId: expense.id, participantId: pid })),
+      });
+    }
 
     return NextResponse.json(expense, { status: 201 });
   } catch {
@@ -76,14 +84,17 @@ export async function PUT(
 
   try {
     const body = await req.json();
-    const { expenseId, title, category, amount, currency, date, notes, paidBy } = body;
+    const { expenseId, title, category, amount, currency, date, notes, paidBy, paidById, sharedBy } = body;
 
     if (!expenseId || !title || !amount || !date) {
       return NextResponse.json({ error: "ID, título, valor e data são obrigatórios" }, { status: 400 });
     }
 
-    await prisma.expense.updateMany({
-      where: { id: expenseId, tripId: id },
+    const owns = await prisma.expense.findFirst({ where: { id: expenseId, tripId: id }, select: { id: true } });
+    if (!owns) return NextResponse.json({ error: "Despesa não encontrada" }, { status: 404 });
+
+    await prisma.expense.update({
+      where: { id: expenseId },
       data: {
         title,
         category: category ?? "OTHER",
@@ -92,8 +103,18 @@ export async function PUT(
         date: new Date(date),
         notes: notes || null,
         paidBy: paidBy || null,
+        paidById: paidById || null,
       },
     });
+
+    if (Array.isArray(sharedBy)) {
+      await prisma.expenseShare.deleteMany({ where: { expenseId } });
+      if (sharedBy.length > 0) {
+        await prisma.expenseShare.createMany({
+          data: sharedBy.map((pid: string) => ({ expenseId, participantId: pid })),
+        });
+      }
+    }
 
     return NextResponse.json({ success: true });
   } catch {

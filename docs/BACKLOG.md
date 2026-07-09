@@ -86,7 +86,7 @@
 | Status | Item | Nota |
 |---|---|---|
 | 🟡 | **Compartilhar/ver a mesma viagem (grupo)** | Fundação existe (`TripMember` + members API + collab UI); falta acesso dono-ou-membro em todas as rotas, aparecer no dashboard do convidado, papéis e (fase 2) tempo real |
-| ⬜ | **Divisão de contas do grupo** (estilo Splitwise) | Novo; depende de membros. `Expense.paidById` + `ExpenseShare` + simplificação de dívidas + tela "Acertar contas" |
+| ✅ | **Divisão de contas do grupo** (estilo Splitwise) | Feito: `TripParticipant` + `ExpenseShare` + `Expense.paidById`; API de participantes; despesa com pagador/divisão; **"Acertar contas"** no orçamento (usa `src/lib/split.ts`) |
 | ✅ | **Mesma base mobile↔web** | Já atendido: Capacitar Modelo A usa o mesmo backend/DB; offline é cache (online-first). Só abrir tarefa se quiser **edição offline com sync** |
 | 🟢 | **Mapa interativo + rota** (`/map`) | ✅ transportes/aeroportos no mapa, ✅ busca por texto, ✅ rota por marcador (Google Maps/transit/Waze), ✅ "me localizar" (geolocation). Falta só: filtro por dia do itinerário |
 | ⬜ | **Otimizar trajeto por distância** | Novo: nearest-neighbor + 2-opt sobre os locais do dia; botão "Otimizar trajeto" no itinerário |
