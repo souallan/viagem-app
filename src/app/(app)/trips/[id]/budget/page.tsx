@@ -151,6 +151,14 @@ export default function BudgetPage() {
 
   useEffect(() => { load(); }, [id]);
 
+  // Grupo: recarrega ao voltar o foco à aba, para ver lançamentos de outros membros.
+  useEffect(() => {
+    const onFocus = () => load();
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
   async function addParticipant() {
     const name = newParticipant.trim();
     if (!name) return;

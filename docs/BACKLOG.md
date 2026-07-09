@@ -91,7 +91,7 @@
 | ✅ | **Mesma base mobile↔web** | Já atendido: Capacitar Modelo A usa o mesmo backend/DB; offline é cache (online-first). Só abrir tarefa se quiser **edição offline com sync** |
 | 🟢 | **Mapa interativo + rota** (`/map`) | ✅ transportes/aeroportos no mapa, ✅ busca por texto, ✅ rota por marcador (Google Maps/transit/Waze), ✅ "me localizar" (geolocation). Falta só: filtro por dia do itinerário |
 | ✅ | **Otimizar trajeto por distância** | `src/lib/route-opt.ts` (nearest-neighbor + 2-opt); botão "Otimizar trajeto" no mapa reordena o dia pela menor distância + mostra km/dia na legenda |
-| ⬜ | **Anexos por item (foto/upload)** | Expande câmera/upload (Fase 4/5): nº de reserva, bilhete, ingresso, check-in por item; depende de Cloudinary |
+| 🟢 | **Anexos por item (foto/upload)** | **Código pronto**: `PhotoUpload` (câmera no celular + arquivo na web, upload unsigned ao Cloudinary), em Documentos + Hospedagem (campo `attachmentUrl`). **Ativar:** criar *unsigned upload preset* no Cloudinary e pôr `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` + `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` no Railway |
 | ⬜ | **Guia de transporte público** | Deep-link Google Maps transit + Citymapper/Moovit por cidade (não construir do zero) |
 
 ## 🧭 UX (Théo) — `docs/auditorias/ux-2026-07-08.md`
