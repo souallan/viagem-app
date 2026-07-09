@@ -54,7 +54,7 @@
 | ✅ | P0 | **Ponte web→app**: smart banner mobile (`app-banner.tsx`, oculto até configurar lojas) + página **`/app`** + `apple-itunes-app` (condicional). Preencher `SITE_CONFIG.app` ao publicar |
 | ⬜ | P0 | **Plugar afiliados no conteúdo orgânico** (blog/roteiro/tips) com `rel="sponsored"` + disclosure |
 | ✅ | P1 | `og:image` — `public/og-image.png` (1200×630) + metadata OG/Twitter |
-| 🟢 | P1 | Escalar `/roteiro`: **10 cidades** feitas (Lisboa, Paris, Roma, Madri, Barcelona, Buenos Aires, Santiago, Tóquio, Nova York, Cancún) em `lib/destinations.ts`; adicionar mais é só editar o arquivo |
+| 🟢 | P1 | Escalar `/roteiro`: **14 cidades** (Lisboa, Paris, Roma, Madri, Barcelona, Amsterdã, Londres, Buenos Aires, Santiago, Cusco, Tóquio, Nova York, Orlando, Cancún) em `lib/destinations.ts`; adicionar mais é só editar o arquivo |
 | ⬜ | P1 | **Stripe** checkout + webhook + premium |
 | ⬜ | P2 | i18n indexável com `hreflang` |
 | ⬜ | P2 | Abrir **Pinterest** (principal fonte de tráfego do nicho no BR) |
@@ -91,7 +91,7 @@
 | ✅ | **Mesma base mobile↔web** | Já atendido: Capacitar Modelo A usa o mesmo backend/DB; offline é cache (online-first). Só abrir tarefa se quiser **edição offline com sync** |
 | 🟢 | **Mapa interativo + rota** (`/map`) | ✅ transportes/aeroportos no mapa, ✅ busca por texto, ✅ rota por marcador (Google Maps/transit/Waze), ✅ "me localizar" (geolocation). Falta só: filtro por dia do itinerário |
 | ✅ | **Otimizar trajeto por distância** | `src/lib/route-opt.ts` (nearest-neighbor + 2-opt); botão "Otimizar trajeto" no mapa reordena o dia pela menor distância + mostra km/dia na legenda |
-| 🟢 | **Anexos por item (foto/upload)** | **Código pronto**: `PhotoUpload` (câmera no celular + arquivo na web, upload unsigned ao Cloudinary), em Documentos + Hospedagem (campo `attachmentUrl`). **Ativar:** criar *unsigned upload preset* no Cloudinary e pôr `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` + `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` no Railway |
+| 🟢 | **Anexos por item (foto/upload)** | **Código pronto** em **Documentos + Hospedagem + Atividades** (`attachmentUrl`): `PhotoUpload` (câmera no celular + arquivo na web, upload unsigned). **Ativar:** criar *unsigned upload preset* no Cloudinary e pôr `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` + `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` no Railway |
 | ⬜ | **Guia de transporte público** | Deep-link Google Maps transit + Citymapper/Moovit por cidade (não construir do zero) |
 
 ## 🧭 UX (Théo) — `docs/auditorias/ux-2026-07-08.md`
