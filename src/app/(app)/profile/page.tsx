@@ -87,6 +87,11 @@ export default function ProfilePage() {
   const [deleteMsg, setDeleteMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
   const [exportLoading, setExportLoading] = useState(false);
 
+  // Saldos de grupo (quanto devo / me devem por viagem)
+  const [groupBalances, setGroupBalances] = useState<{ tripId: string; title: string; currency: string; net: number }[]>([]);
+  const fmtBRL = (v: number, cur: string) =>
+    new Intl.NumberFormat("pt-BR", { style: "currency", currency: cur || "BRL" }).format(v);
+
   async function load() {
     const res = await fetch("/api/user");
     if (res.ok) {
@@ -100,6 +105,7 @@ export default function ProfilePage() {
   useEffect(() => {
     load();
     fetch("/api/referral").then(r => r.ok ? r.json() : null).then(d => { if (d) setReferral(d); });
+    fetch("/api/user/group-balances").then(r => r.ok ? r.json() : []).then(d => setGroupBalances(Array.isArray(d) ? d : []));
   }, []);
 
   async function handleProfileSave(e: React.FormEvent) {
@@ -262,6 +268,46 @@ export default function ProfilePage() {
           ))}
         </div>
       </div>
+
+      {/* ── Contas em grupo (quanto devo / me devem) ── */}
+      {groupBalances.length > 0 && (
+        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
+          <h2 className="font-bold text-gray-800 flex items-center gap-2 mb-4">
+            <Users className="h-4 w-4 text-primary-500" />
+            Suas contas em grupo
+          </h2>
+          <div className="space-y-2">
+            {groupBalances.map((g) => {
+              const settled = Math.abs(g.net) < 0.005;
+              return (
+                <Link
+                  key={g.tripId}
+                  href={`/trips/${g.tripId}/budget`}
+                  className="flex items-center gap-3 rounded-xl border border-gray-100 px-3 py-2.5 hover:border-primary-200 hover:bg-gray-50 transition-colors"
+                >
+                  <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center shrink-0", settled ? "bg-gray-100" : g.net > 0 ? "bg-emerald-50" : "bg-rose-50")}>
+                    <Plane className={cn("h-4 w-4", settled ? "text-gray-400" : g.net > 0 ? "text-emerald-600" : "text-rose-500")} />
+                  </div>
+                  <span className="flex-1 min-w-0 truncate font-semibold text-gray-900">{g.title}</span>
+                  {settled ? (
+                    <span className="text-xs font-semibold text-gray-400 flex items-center gap-1"><Check className="h-3.5 w-3.5" /> quitado</span>
+                  ) : (
+                    <div className="text-right">
+                      <span className={cn("block text-[10px] font-bold uppercase tracking-wide", g.net > 0 ? "text-emerald-500" : "text-rose-400")}>
+                        {g.net > 0 ? "te devem" : "você deve"}
+                      </span>
+                      <span className={cn("block text-sm font-black", g.net > 0 ? "text-emerald-600" : "text-rose-600")}>
+                        {fmtBRL(Math.abs(g.net), g.currency)}
+                      </span>
+                    </div>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+          <p className="text-[10px] text-gray-400 mt-3">Saldo das viagens em grupo onde você é participante. Toque para acertar as contas.</p>
+        </div>
+      )}
 
       {/* ── Profile edit form ── */}
       {editingProfile && (

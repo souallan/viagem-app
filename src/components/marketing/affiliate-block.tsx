@@ -1,4 +1,7 @@
+"use client";
+
 import { affiliates, type AffiliatePartner } from "@/lib/affiliates";
+import { trackEvent } from "@/lib/analytics";
 
 type GroupKey = keyof typeof affiliates;
 
@@ -9,6 +12,7 @@ function AffiliateCard({ p, destination }: { p: AffiliatePartner; destination?: 
       href={url}
       target="_blank"
       rel="noopener noreferrer sponsored"
+      onClick={() => trackEvent("affiliate_click", { partner: p.id, destination: destination ?? "" })}
       className={`flex items-center gap-3 p-3.5 rounded-xl border bg-white hover:shadow-md hover:-translate-y-0.5 transition-all ${p.borderColor}`}
     >
       <span className="text-2xl shrink-0">{p.emoji}</span>

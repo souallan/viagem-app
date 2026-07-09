@@ -9,8 +9,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Muitas tentativas. Tente mais tarde." }, { status: 429 });
   }
 
+  const EMAIL_RE = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
   const { email } = await req.json().catch(() => ({}));
-  if (!email || typeof email !== "string" || !email.includes("@")) {
+  if (!email || typeof email !== "string" || email.length > 254 || !EMAIL_RE.test(email.trim())) {
     return NextResponse.json({ error: "Email inválido." }, { status: 400 });
   }
 

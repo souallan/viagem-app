@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Check, Zap, Plane, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 
 const FREE_FEATURES = [
   "Até 3 viagens ativas",
@@ -144,7 +145,7 @@ export default function PricingPage() {
             <button
               className="w-full text-center py-3 px-6 rounded-xl font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-lg mb-8"
               style={{ background: "linear-gradient(135deg, #1A5FCC, #2570E8)" }}
-              onClick={() => alert("Em breve! Pagamentos via Stripe chegando.")}
+              onClick={() => { trackEvent("upgrade_click", { plan: annual ? "annual" : "monthly" }); alert("Em breve! Pagamentos via Stripe chegando."); }}
             >
               <Zap className="inline h-4 w-4 mr-2" />
               Assinar Premium
