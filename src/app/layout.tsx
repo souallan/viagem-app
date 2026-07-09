@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import { GATracker } from "@/components/analytics/ga-tracker";
 import { NativeBootstrap } from "@/components/native/native-bootstrap";
+import { AppBanner } from "@/components/marketing/app-banner";
+import { SITE_CONFIG } from "@/lib/site-config";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -31,14 +33,18 @@ export const metadata: Metadata = {
     siteName: "RoteiroApp",
     title: "RoteiroApp — Planejador de Viagens",
     description: "Planeje roteiros, controle orçamento, organize documentos e compartilhe suas viagens. Gratuito e fácil de usar.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "RoteiroApp — Planejador de Viagens" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "RoteiroApp — Planejador de Viagens",
     description: "Planeje roteiros, controle orçamento, organize documentos e compartilhe suas viagens.",
     creator: "@roteiroapp",
+    images: ["/og-image.png"],
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+  // Smart banner nativo do iOS Safari (ativa quando o app for publicado e o ID preenchido)
+  other: SITE_CONFIG.app.iosAppId ? { "apple-itunes-app": `app-id=${SITE_CONFIG.app.iosAppId}` } : undefined,
 };
 
 // Viewport separado (Next 15). `viewportFit: "cover"` habilita os env(safe-area-inset-*)
@@ -104,6 +110,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <NativeBootstrap />
+        <AppBanner />
         {GA_ID && (
           <Suspense fallback={null}>
             <GATracker gaId={GA_ID} />

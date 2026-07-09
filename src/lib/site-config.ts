@@ -19,6 +19,13 @@ export const SITE_CONFIG = {
     whatsapp:  "https://wa.me/5584999990000",
   },
 
+  // Preencher quando o app for publicado nas lojas. Vazio = banner/lojas ficam ocultos.
+  app: {
+    android: "",   // ex.: https://play.google.com/store/apps/details?id=com.roteiroapp.app
+    ios:     "",   // ex.: https://apps.apple.com/app/idXXXXXXXXXX
+    iosAppId: "",  // ID numérico da App Store (para o smart banner do iOS Safari)
+  },
+
   copyright: {
     year:  2026,
     owner: "RoteiroApp",
