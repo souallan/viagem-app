@@ -151,7 +151,7 @@ Registered routes:
 - `/trips/[id]/packing` — DELETE, GET, PATCH, POST, PUT
 - `/trips/[id]/participants` — DELETE, GET, POST
 - `/trips/[id]/prep` — DELETE, GET, PATCH, POST
-- `/trips/[id]` — DELETE, GET, PUT
+- `/trips/[id]` — DELETE, GET, PATCH, PUT
 - `/trips/[id]/share` — DELETE, POST
 - `/trips/[id]/share-route` — POST
 - `/trips/[id]/transports` — DELETE, GET, POST, PUT
