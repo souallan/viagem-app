@@ -102,7 +102,7 @@ export default function EditTripPage() {
   }
 
   async function handleDelete() {
-    if (!(await confirmDialog("Excluir esta viagem? Todos os dados (atividades, despesas, documentos) serão removidos permanentemente."))) return;
+    if (!(await confirmDialog("Todos os dados desta viagem (atividades, despesas, documentos, reservas) serão removidos permanentemente. Esta ação não pode ser desfeita.", { title: "Excluir viagem?", confirmText: "Sim, excluir", cancelText: "Cancelar" }))) return;
     setDeleting(true);
     await fetch(`/api/trips/${id}`, { method: "DELETE" });
     router.push("/dashboard");

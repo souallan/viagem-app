@@ -36,7 +36,7 @@ export function TripCard({ trip }: { trip: Trip }) {
   async function handleDelete(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    if (!(await confirmDialog(t.tripCard.deleteConfirm.replace("{title}", trip.title)))) return;
+    if (!(await confirmDialog(t.tripCard.deleteConfirm.replace("{title}", trip.title), { title: "Excluir viagem?", confirmText: "Excluir", cancelText: "Cancelar" }))) return;
     setDeleting(true);
     await fetch(`/api/trips/${trip.id}`, { method: "DELETE" });
     router.refresh();
