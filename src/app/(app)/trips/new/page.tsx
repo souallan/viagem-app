@@ -5,8 +5,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft, Loader2, Plus, X, MapPin, ArrowRight,
-  Route, GripVertical,
+  Route, GripVertical, Image as ImageIcon, Check,
 } from "lucide-react";
+import { COVER_GROUPS } from "@/lib/cover-photos";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -325,6 +326,7 @@ function NewTripForm() {
     currency: template?.currency ?? "BRL",
     budget: "",
     status: "PLANNING",
+    coverImage: template?.coverImage ?? "",
   });
 
   useEffect(() => {
@@ -424,8 +426,8 @@ function NewTripForm() {
         body: JSON.stringify({
           ...form,
           destination: destinationValue,
-          // Include template cover image if no custom image was set
-          coverImage: template?.coverImage ?? null,
+          // Prioriza a capa escolhida pela pessoa; senão, a do template
+          coverImage: form.coverImage || template?.coverImage || null,
         }),
       });
 
@@ -627,6 +629,59 @@ function NewTripForm() {
                 onChange={handleChange}
                 rows={3}
               />
+            </div>
+
+            {/* Foto de capa */}
+            <div className="space-y-2">
+              <Label className="flex items-center gap-1.5">
+                <ImageIcon className="h-3.5 w-3.5 text-gray-400" /> Foto de capa <span className="text-gray-400 font-normal">(opcional)</span>
+              </Label>
+              {form.coverImage && (
+                <div className="relative rounded-xl overflow-hidden border border-gray-200 h-28">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={form.coverImage} alt="Capa selecionada" className="w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => setForm((p) => ({ ...p, coverImage: "" }))}
+                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+                    aria-label="Remover capa"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+              <div className="space-y-3 max-h-64 overflow-y-auto pr-1 rounded-xl border border-gray-100 p-2">
+                {COVER_GROUPS.map((group) => (
+                  <div key={group.region}>
+                    <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1.5 sticky top-0 bg-white/95 py-1 z-10">{group.region}</p>
+                    <div className="grid grid-cols-4 gap-2">
+                      {group.photos.map(({ url, label }) => (
+                        <button
+                          key={url}
+                          type="button"
+                          onClick={() => setForm((p) => ({ ...p, coverImage: url }))}
+                          className={cn(
+                            "relative rounded-lg overflow-hidden aspect-video border-2 transition-all",
+                            form.coverImage === url ? "border-sky-500 scale-95" : "border-transparent hover:border-gray-300"
+                          )}
+                          title={label}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={url} alt={label} className="w-full h-full object-cover" loading="lazy" />
+                          {form.coverImage === url && (
+                            <div className="absolute inset-0 bg-sky-500/30 flex items-center justify-center">
+                              <Check className="h-5 w-5 text-white drop-shadow" aria-hidden="true" />
+                            </div>
+                          )}
+                          <div className="absolute bottom-0 left-0 right-0 bg-black/50 py-0.5 px-1">
+                            <p className="text-white text-[9px] font-medium text-center truncate">{label}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Template highlights */}
