@@ -73,8 +73,13 @@ export async function POST(req: Request) {
 /** Marca PREMIUM (com validade = fim do período) ou reverte para FREE. */
 async function applySubscription(userId: string, sub: Stripe.Subscription) {
   const active = sub.status === "active" || sub.status === "trialing";
-  // `current_period_end` (epoch s) — acesso tolerante a variações de versão da API.
-  const periodEnd = (sub as unknown as { current_period_end?: number }).current_period_end;
+  // `current_period_end` (epoch s). Nas versões novas da API do Stripe ele saiu do
+  // objeto da assinatura e passou para o item — lemos dos dois lugares (tolerante à versão).
+  const s = sub as unknown as {
+    current_period_end?: number;
+    items?: { data?: Array<{ current_period_end?: number }> };
+  };
+  const periodEnd = s.current_period_end ?? s.items?.data?.[0]?.current_period_end;
   await prisma.user.update({
     where: { id: userId },
     data: {
