@@ -78,6 +78,33 @@ export async function PUT(
   }
 }
 
+// Atualização parcial (ex.: opt-in de alertas do destino) — não mexe em datas/orçamento
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+  }
+
+  const { id } = await params;
+  const trip = await getTrip(id, session.user.id);
+  if (!trip) {
+    return NextResponse.json({ error: "Viagem não encontrada" }, { status: 404 });
+  }
+
+  try {
+    const body = await request.json();
+    const data: { alertsEnabled?: boolean } = {};
+    if (typeof body.alertsEnabled === "boolean") data.alertsEnabled = body.alertsEnabled;
+    const updated = await prisma.trip.update({ where: { id }, data });
+    return NextResponse.json(updated);
+  } catch {
+    return NextResponse.json({ error: "Erro ao atualizar" }, { status: 500 });
+  }
+}
+
 export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }

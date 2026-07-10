@@ -14,6 +14,7 @@ import { ptBR } from "date-fns/locale";
 import ImmigrationAlerts from "@/components/trips/immigration-alerts";
 import ShareRouteButton from "@/components/trips/share-route-button";
 import TripPublicShare from "@/components/trips/trip-public-share";
+import DestinationAlertsToggle from "@/components/trips/destination-alerts-toggle";
 import TripCollaboration from "@/components/trips/trip-collaboration";
 
 export default async function TripOverviewPage({
@@ -278,6 +279,9 @@ export default async function TripOverviewPage({
         </div>
       )}
 
+      {trip.userId === uid && (
+        <DestinationAlertsToggle tripId={id} initialEnabled={trip.alertsEnabled} />
+      )}
       <ImmigrationAlerts destination={trip.destination} />
       <TripPublicShare tripId={id} initialToken={trip.shareToken ?? null} />
       <TripCollaboration tripId={id} />

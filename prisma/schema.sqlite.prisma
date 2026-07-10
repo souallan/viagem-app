@@ -91,6 +91,7 @@ model Trip {
   coverImage  String?
   currency    String   @default("BRL")
   budget      Float?
+  alertsEnabled Boolean @default(false)
   shareToken  String?  @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

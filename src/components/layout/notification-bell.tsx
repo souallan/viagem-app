@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Bell, Plane, FileWarning, X } from "lucide-react";
+import { Bell, Plane, FileWarning, AlertTriangle, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Notification {
   id: string;
-  type: "trip" | "document";
+  type: "trip" | "document" | "weather";
   title: string;
   subtitle: string;
   href: string;
@@ -74,7 +74,7 @@ export function NotificationBell() {
           ) : (
             <div className="divide-y divide-white/5 max-h-80 overflow-y-auto">
               {visible.map((n) => {
-                const Icon = n.type === "trip" ? Plane : FileWarning;
+                const Icon = n.type === "trip" ? Plane : n.type === "weather" ? AlertTriangle : FileWarning;
                 const iconColor = n.urgency === "high"
                   ? "text-red-400 bg-red-600/15"
                   : "text-amber-400 bg-amber-600/15";
