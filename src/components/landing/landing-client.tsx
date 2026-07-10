@@ -3,21 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  Plane, ArrowRight, CheckCircle, Star,
+  Plane, ArrowRight, CheckCircle, Check, Star, Crown, Zap,
   Globe, BookOpen, BedDouble, Lightbulb, Camera,
+  Shield, CreditCard, Lock, ChevronDown,
 } from "lucide-react";
 import { landingI18n, type LandingLang } from "@/lib/landing-i18n";
 import { trackEvent } from "@/lib/analytics";
 
 // ── Imagens (public/screenshots/) ────────────────────────────────
-// roteiros.png       1690×878  hero principal
-// stats.png          1641×376  strip "o que você vê num olhar"
-// hospedagem.png     1630×915  feature: hospedagem + calendário
-// cotação.png        1644×837  feature: câmbio
-// dicas.png          1630×869  feature: dicas & guias
-// experiences.png    1698×637  banner: experiências (wide)
-// experience-detail  1707×889  feature: relato detalhado
-
 const S = {
   roteiros:   "/screenshots/roteiros.png",
   stats:      "/screenshots/stats.png",
@@ -28,7 +21,6 @@ const S = {
   detail:     "/screenshots/experience-detail.png",
 };
 
-// Imagem padrão — sem corte, proporção original
 function Img({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
   return (
     <figure className={`overflow-hidden rounded-2xl border border-white/10 shadow-[0_16px_48px_rgba(0,0,0,0.5)] ${className}`}>
@@ -37,8 +29,6 @@ function Img({ src, alt, className = "" }: { src: string; alt: string; className
   );
 }
 
-// Imagem premium — moldura de browser + glow colorido + hover scale
-// Usada em: roteiros (hero), cotação, dicas, experience-detail
 function PremiumImg({ src, alt, glow = "rgba(59,130,246,0.25)", eager = false }: {
   src: string; alt: string; glow?: string; eager?: boolean;
 }) {
@@ -50,7 +40,6 @@ function PremiumImg({ src, alt, glow = "rgba(59,130,246,0.25)", eager = false }:
         boxShadow: `0 0 0 1px rgba(255,255,255,0.05), 0 24px 64px rgba(0,0,0,0.55), 0 0 80px ${glow}`,
       }}
     >
-      {/* Barra de browser simulada */}
       <div className="flex items-center gap-1.5 px-3 py-2.5" style={{ background: "#1a1f2e", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
         <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
         <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
@@ -59,13 +48,7 @@ function PremiumImg({ src, alt, glow = "rgba(59,130,246,0.25)", eager = false }:
           <span className="text-[9px] text-slate-500 font-medium">roteiroapp.com</span>
         </div>
       </div>
-      <img
-        src={src}
-        alt={alt}
-        className="w-full h-auto block"
-        loading={eager ? "eager" : "lazy"}
-        decoding="async"
-      />
+      <img src={src} alt={alt} className="w-full h-auto block" loading={eager ? "eager" : "lazy"} decoding="async" />
     </figure>
   );
 }
@@ -82,7 +65,7 @@ function LangPicker({ lang, set }: { lang: LandingLang; set: (l: LandingLang) =>
       {LANGS.map((o) => (
         <button key={o.id} onClick={() => set(o.id)} aria-label={o.label}
           className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-all
-            ${lang === o.id ? "bg-blue-600 text-white shadow-sm" : "text-slate-500 hover:text-slate-300"}`}>
+            ${lang === o.id ? "bg-primary-600 text-white shadow-sm" : "text-slate-400 hover:text-slate-200"}`}>
           <span>{o.flag}</span><span>{o.label}</span>
         </button>
       ))}
@@ -90,7 +73,6 @@ function LangPicker({ lang, set }: { lang: LandingLang; set: (l: LandingLang) =>
   );
 }
 
-// Bloco de texto para seções de feature
 function FeatureText({
   badge, badgeIcon: Icon, badgeColor,
   title, highlight, desc, bullets, bulletColor,
@@ -134,15 +116,18 @@ function highlightClass(bulletColor: string) {
   if (bulletColor.includes("teal"))   return "text-teal-400";
   if (bulletColor.includes("violet")) return "text-violet-400";
   if (bulletColor.includes("pink"))   return "text-pink-400";
-  return "text-blue-400";
+  return "text-primary-400";
 }
 
-interface Props { stats: { users: number; trips: number; destinations: number } }
+const GUARANTEE_ICONS: Record<string, React.ElementType> = {
+  shield: Shield, card: CreditCard, lock: Lock, globe: Globe,
+};
 
-export function LandingClient({ stats }: Props) {
+export function LandingClient() {
   const [lang, setLang] = useState<LandingLang>("pt");
   const [nlEmail, setNlEmail] = useState("");
   const [nlState, setNlState] = useState<"idle"|"loading"|"success"|"error">("idle");
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
   const t = landingI18n[lang];
   const pt = lang === "pt", en = lang === "en";
 
@@ -153,14 +138,10 @@ export function LandingClient({ stats }: Props) {
     setNlState(res.ok ? "success" : "error");
   }
 
-  const statsCfg = [
-    { value: stats.trips  > 0 ? `${stats.trips.toLocaleString("pt-BR")}+`        : t.stats.fallbackTrips, label: stats.trips  > 0 ? t.stats.labelTrips   : t.stats.trips   },
-    { value: stats.users  > 0 ? `${stats.users.toLocaleString("pt-BR")}+`        : t.stats.fallbackUsers, label: stats.users  > 0 ? t.stats.users        : t.stats.labelUsers },
-    { value: stats.destinations > 0 ? `${stats.destinations.toLocaleString("pt-BR")}+` : t.stats.fallbackDests, label: stats.destinations > 0 ? t.stats.destinations : t.stats.labelDests },
-  ];
+  const cta = (position: string) => () => trackEvent("cta_click", { position });
 
   return (
-    <div className="min-h-screen text-white overflow-x-hidden bg-vibe-dark">
+    <div className="min-h-screen text-white overflow-x-hidden bg-vibe-dark pb-16 sm:pb-0">
       <div className="fixed inset-0 pointer-events-none bg-grid-subtle bg-grid-48 opacity-100" aria-hidden />
       <div className="fixed top-[-20%] left-[5%] w-[600px] h-[600px] rounded-full pointer-events-none bg-glow-blue" aria-hidden />
       <div className="fixed bottom-[-20%] right-[-5%] w-[500px] h-[500px] rounded-full pointer-events-none bg-glow-teal" aria-hidden />
@@ -176,20 +157,19 @@ export function LandingClient({ stats }: Props) {
             <p className="text-[9px] text-slate-600 uppercase tracking-widest font-semibold leading-none">Travel Planner</p>
           </div>
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
+          <a href="#recursos" className="hidden md:block text-sm font-semibold text-slate-400 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/5">{t.nav.features}</a>
+          <a href="#planos" className="hidden md:block text-sm font-semibold text-slate-400 hover:text-white transition-colors px-3 py-2 rounded-lg hover:bg-white/5">{t.nav.plans}</a>
           <div className="hidden sm:block"><LangPicker lang={lang} set={setLang} /></div>
           <Link href="/login" className="hidden sm:block text-sm font-semibold text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg hover:bg-white/5">{t.nav.login}</Link>
-          <Link href="/register" className="text-sm font-bold px-5 py-2.5 rounded-xl bg-cta-blue shadow-primary-md hover:opacity-90 hover:scale-[1.02] transition-all">{t.nav.register}</Link>
+          <Link href="/register" onClick={cta("nav")} className="text-sm font-bold px-5 py-2.5 rounded-xl bg-cta-blue shadow-primary-md hover:opacity-90 hover:scale-[1.02] transition-all">{t.nav.register}</Link>
         </div>
       </nav>
 
-      {/* ══════════════════════════════════════════════════════
-          HERO — roteiros.png (1690×878)
-          Roteiros prontos: Paris, Tóquio, Nova York
-      ══════════════════════════════════════════════════════ */}
+      {/* ── HERO ── */}
       <section className="relative z-10 max-w-7xl mx-auto px-6 md:px-14 pt-16 pb-12">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-blue-500/25 bg-blue-600/10 text-blue-300 text-xs font-semibold mb-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-primary-500/25 bg-primary-600/10 text-primary-300 text-xs font-semibold mb-6">
             <Star className="h-3 w-3 fill-current" /> {t.hero.badge}
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.07] mb-6">
@@ -197,23 +177,25 @@ export function LandingClient({ stats }: Props) {
             <span className="bg-hero-text bg-clip-text text-transparent">{t.hero.title2}</span>
           </h1>
           <p className="text-lg text-slate-400 leading-relaxed mb-8 max-w-2xl mx-auto">{t.hero.subtitle}</p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
-            <Link href="/register" className="flex items-center gap-2 px-8 py-4 rounded-xl font-black text-base bg-cta-blue shadow-primary-lg hover:opacity-90 hover:scale-[1.02] transition-all">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-5">
+            <Link href="/register" onClick={cta("hero_primary")} className="flex items-center gap-2 px-8 py-4 rounded-xl font-black text-base bg-cta-blue shadow-primary-lg hover:opacity-90 hover:scale-[1.02] transition-all">
               {t.hero.cta} <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/login" className="flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-sm text-slate-300 border border-white/10 hover:border-white/20 hover:bg-white/5 transition-all">
-              {t.hero.ctaLogin}
-            </Link>
+            <a href="#planos" onClick={cta("hero_plans")} className="flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-sm text-slate-200 border border-white/12 hover:border-white/25 hover:bg-white/5 transition-all">
+              {t.hero.ctaPlans}
+            </a>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mb-3">
             {t.hero.trust.map((item) => (
-              <span key={item} className="flex items-center gap-1.5 text-xs text-slate-500">
+              <span key={item} className="flex items-center gap-1.5 text-xs text-slate-400">
                 <CheckCircle className="h-3.5 w-3.5 text-emerald-500 shrink-0" /> {item}
               </span>
             ))}
           </div>
+          <p className="text-xs text-slate-500 flex items-center justify-center gap-1.5">
+            <Globe className="h-3.5 w-3.5" /> {t.hero.microProof}
+          </p>
         </div>
-        {/* roteiros.png — 1690×878 — sem corte — premium */}
         <div className="max-w-5xl mx-auto">
           <PremiumImg
             src={S.roteiros}
@@ -231,10 +213,10 @@ export function LandingClient({ stats }: Props) {
         </div>
       </section>
 
-      {/* ── NÚMEROS ── */}
+      {/* ── FATOS (produto, sem números inflados) ── */}
       <section className="relative z-10 border-y border-white/5 bg-white/[0.02]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 grid grid-cols-3 divide-x divide-white/5 text-center">
-          {statsCfg.map((s, i) => (
+          {t.facts.items.map((s, i) => (
             <div key={i} className="px-4 sm:px-8">
               <div className="text-3xl md:text-4xl font-black mb-1 bg-stats-text bg-clip-text text-transparent">{s.value}</div>
               <div className="text-xs text-slate-500">{s.label}</div>
@@ -243,11 +225,8 @@ export function LandingClient({ stats }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          STATS STRIP — stats.png (1641×376)
-          Cards de resumo: atividades, hospedagens, transportes...
-      ══════════════════════════════════════════════════════ */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-14">
+      {/* ── STATS STRIP (imagem) ── */}
+      <section id="recursos" className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-14">
         <div className="text-center mb-7">
           <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">
             {pt ? "Tudo numa tela só" : en ? "Everything in one screen" : "Todo en una pantalla"}
@@ -258,9 +237,8 @@ export function LandingClient({ stats }: Props) {
              : <>Actividades, alojamientos, transportes, gastos.<br /><span className="text-slate-400 font-medium">Lo ves todo de un vistazo, sin buscar.</span></>}
           </h2>
         </div>
-        {/* stats.png — 1641×376 — tira horizontal — sem corte */}
         <Img src={S.stats}
-          alt={pt ? "Cards de resumo da viagem: 5 atividades, 0 hospedagens, 0 transportes, 0 documentos, 0/0 malas, R$ 0,00 gastos"
+          alt={pt ? "Cards de resumo da viagem: atividades, hospedagens, transportes, documentos, malas e gastos"
              : en ? "Trip summary cards: activities, accommodations, transport, documents, packing, and expenses"
              : "Tarjetas de resumen del viaje: actividades, alojamientos, transporte, documentos, equipaje y gastos"} />
       </section>
@@ -287,10 +265,24 @@ export function LandingClient({ stats }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          FEATURE 1 — hospedagem.png (1630×915)
-          Hospedagem + calendário visual
-      ══════════════════════════════════════════════════════ */}
+      {/* ── COMO FUNCIONA (3 passos) ── */}
+      <section className="relative z-10 max-w-5xl mx-auto px-6 md:px-14 py-16">
+        <div className="text-center mb-10">
+          <p className="text-xs font-bold text-primary-400 uppercase tracking-widest mb-2">{t.howItWorks.eyebrow}</p>
+          <h2 className="text-2xl md:text-3xl font-black">{t.howItWorks.title}</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          {t.howItWorks.steps.map((s) => (
+            <div key={s.n} className="rounded-2xl border border-white/8 p-6 bg-white/[0.03]">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-cta-blue text-white font-black text-lg mb-4 shadow-primary-md">{s.n}</div>
+              <h3 className="font-bold text-white mb-1.5">{s.title}</h3>
+              <p className="text-sm text-slate-400 leading-relaxed">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── FEATURE 1 — hospedagem ── */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
           <FeatureText
@@ -310,7 +302,6 @@ export function LandingClient({ stats }: Props) {
             ctaHref="/register"
             ctaColor="bg-sky-600 hover:bg-sky-500"
           />
-          {/* hospedagem.png — 1630×915 — sem corte */}
           <Img src={S.hospedagem}
             alt={pt ? "Calendário visual de hospedagem com check-in e check-out por cores, e cards de resumo da viagem"
                : en ? "Visual accommodation calendar with color-coded check-in/check-out and trip summary cards"
@@ -318,14 +309,10 @@ export function LandingClient({ stats }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          FEATURE 2 — cotação.png (1644×837)
-          Câmbio e conversão automática
-      ══════════════════════════════════════════════════════ */}
+      {/* ── FEATURE 2 — câmbio ── */}
       <section className="relative z-10 border-t border-white/5 bg-white/[0.015]">
         <div className="max-w-6xl mx-auto px-6 md:px-14 py-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
-            {/* cotação.png — 1644×837 — sem corte — premium */}
             <PremiumImg
               src={S.cotacao}
               alt={pt ? "Cotação ao vivo de moedas: euro, dólar, iene, libra e mais de 150 moedas com conversão automática"
@@ -351,10 +338,7 @@ export function LandingClient({ stats }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          FEATURE 3 — dicas.png (1630×869)
-          Dicas e guias de viagem
-      ══════════════════════════════════════════════════════ */}
+      {/* ── FEATURE 3 — dicas ── */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
           <FeatureText
@@ -371,7 +355,6 @@ export function LandingClient({ stats }: Props) {
                        : ["28 artículos en PT, EN y ES — creciendo cada semana", "Categorías: finanzas, seguridad, documentos, tecnología, salud", "Sin discurso de agencia — consejos reales de viajeros"]}
             bulletColor="text-teal-400"
           />
-          {/* dicas.png — 1630×869 — sem corte — premium */}
           <PremiumImg
             src={S.dicas}
             alt={pt ? "Página de dicas com artigos sobre voos baratos, viagem solo feminina, Google Maps offline e passaporte sem visto"
@@ -382,10 +365,7 @@ export function LandingClient({ stats }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          EXPERIENCES BANNER — experiences.png (1698×637)
-          Lista de experiências — imagem wide, full-width
-      ══════════════════════════════════════════════════════ */}
+      {/* ── EXPERIENCES BANNER ── */}
       <section className="relative z-10 border-t border-white/5 bg-white/[0.015]">
         <div className="max-w-6xl mx-auto px-6 md:px-14 py-14">
           <div className="text-center mb-8">
@@ -404,7 +384,6 @@ export function LandingClient({ stats }: Props) {
                : "Guarda tus aventuras con foto, valoración y humor. Comparte con la comunidad e inspira a quienes aún planifican."}
             </p>
           </div>
-          {/* experiences.png — 1698×637 — imagem wide, proporcional — sem corte */}
           <Img src={S.exps}
             alt={pt ? "Lista de experiências de viagem com destaque para Visita ao Coliseu em Roma, avaliação 4 estrelas e mood Incrível"
                : en ? "Travel experiences list featuring a visit to the Colosseum in Rome, 4-star rating and Incredible mood"
@@ -412,13 +391,9 @@ export function LandingClient({ stats }: Props) {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════
-          FEATURE 4 — experience-detail.png (1707×889)
-          Detalhe de relato de viagem
-      ══════════════════════════════════════════════════════ */}
+      {/* ── FEATURE 4 — diário ── */}
       <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
-          {/* experience-detail.png — 1707×889 — sem corte — premium */}
           <PremiumImg
             src={S.detail}
             alt={pt ? "Detalhe do relato Visita Coliseu: foto de capa, avaliação 4/5, texto completo do relato e hashtags #Coliseu #Roma"
@@ -435,7 +410,7 @@ export function LandingClient({ stats }: Props) {
             desc={pt ? "Escreva relatos completos com foto de capa, avaliação em estrelas, humor da viagem e hashtags. Seu diário digital fica guardado para sempre — e pode inspirar outros viajantes a descobrirem os mesmos lugares."
                 : en ? "Write full stories with cover photo, star rating, trip mood, and hashtags. Your digital diary is saved forever — and can inspire other travelers to discover the same places."
                 : "Escribe relatos completos con foto de portada, valoración en estrellas, humor del viaje y hashtags. Tu diario digital se guarda para siempre — e inspira a otros viajeros."}
-            bullets={pt ? ["Foto de capa, avaliação e humor da viagem por relato", "Hashtags para descobrir relatos do mesmo destino", "Públique para a comunidade ou mantenha privado"]
+            bullets={pt ? ["Foto de capa, avaliação e humor da viagem por relato", "Hashtags para descobrir relatos do mesmo destino", "Publique para a comunidade ou mantenha privado"]
                        : en ? ["Cover photo, rating, and trip mood per story", "Hashtags to discover stories from the same destination", "Publish to the community or keep it private"]
                        : ["Foto de portada, valoración y humor del viaje", "Hashtags para descubrir relatos del mismo destino", "Publica para la comunidad o mantenlo privado"]}
             bulletColor="text-pink-400"
@@ -443,57 +418,135 @@ export function LandingClient({ stats }: Props) {
         </div>
       </section>
 
-      {/* ── DEPOIMENTOS ── */}
+      {/* ── GARANTIAS / CONFIANÇA ── */}
       <section className="relative z-10 border-t border-white/5 py-16">
         <div className="max-w-6xl mx-auto px-6 md:px-14">
-          <div className="text-center mb-12">
-            <p className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-3">{t.testimonials.eyebrow}</p>
-            <h2 className="text-3xl font-black tracking-tight">{t.testimonials.title}</h2>
+          <div className="text-center mb-10">
+            <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-3">{t.guarantees.eyebrow}</p>
+            <h2 className="text-3xl font-black tracking-tight">{t.guarantees.title}</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {t.testimonials.items.map((item, i) => (
-              <div key={i} className="rounded-2xl border border-white/6 p-6 bg-white/[0.03] hover:border-white/12 transition-all">
-                <div className="flex gap-0.5 mb-4">
-                  {Array.from({ length: 5 }).map((_, s) => (
-                    <Star key={s} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                  ))}
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed mb-5 italic">&ldquo;{item.text}&rdquo;</p>
-                <div className="flex items-center gap-3">
-                  <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center text-[11px] font-black text-white shrink-0`}>
-                    {item.av}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {t.guarantees.items.map((g) => {
+              const Icon = GUARANTEE_ICONS[g.icon] ?? Shield;
+              return (
+                <div key={g.title} className="rounded-2xl border border-white/6 p-6 bg-white/[0.03] hover:border-white/12 transition-all">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-500/10 border border-emerald-500/20 mb-4">
+                    <Icon className="h-[18px] w-[18px] text-emerald-400" />
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-white">{item.name}</p>
-                    <p className="text-[11px] text-slate-600">{item.dest}</p>
-                  </div>
+                  <h3 className="font-bold text-white text-sm mb-1.5">{g.title}</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">{g.desc}</p>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
 
+      {/* ── PLANOS ── */}
+      <section id="planos" className="relative z-10 border-t border-white/5 bg-white/[0.015] py-20 scroll-mt-20">
+        <div className="max-w-5xl mx-auto px-6 md:px-14">
+          <div className="text-center mb-12">
+            <p className="text-xs font-bold text-primary-400 uppercase tracking-widest mb-3">{t.plans.eyebrow}</p>
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight mb-3">{t.plans.title}</h2>
+            <p className="text-slate-400 max-w-xl mx-auto">{t.plans.subtitle}</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {/* Free */}
+            <div className="rounded-2xl border border-white/10 p-8 bg-white/[0.02]">
+              <span className="text-sm font-bold text-slate-400 uppercase tracking-wide">{t.plans.free.name}</span>
+              <div className="mt-2 flex items-end gap-1">
+                <span className="text-4xl font-black text-white">{t.plans.free.price}</span>
+                <span className="text-slate-500 mb-1.5 text-sm">{t.plans.free.period}</span>
+              </div>
+              <p className="text-sm text-slate-500 mt-2 mb-6">{t.plans.free.desc}</p>
+              <Link href="/register" onClick={cta("plans_free")}
+                className="block w-full text-center py-3 px-6 rounded-xl border-2 border-white/12 font-bold text-slate-200 hover:border-white/25 hover:bg-white/5 transition-all mb-7">
+                {t.plans.free.cta}
+              </Link>
+              <ul className="space-y-3">
+                {t.plans.free.features.map((f) => (
+                  <li key={f} className="flex items-start gap-3 text-sm text-slate-400">
+                    <Check className="h-4 w-4 text-slate-500 shrink-0 mt-0.5" /> {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* Premium */}
+            <div className="relative rounded-2xl border-2 border-primary-500/60 p-8 bg-gradient-to-b from-primary-600/10 to-transparent">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span className="inline-flex items-center gap-1.5 bg-cta-blue text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-primary-md">
+                  <Star className="h-3 w-3 fill-current" /> {t.plans.mostPopular}
+                </span>
+              </div>
+              <span className="text-sm font-bold text-primary-300 uppercase tracking-wide">{t.plans.premium.name}</span>
+              <div className="mt-2 flex items-end gap-1">
+                <span className="text-4xl font-black text-white">{t.plans.premium.price}</span>
+                <span className="text-slate-500 mb-1.5 text-sm">{t.plans.premium.period}</span>
+              </div>
+              <p className="text-xs text-slate-500 mt-1">{t.plans.premium.note}</p>
+              <p className="text-sm text-slate-400 mt-2 mb-6">{t.plans.premium.desc}</p>
+              <Link href="/pricing" onClick={cta("plans_premium")}
+                className="flex items-center justify-center gap-2 w-full text-center py-3 px-6 rounded-xl font-bold text-white bg-cta-blue shadow-primary-md hover:opacity-90 hover:scale-[1.02] transition-all mb-7">
+                <Zap className="h-4 w-4" /> {t.plans.premium.cta}
+              </Link>
+              <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide mb-3">{t.plans.premium.featuresIntro}</p>
+              <ul className="space-y-3">
+                {t.plans.premium.features.map((f) => (
+                  <li key={f} className="flex items-start gap-3 text-sm text-slate-200">
+                    <Crown className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" /> {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="relative z-10 max-w-3xl mx-auto px-6 md:px-14 py-20">
+        <div className="text-center mb-10">
+          <p className="text-xs font-bold text-primary-400 uppercase tracking-widest mb-3">{t.faq.eyebrow}</p>
+          <h2 className="text-3xl font-black tracking-tight">{t.faq.title}</h2>
+        </div>
+        <div className="space-y-3">
+          {t.faq.items.map((item, i) => (
+            <div key={i} className="rounded-xl border border-white/8 bg-white/[0.02] overflow-hidden">
+              <button
+                onClick={() => { setOpenFaq(openFaq === i ? null : i); if (openFaq !== i) trackEvent("faq_open", { q: String(i) }); }}
+                className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
+                aria-expanded={openFaq === i}
+              >
+                <span className="font-semibold text-white text-sm">{item.q}</span>
+                <ChevronDown className={`h-4 w-4 text-slate-400 shrink-0 transition-transform ${openFaq === i ? "rotate-180" : ""}`} />
+              </button>
+              {openFaq === i && (
+                <p className="px-5 pb-4 text-sm text-slate-400 leading-relaxed">{item.a}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ── CTA FINAL ── */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-24">
-        <div className="rounded-3xl p-10 md:p-16 text-center border border-blue-500/20 relative overflow-hidden bg-cta-section">
-          <div className="absolute inset-0 pointer-events-none bg-gradient-radial from-blue-600/10 to-transparent" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-px bg-gradient-to-r from-transparent via-blue-400/40 to-transparent" />
+      <section className="relative z-10 max-w-6xl mx-auto px-6 md:px-14 py-16">
+        <div className="rounded-3xl p-10 md:p-16 text-center border border-primary-500/20 relative overflow-hidden bg-cta-section">
+          <div className="absolute inset-0 pointer-events-none bg-gradient-radial from-primary-600/10 to-transparent" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-px bg-gradient-to-r from-transparent via-primary-400/40 to-transparent" />
           <div className="relative z-10">
-            <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-cta-blue shadow-primary-lg ring-4 ring-blue-500/10">
+            <div className="w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center bg-cta-blue shadow-primary-lg ring-4 ring-primary-500/10">
               <Plane className="h-7 w-7 text-white" />
             </div>
             <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 leading-tight">{t.cta.title}</h2>
             <p className="text-slate-400 text-base mb-10 max-w-lg mx-auto leading-relaxed">{t.cta.subtitle}</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/register" className="flex items-center gap-2 px-10 py-4 rounded-xl font-black text-base bg-cta-blue shadow-primary-lg hover:opacity-90 hover:scale-[1.03] transition-all">
+              <Link href="/register" onClick={cta("final_primary")} className="flex items-center gap-2 px-10 py-4 rounded-xl font-black text-base bg-cta-blue shadow-primary-lg hover:opacity-90 hover:scale-[1.03] transition-all">
                 {t.cta.button} <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/login" className="text-sm font-semibold text-slate-500 hover:text-slate-300 transition-colors">
-                {t.cta.login}
-              </Link>
+              <a href="#planos" onClick={cta("final_plans")} className="px-8 py-4 rounded-xl font-semibold text-sm text-slate-200 border border-white/12 hover:border-white/25 hover:bg-white/5 transition-all">
+                {t.cta.buttonPlans}
+              </a>
             </div>
-            <p className="text-slate-700 text-xs mt-6">{t.cta.fine}</p>
+            <p className="text-slate-600 text-xs mt-6">{t.cta.fine}</p>
           </div>
         </div>
       </section>
@@ -536,17 +589,26 @@ export function LandingClient({ stats }: Props) {
             </div>
             <div>
               <span className="text-sm font-bold text-white">RoteiroApp</span>
-              <p className="text-[10px] text-slate-700">{t.footer.copy}</p>
+              <p className="text-[10px] text-slate-600">{t.footer.copy}</p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-5 text-xs text-slate-600">
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-5 text-xs text-slate-400">
             {t.footer.links.map(({ label, href }) => (
-              <a key={href} href={href} className="hover:text-slate-300 transition-colors">{label}</a>
+              <a key={href} href={href} className="hover:text-white transition-colors">{label}</a>
             ))}
           </div>
           <LangPicker lang={lang} set={setLang} />
         </div>
       </footer>
+
+      {/* ── STICKY CTA (mobile) ── */}
+      <div className="fixed bottom-0 inset-x-0 z-40 sm:hidden border-t border-white/10 bg-slate-950/95 backdrop-blur-md px-4 py-3 flex items-center gap-3">
+        <p className="text-xs text-slate-300 font-medium flex-1 leading-tight">{t.stickyCta.text}</p>
+        <Link href="/register" onClick={cta("sticky_mobile")}
+          className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl font-bold text-sm text-white bg-cta-blue shadow-primary-md">
+          {t.stickyCta.button} <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
     </div>
   );
 }

@@ -1,20 +1,29 @@
-import { prisma } from "@/lib/prisma";
+import type { Metadata } from "next";
 import { LandingClient } from "@/components/landing/landing-client";
 
-async function getStats() {
-  try {
-    const [users, trips, destRaw] = await Promise.all([
-      prisma.user.count(),
-      prisma.trip.count(),
-      prisma.trip.groupBy({ by: ["destination"], _count: { id: true } }),
-    ]);
-    return { users, trips, destinations: destRaw.length };
-  } catch {
-    return { users: 0, trips: 0, destinations: 0 };
-  }
-}
+export const metadata: Metadata = {
+  title: "RoteiroApp — Planeje viagens sem 27 abas | Grátis",
+  description:
+    "Roteiro, orçamento, hospedagem, malas e documentos num app só. Grátis para começar, sem cartão. Feito para brasileiros. PT/EN/ES.",
+  openGraph: {
+    title: "RoteiroApp — Sua viagem inteira organizada, num app só",
+    description:
+      "Itinerário, gastos, hospedagem, malas, documentos e roteiros prontos. Comece grátis, sem cartão. PT/EN/ES.",
+    url: "https://roteiroapp.com",
+    siteName: "RoteiroApp",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "RoteiroApp" }],
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RoteiroApp — Planeje viagens sem 27 abas",
+    description: "Tudo da sua viagem num app só. Grátis para começar, sem cartão.",
+    images: ["/og-image.png"],
+  },
+  alternates: { canonical: "https://roteiroapp.com" },
+};
 
-export default async function LandingPage() {
-  const stats = await getStats();
-  return <LandingClient stats={stats} />;
+export default function LandingPage() {
+  return <LandingClient />;
 }
