@@ -13,25 +13,7 @@ import { Select } from "@/components/ui/select";
 import { CurrencyInput } from "@/components/ui/currency-input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-
-const PRESET_PHOTOS = [
-  { url: "https://images.unsplash.com/photo-1499856374753-58c65c3da0ba?w=800&q=80", label: "Paris" },
-  { url: "https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?w=800&q=80", label: "Tokyo" },
-  { url: "https://images.unsplash.com/photo-1529260830199-42c24126f198?w=800&q=80", label: "Roma" },
-  { url: "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=800&q=80", label: "Barcelona" },
-  { url: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80", label: "Dubai" },
-  { url: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80", label: "Bali" },
-  { url: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=800&q=80", label: "Lisboa" },
-  { url: "https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=800&q=80", label: "Amsterdam" },
-  { url: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80", label: "Santorini" },
-  { url: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80", label: "Nova York" },
-  { url: "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80", label: "Praia tropical" },
-  { url: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80", label: "Montanhas" },
-  { url: "https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80", label: "Índia" },
-  { url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80", label: "Marrocos" },
-  { url: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80", label: "Estrada" },
-  { url: "https://images.unsplash.com/photo-1501952476817-d7ae22e8ee4e?w=800&q=80", label: "Sunset tropical" },
-];
+import { COVER_GROUPS } from "@/lib/cover-photos";
 
 export default function EditTripPage() {
   const router = useRouter();
@@ -201,31 +183,38 @@ export default function EditTripPage() {
             </button>
           </div>
 
-          {/* Preset grid */}
+          {/* Preset grid — agrupado por região */}
           {photoMode === "preset" && (
-            <div className="grid grid-cols-4 gap-2">
-              {PRESET_PHOTOS.map(({ url, label }) => (
-                <button
-                  key={url}
-                  type="button"
-                  onClick={() => selectPreset(url)}
-                  className={cn(
-                    "relative rounded-lg overflow-hidden aspect-video border-2 transition-all",
-                    selectedPhoto === url ? "border-sky-500 scale-95" : "border-transparent hover:border-gray-300"
-                  )}
-                  title={label}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt={label} className="w-full h-full object-cover" />
-                  {selectedPhoto === url && (
-                    <div className="absolute inset-0 bg-sky-500/30 flex items-center justify-center">
-                      <Check className="h-5 w-5 text-white drop-shadow" aria-hidden="true" />
-                    </div>
-                  )}
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/50 py-0.5 px-1">
-                    <p className="text-white text-[9px] font-medium text-center truncate">{label}</p>
+            <div className="space-y-4 max-h-[440px] overflow-y-auto pr-1">
+              {COVER_GROUPS.map((group) => (
+                <div key={group.region}>
+                  <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-2 sticky top-0 bg-white/95 py-1 z-10">{group.region}</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {group.photos.map(({ url, label }) => (
+                      <button
+                        key={url}
+                        type="button"
+                        onClick={() => selectPreset(url)}
+                        className={cn(
+                          "relative rounded-lg overflow-hidden aspect-video border-2 transition-all",
+                          selectedPhoto === url ? "border-sky-500 scale-95" : "border-transparent hover:border-gray-300"
+                        )}
+                        title={label}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={url} alt={label} className="w-full h-full object-cover" loading="lazy" />
+                        {selectedPhoto === url && (
+                          <div className="absolute inset-0 bg-sky-500/30 flex items-center justify-center">
+                            <Check className="h-5 w-5 text-white drop-shadow" aria-hidden="true" />
+                          </div>
+                        )}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/50 py-0.5 px-1">
+                          <p className="text-white text-[9px] font-medium text-center truncate">{label}</p>
+                        </div>
+                      </button>
+                    ))}
                   </div>
-                </button>
+                </div>
               ))}
             </div>
           )}

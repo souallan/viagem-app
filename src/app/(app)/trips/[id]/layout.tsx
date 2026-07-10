@@ -38,22 +38,34 @@ export default async function TripLayout({
     <div className="space-y-0">
       {/* ── Trip Hero Header ── */}
       <div
-        className="relative overflow-hidden rounded-2xl mb-6"
+        className="relative overflow-hidden rounded-2xl mb-6 min-h-[190px] sm:min-h-[230px] flex flex-col justify-end"
         style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #1a56cc 55%, #6d28d9 100%)" }}
       >
-        {/* Dot pattern */}
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
-            backgroundSize: "24px 24px",
-          }}
-        />
-        {/* Blur orbs */}
-        <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full opacity-20"
-          style={{ background: "radial-gradient(circle, #a78bfa, transparent)" }} />
-        <div className="absolute -bottom-8 -left-8 w-40 h-40 rounded-full opacity-15"
-          style={{ background: "radial-gradient(circle, #38bdf8, transparent)" }} />
+        {trip.coverImage ? (
+          <>
+            {/* Foto de capa como fundo do header */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={trip.coverImage} alt={trip.title} className="absolute inset-0 w-full h-full object-cover" />
+            {/* Overlay escuro (mais forte embaixo) para o texto branco continuar legível */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/20" />
+          </>
+        ) : (
+          <>
+            {/* Dot pattern */}
+            <div
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+                backgroundSize: "24px 24px",
+              }}
+            />
+            {/* Blur orbs */}
+            <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full opacity-20"
+              style={{ background: "radial-gradient(circle, #a78bfa, transparent)" }} />
+            <div className="absolute -bottom-8 -left-8 w-40 h-40 rounded-full opacity-15"
+              style={{ background: "radial-gradient(circle, #38bdf8, transparent)" }} />
+          </>
+        )}
 
         <div className="relative z-10 px-6 py-5 sm:px-8 sm:py-6">
           {/* Title row */}
