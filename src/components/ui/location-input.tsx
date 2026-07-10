@@ -36,12 +36,6 @@ function countryCodeToFlag(code: string): string {
   );
 }
 
-function formatCity(s: Suggestion): string {
-  const parts = [s.city, s.state, s.country].filter(Boolean);
-  const unique = parts.filter((p, i) => parts.indexOf(p) === i);
-  return unique.join(", ");
-}
-
 export function LocationInput({
   value,
   onChange,

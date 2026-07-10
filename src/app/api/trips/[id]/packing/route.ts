@@ -129,7 +129,6 @@ export async function DELETE(
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
 
-  const { id } = await params;
   const { itemId } = await req.json();
 
   await prisma.packingItem.deleteMany({ where: { id: itemId } });

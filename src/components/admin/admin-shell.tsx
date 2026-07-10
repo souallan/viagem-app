@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, Shield } from "lucide-react";
+import { Menu, Shield } from "lucide-react";
 import { AdminSidebar } from "./admin-sidebar";
 import Link from "next/link";
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
-  BarChart3, Users, Plane, BookOpen, Route, TrendingUp,
+  BarChart3, Users, Plane, BookOpen, TrendingUp,
   MapPin, Package, Wallet, FileText, Calendar, Star,
   Activity, Zap, Target, DollarSign, Clock, Globe,
 } from "lucide-react";
@@ -141,7 +141,6 @@ export default function AdminStatsPage() {
 
   // Affiliate intelligence
   const topTransportType = transportTypes[0]?.type ?? "FLIGHT";
-  const topDestination = topDestinations[0]?.destination ?? "—";
   const topExpenseCategory = expenseCategories[0]?.category ?? "—";
   const premiumUserPct = totalBudget > 0 ? Math.round(((budgetBuckets.high + budgetBuckets.premium) / totalBudget) * 100) : 0;
   const longTripPct = totalDuration > 0 ? Math.round(((durationBuckets.two_weeks + durationBuckets.month_plus) / totalDuration) * 100) : 0;

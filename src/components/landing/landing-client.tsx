@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   Plane, ArrowRight, CheckCircle, Star,
-  Globe, BookOpen, Route, BedDouble, Lightbulb, Camera,
+  Globe, BookOpen, BedDouble, Lightbulb, Camera,
 } from "lucide-react";
 import { landingI18n, type LandingLang } from "@/lib/landing-i18n";
 import { trackEvent } from "@/lib/analytics";

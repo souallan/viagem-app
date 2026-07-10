@@ -1,7 +1,7 @@
 import {
   Shield, Train, Globe, Smartphone, Heart, FileText,
-  Clock, Lightbulb, Map, CreditCard, Camera, Languages,
-  Wifi, Luggage, Utensils, Sun, Zap, BookOpen,
+  Map, CreditCard, Camera, Languages,
+  Wifi, Luggage, Utensils, Sun, Zap,
 } from "lucide-react";
 
 export interface Tip {

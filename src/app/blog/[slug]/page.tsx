@@ -574,7 +574,6 @@ function renderContent(content: string) {
       return (
         <ul key={i} className="list-disc list-inside space-y-1.5 text-gray-600 text-sm leading-relaxed mb-4">
           {items.map((item, j) => {
-            const text = item.slice(2).replace(/\*\*(.+?)\*\*/g, "$1");
             const bold = item.slice(2).split("**");
             return (
               <li key={j}>

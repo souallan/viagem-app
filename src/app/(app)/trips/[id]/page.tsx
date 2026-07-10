@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { formatDate, formatCurrency, tripStatusLabel, tripStatusColor } from "@/lib/utils";
+import { formatDate, formatCurrency, tripStatusLabel } from "@/lib/utils";
 import {
   Calendar, MapPin, DollarSign, FileText,
   Activity, Map, BarChart2, ExternalLink, Globe,

@@ -309,7 +309,6 @@ function SummaryTable({ segments, currency, brlRate }: { segments: Segment[]; cu
 
 export default function ComparePage() {
   const { id } = useParams<{ id: string }>();
-  const { t } = useLanguage();
   const storageKey = `compare-${id}`;
 
   const [segments, setSegments] = useState<Segment[]>(() => {
@@ -368,8 +367,6 @@ export default function ComparePage() {
   function addSegment() { setSegments(prev => [...prev, emptySegment(crypto.randomUUID())]); }
   function removeSegment(segId: string) { setSegments(prev => prev.filter(s => s.id !== segId)); }
   function clearAll() { if (!confirm("Limpar todas as cotações?")) return; setSegments([emptySegment(crypto.randomUUID())]); }
-
-  const symbol = getCurrencySymbol(currency);
 
   return (
     <div className="space-y-6 pb-10">

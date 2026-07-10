@@ -450,7 +450,7 @@ export default function SummaryPage() {
                           <SectionTitle icon={BedDouble} label="Check-in" color="bg-teal-500" />
                           <div className="space-y-2">
                             {checkIns.map((a) => {
-                              const [c1, c2] = ACCOM_GRADIENT[a.type] ?? ["#9ca3af", "#6b7280"];
+                              const [c1] = ACCOM_GRADIENT[a.type] ?? ["#9ca3af", "#6b7280"];
                               const nights   = nightsCount(a.checkIn, a.checkOut);
                               return (
                                 <div key={a.id} className="flex items-center gap-3 p-3 rounded-xl border" style={{ borderColor: c1 + "40", background: c1 + "08" }}>
