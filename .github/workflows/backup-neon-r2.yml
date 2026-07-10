@@ -1,0 +1,57 @@
+name: Backup Neon → R2
+
+# Backup diário independente (3-2-1): faz pg_dump do banco Neon e envia para o
+# Cloudflare R2 (provedor diferente). Roda na nuvem do GitHub — não depende do PC.
+# Segredos necessários no repo (Settings → Secrets and variables → Actions):
+#   NEON_DATABASE_URL, R2_ENDPOINT, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # todo dia 06:00 UTC (03:00 BRT)
+  workflow_dispatch: {} # permite rodar manualmente
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Instalar postgresql-client 16
+        run: |
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/pgdg.gpg
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client-16
+
+      - name: Dump do Neon
+        run: |
+          STAMP=$(date +%Y-%m-%d_%H%M)
+          FILE="roteiroapp_${STAMP}.dump"
+          pg_dump "${{ secrets.NEON_DATABASE_URL }}" -Fc --no-owner --no-acl -f "$FILE"
+          ls -lh "$FILE"
+          echo "FILE=$FILE" >> "$GITHUB_ENV"
+
+      - name: Enviar para o R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          aws s3 cp "$FILE" "s3://${{ secrets.R2_BUCKET }}/daily/$FILE" \
+            --endpoint-url "${{ secrets.R2_ENDPOINT }}"
+          echo "Enviado: daily/$FILE"
+
+      - name: Remover backups com mais de 30 dias
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          CUTOFF=$(date -d '30 days ago' +%Y-%m-%d)
+          aws s3 ls "s3://${{ secrets.R2_BUCKET }}/daily/" --endpoint-url "${{ secrets.R2_ENDPOINT }}" \
+            | awk '{print $4}' | while read -r f; do
+              [ -z "$f" ] && continue
+              d=$(echo "$f" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | head -1)
+              if [ -n "$d" ] && [ "$d" \< "$CUTOFF" ]; then
+                aws s3 rm "s3://${{ secrets.R2_BUCKET }}/daily/$f" --endpoint-url "${{ secrets.R2_ENDPOINT }}"
+                echo "removido antigo: $f"
+              fi
+            done
