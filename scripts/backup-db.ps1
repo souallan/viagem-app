@@ -35,6 +35,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+# Garante o pg_dump no PATH (instalacao via Scoop), para rodar tambem no Agendador
+$pgBin = "$env:USERPROFILE\scoop\apps\postgresql\current\bin"
+if (Test-Path $pgBin) { $env:PATH = "$pgBin;$env:PATH" }
+
 # Aceita tambem DATABASE_URL como fallback (compatibilidade)
 if (-not $DatabaseUrl) { $DatabaseUrl = $env:DATABASE_URL }
 
