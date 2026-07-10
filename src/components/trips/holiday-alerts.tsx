@@ -130,7 +130,7 @@ export default function HolidayAlerts({ destinations, activityDates }: { destina
         className="w-full flex items-center gap-3 px-5 py-3.5 text-left"
         onClick={() => setOpen(v => !v)}
       >
-        <PartyPopper className="h-4.5 w-4.5 text-amber-600 shrink-0" />
+        <PartyPopper className="h-[18px] w-[18px] text-amber-600 shrink-0" />
         <span className="text-sm font-bold text-amber-800 flex-1">
           {matches.length === 1 ? "1 atividade em feriado" : `${matches.length} atividades em feriados`}
         </span>

@@ -79,7 +79,7 @@ export default function AdminUsersPage() {
         <div>
           <h1 className="text-2xl font-black text-white flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center">
-              <Users className="h-4.5 w-4.5 text-blue-400" />
+              <Users className="h-[18px] w-[18px] text-blue-400" />
             </div>
             Gerenciar Usuários
           </h1>

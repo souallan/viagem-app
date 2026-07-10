@@ -139,7 +139,7 @@ export default function TripCollaboration({ tripId }: { tripId: string }) {
               </span>
               <button
                 onClick={() => handleRemove(m.id)}
-                className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-red-500 transition-all shrink-0"
+                className="opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 text-gray-300 hover:text-red-500 transition-all shrink-0"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>

@@ -40,7 +40,7 @@ export default function AdminSettingsPage() {
         <div>
           <h1 className="text-2xl font-black text-white flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-slate-600/20 flex items-center justify-center">
-              <Settings className="h-4.5 w-4.5 text-slate-400" />
+              <Settings className="h-[18px] w-[18px] text-slate-400" />
             </div>
             Configurações
           </h1>

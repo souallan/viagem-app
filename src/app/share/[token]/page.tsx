@@ -90,7 +90,7 @@ export default async function PublicSharePage({ params }: { params: Promise<{ to
         {trip.accommodations.length > 0 && (
           <section>
             <h2 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-              <Hotel className="h-4.5 w-4.5 text-purple-500" /> Hospedagens
+              <Hotel className="h-[18px] w-[18px] text-purple-500" /> Hospedagens
             </h2>
             <div className="space-y-2">
               {trip.accommodations.map(a => (
@@ -115,7 +115,7 @@ export default async function PublicSharePage({ params }: { params: Promise<{ to
         {trip.transports.length > 0 && (
           <section>
             <h2 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-              <Plane className="h-4.5 w-4.5 text-emerald-500" /> Transportes
+              <Plane className="h-[18px] w-[18px] text-emerald-500" /> Transportes
             </h2>
             <div className="space-y-2">
               {trip.transports.map(t => (
@@ -140,7 +140,7 @@ export default async function PublicSharePage({ params }: { params: Promise<{ to
         {sortedDates.length > 0 && (
           <section>
             <h2 className="text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
-              <Zap className="h-4.5 w-4.5 text-blue-500" /> Atividades por dia
+              <Zap className="h-[18px] w-[18px] text-blue-500" /> Atividades por dia
             </h2>
             <div className="space-y-6">
               {sortedDates.map((dateStr, dayIdx) => {

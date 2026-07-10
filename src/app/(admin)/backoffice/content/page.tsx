@@ -107,7 +107,7 @@ export default function AdminContentPage() {
         <div>
           <h1 className="text-2xl font-black text-white flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-violet-600/20 flex items-center justify-center">
-              <FileText className="h-4.5 w-4.5 text-violet-400" />
+              <FileText className="h-[18px] w-[18px] text-violet-400" />
             </div>
             Moderação de Conteúdo
           </h1>

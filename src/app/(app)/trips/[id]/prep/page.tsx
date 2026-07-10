@@ -255,7 +255,7 @@ export default function PrepPage() {
                     </div>
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-red-500 transition-all shrink-0 mt-0.5"
+                      className="opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 text-gray-300 hover:text-red-500 transition-all shrink-0 mt-0.5"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>

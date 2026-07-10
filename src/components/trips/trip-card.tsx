@@ -93,7 +93,7 @@ export function TripCard({ trip }: { trip: Trip }) {
           </div>
 
           {/* Action buttons — visible on hover */}
-          <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="absolute top-3 right-3 flex gap-1.5 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 transition-opacity duration-200">
             <button
               onClick={handleEdit}
               className="w-8 h-8 rounded-lg bg-white/90 hover:bg-white flex items-center justify-center shadow transition-colors"

@@ -153,7 +153,7 @@ export default function AdminStatsPage() {
       <div>
         <h1 className="text-2xl font-black text-white flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-orange-600/20 flex items-center justify-center">
-            <BarChart3 className="h-4.5 w-4.5 text-orange-400" />
+            <BarChart3 className="h-[18px] w-[18px] text-orange-400" />
           </div>
           Analytics de Comportamento
         </h1>

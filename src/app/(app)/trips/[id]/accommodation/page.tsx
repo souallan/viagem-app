@@ -691,7 +691,7 @@ export default function AccommodationPage() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
+                    <div className="flex items-center gap-1 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100">
                       <button
                         onClick={(e) => { e.stopPropagation(); openEdit(item); }}
                         className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-300 hover:text-primary-500 hover:bg-primary-50 transition-colors"

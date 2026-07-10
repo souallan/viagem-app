@@ -44,7 +44,7 @@ function KPI({ label, value, icon: Icon, color, sub }: {
   return (
     <div className="rounded-2xl border border-white/6 p-4" style={{ background: "rgba(255,255,255,0.04)" }}>
       <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center mb-3", color)}>
-        <Icon className="h-4.5 w-4.5" />
+        <Icon className="h-[18px] w-[18px]" />
       </div>
       <p className="text-2xl font-black text-white leading-none">{typeof value === "number" ? value.toLocaleString("pt-BR") : value}</p>
       <p className="text-xs text-slate-500 mt-1">{label}</p>
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
         <div>
           <h1 className="text-2xl font-black text-white flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-red-600/20 flex items-center justify-center">
-              <Shield className="h-4.5 w-4.5 text-red-400" />
+              <Shield className="h-[18px] w-[18px] text-red-400" />
             </div>
             Painel Admin
           </h1>

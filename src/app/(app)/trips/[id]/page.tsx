@@ -307,7 +307,7 @@ export default async function TripOverviewPage({
               className="flex items-center gap-2.5 p-3 rounded-xl border bg-white hover:shadow-md hover:-translate-y-0.5 transition-all group"
             >
               <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${r.color}`}>
-                <r.icon className="h-4.5 w-4.5" />
+                <r.icon className="h-[18px] w-[18px]" />
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-gray-900 truncate">{r.name}</p>

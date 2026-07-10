@@ -174,7 +174,7 @@ function ActivityItem({
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 shrink-0 mt-0.5">
+            <div className="flex items-center gap-1 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 shrink-0 mt-0.5">
               <button onClick={onEdit} className="text-gray-200 hover:text-primary-500 transition-colors" aria-label={t.common.edit}>
                 <Pencil className="h-3.5 w-3.5" />
               </button>
@@ -279,7 +279,7 @@ function PeriodActivityCard({ activity, onDelete, onEdit }: { activity: Activity
         )}
       </div>
 
-      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 shrink-0">
+      <div className="flex items-center gap-1 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 shrink-0">
         <button onClick={onEdit} className="text-gray-200 hover:text-primary-500 transition-colors" aria-label={t.common.edit}>
           <Pencil className="h-3.5 w-3.5" />
         </button>

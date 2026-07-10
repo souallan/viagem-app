@@ -86,14 +86,14 @@ export default function AdminNewsletterPage() {
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-2xl border border-white/6 p-4" style={{ background: "rgba(255,255,255,0.04)" }}>
           <div className="w-9 h-9 rounded-xl bg-teal-600/20 flex items-center justify-center mb-3">
-            <Users className="h-4.5 w-4.5 text-teal-400" />
+            <Users className="h-[18px] w-[18px] text-teal-400" />
           </div>
           <p className="text-2xl font-black text-white">{subscribers.length}</p>
           <p className="text-xs text-slate-500 mt-1">Total de inscritos</p>
         </div>
         <div className="rounded-2xl border border-white/6 p-4" style={{ background: "rgba(255,255,255,0.04)" }}>
           <div className="w-9 h-9 rounded-xl bg-green-600/20 flex items-center justify-center mb-3">
-            <Mail className="h-4.5 w-4.5 text-green-400" />
+            <Mail className="h-[18px] w-[18px] text-green-400" />
           </div>
           <p className="text-2xl font-black text-white">
             {subscribers.filter((s) => s.confirmedAt).length}

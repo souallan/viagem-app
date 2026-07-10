@@ -255,7 +255,7 @@ export default function BudgetPage() {
   function openNew() {
     setEditingId(null);
     setForm({
-      title: "", category: "OTHER", amount: "", currency: tripCurrency, date: "",
+      title: "", category: "OTHER", amount: "", currency: tripCurrency, date: new Date().toISOString().slice(0, 10),
       notes: "", paidBy: "", paidById: "", sharedBy: participants.map((p) => p.id),
     });
     setOpen(true);

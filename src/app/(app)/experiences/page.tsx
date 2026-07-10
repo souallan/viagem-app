@@ -80,7 +80,7 @@ function FeaturedCard({ exp, onDelete }: { exp: Experience; onDelete: (id: strin
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold tracking-wide">
             {t.experiences.featured}
           </span>
-          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex items-center gap-2 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 transition-opacity">
             <Link
               href={`/experiences/${exp.id}/edit`}
               onClick={(e) => e.stopPropagation()}
@@ -184,7 +184,7 @@ function ExperienceCard({ exp, onDelete }: { exp: Experience; onDelete: (id: str
           )}
 
           {/* Action buttons */}
-          <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute top-3 right-3 flex gap-1.5 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 transition-opacity">
             <Link
               href={`/experiences/${exp.id}/edit`}
               onClick={(e) => e.stopPropagation()}
