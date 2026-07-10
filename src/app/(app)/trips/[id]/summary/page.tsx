@@ -202,9 +202,13 @@ function SectionTitle({ icon: Icon, label, color }: { icon: React.ElementType; l
 const PRINT_STYLE = `
 @media print {
   @page { margin: 16mm 14mm; size: A4; }
+  html, body { background: white !important; }
   body { font-size: 11px !important; }
+  /* Isola o resumo: esconde TUDO (menu lateral, banners, etc.) e mostra só a área imprimível */
+  body * { visibility: hidden !important; }
+  .print-page, .print-page * { visibility: visible !important; }
+  .print-page { position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; margin: 0 !important; padding: 0 !important; background: white !important; }
   .no-print { display: none !important; }
-  .print-page { background: white !important; padding: 0 !important; }
   .shadow-sm, .shadow-lg, .shadow-md { box-shadow: none !important; }
   .rounded-3xl, .rounded-2xl, .rounded-xl { border-radius: 8px !important; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
