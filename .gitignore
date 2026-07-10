@@ -40,3 +40,6 @@ next-env.d.ts
 # prisma
 prisma/dev.db
 prisma/dev.db-journal
+
+# Dumps de backup do banco (dados de clientes — nunca versionar)
+/backups/
