@@ -1,12 +1,12 @@
 function Skeleton({ className }: { className?: string }) {
-  return <div className={`animate-pulse rounded-xl bg-white/5 ${className ?? ""}`} />;
+  return <div className={`skeleton rounded-xl ${className ?? ""}`} />;
 }
 
 export default function TripLoading() {
   return (
     <div className="space-y-5">
       {/* Trip header */}
-      <div className="rounded-2xl border border-white/6 p-5 space-y-3" style={{ background: "rgba(255,255,255,0.03)" }}>
+      <div className="rounded-2xl border border-slate-200 p-5 space-y-3" style={{ background: "#ffffff" }}>
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2 flex-1">
             <Skeleton className="h-7 w-2/3" />
@@ -35,7 +35,7 @@ export default function TripLoading() {
       {/* Content area */}
       <div className="space-y-3">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="rounded-2xl border border-white/6 p-4" style={{ background: "rgba(255,255,255,0.03)" }}>
+          <div key={i} className="rounded-2xl border border-slate-200 p-4" style={{ background: "#ffffff" }}>
             <div className="flex items-center gap-3 mb-3">
               <Skeleton className="h-8 w-8 rounded-lg shrink-0" />
               <Skeleton className="h-4 w-1/3" />

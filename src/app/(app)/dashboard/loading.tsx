@@ -1,5 +1,5 @@
 function Skeleton({ className }: { className?: string }) {
-  return <div className={`animate-pulse rounded-xl bg-white/5 ${className ?? ""}`} />;
+  return <div className={`skeleton rounded-xl ${className ?? ""}`} />;
 }
 
 export default function DashboardLoading() {
@@ -20,7 +20,7 @@ export default function DashboardLoading() {
       {/* Trip cards grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="rounded-2xl border border-white/6 overflow-hidden" style={{ background: "rgba(255,255,255,0.03)" }}>
+          <div key={i} className="rounded-2xl border border-slate-200 overflow-hidden" style={{ background: "#ffffff" }}>
             <Skeleton className="h-32 w-full rounded-none" />
             <div className="p-4 space-y-3">
               <Skeleton className="h-5 w-3/4" />

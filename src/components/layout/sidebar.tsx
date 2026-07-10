@@ -96,7 +96,7 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
                 isActive
                   ? "text-white bg-white/8"
-                  : "text-slate-500 hover:text-slate-200 hover:bg-white/5"
+                  : "text-slate-400 hover:text-white hover:bg-white/5"
               )}
             >
               {isActive && (
@@ -106,7 +106,7 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
                 "w-6 h-6 rounded-md flex items-center justify-center shrink-0",
                 isActive ? "bg-primary-600/30" : "bg-white/4"
               )}>
-                <item.icon className={cn("h-3.5 w-3.5", isActive ? "text-primary-400" : "text-slate-600")} />
+                <item.icon className={cn("h-3.5 w-3.5", isActive ? "text-primary-400" : "text-slate-400")} />
               </div>
               <span className={isActive ? "text-white" : ""}>{item.label}</span>
               {isActive && <div className="ml-auto w-1 h-1 rounded-full bg-primary-400" />}
@@ -162,7 +162,7 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
 
           {/* Language selector — compact row */}
           <div className="flex items-center gap-1.5">
-            <Globe className="h-3 w-3 text-slate-700 shrink-0" />
+            <Globe className="h-3 w-3 text-slate-500 shrink-0" />
             <div className="flex gap-1 flex-1">
               {LANGS.map((l) => (
                 <button
@@ -173,7 +173,7 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
                     "flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all",
                     lang === l.code
                       ? "bg-primary-600/20 text-primary-300 border border-primary-500/30"
-                      : "text-slate-600 hover:text-slate-300 hover:bg-white/5 border border-transparent"
+                      : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent"
                   )}
                 >
                   <span>{l.flag}</span>
@@ -189,7 +189,7 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
               <a
                 href={`mailto:${SITE_CONFIG.admin.email}`}
                 title={SITE_CONFIG.admin.email}
-                className="w-7 h-7 flex items-center justify-center rounded-md text-slate-700 hover:text-primary-400 hover:bg-white/5 transition-all"
+                className="w-7 h-7 flex items-center justify-center rounded-md text-slate-500 hover:text-primary-400 hover:bg-white/5 transition-all"
               >
                 <Mail className="h-3.5 w-3.5" />
               </a>
@@ -198,7 +198,7 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Instagram"
-                className="w-7 h-7 flex items-center justify-center rounded-md text-slate-700 hover:text-pink-400 hover:bg-white/5 transition-all"
+                className="w-7 h-7 flex items-center justify-center rounded-md text-slate-500 hover:text-pink-400 hover:bg-white/5 transition-all"
               >
                 <Instagram className="h-3.5 w-3.5" />
               </a>
@@ -207,7 +207,7 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
                 target="_blank"
                 rel="noopener noreferrer"
                 title="WhatsApp"
-                className="w-7 h-7 flex items-center justify-center rounded-md text-slate-700 hover:text-green-400 hover:bg-white/5 transition-all"
+                className="w-7 h-7 flex items-center justify-center rounded-md text-slate-500 hover:text-green-400 hover:bg-white/5 transition-all"
               >
                 <MessageCircle className="h-3.5 w-3.5" />
               </a>
@@ -216,14 +216,14 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
             <Link
               href="/privacy"
               title={t.sidebar.privacyPolicy}
-              className="w-7 h-7 flex items-center justify-center rounded-md text-slate-700 hover:text-slate-400 hover:bg-white/5 transition-all"
+              className="w-7 h-7 flex items-center justify-center rounded-md text-slate-500 hover:text-slate-400 hover:bg-white/5 transition-all"
             >
               <Lock className="h-3.5 w-3.5" />
             </Link>
           </div>
 
           {/* Copyright */}
-          <p className="text-[10px] text-slate-500 leading-snug">
+          <p className="text-[10px] text-slate-400 leading-snug">
             © {SITE_CONFIG.copyright.year}{" "}
             <span className="text-slate-300 font-semibold">{SITE_CONFIG.copyright.owner}</span>
             {" · "}{SITE_CONFIG.copyright.text}

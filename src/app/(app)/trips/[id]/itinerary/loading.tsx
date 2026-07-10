@@ -1,5 +1,5 @@
 function Skeleton({ className }: { className?: string }) {
-  return <div className={`animate-pulse rounded-xl bg-white/5 ${className ?? ""}`} />;
+  return <div className={`skeleton rounded-xl ${className ?? ""}`} />;
 }
 
 export default function ItineraryLoading() {
@@ -23,9 +23,9 @@ export default function ItineraryLoading() {
           </div>
           {/* Activity cards */}
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="rounded-2xl border border-white/6 p-4 flex items-center gap-3"
-              style={{ background: "rgba(255,255,255,0.03)" }}>
-              <div className="w-1 h-12 rounded-full bg-white/10 shrink-0" />
+            <div key={i} className="rounded-2xl border border-slate-200 p-4 flex items-center gap-3"
+              style={{ background: "#ffffff" }}>
+              <div className="w-1 h-12 rounded-full bg-slate-200 shrink-0" />
               <Skeleton className="h-8 w-8 rounded-lg shrink-0" />
               <div className="flex-1 space-y-1.5">
                 <Skeleton className="h-4 w-1/2" />

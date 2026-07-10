@@ -1,5 +1,5 @@
 function Skeleton({ className }: { className?: string }) {
-  return <div className={`animate-pulse rounded-xl bg-white/5 ${className ?? ""}`} />;
+  return <div className={`skeleton rounded-xl ${className ?? ""}`} />;
 }
 
 export default function BudgetLoading() {
@@ -11,7 +11,7 @@ export default function BudgetLoading() {
       </div>
 
       {/* Summary card */}
-      <div className="rounded-2xl border border-white/6 p-5 space-y-4" style={{ background: "rgba(255,255,255,0.03)" }}>
+      <div className="rounded-2xl border border-slate-200 p-5 space-y-4" style={{ background: "#ffffff" }}>
         <div className="flex justify-between items-start">
           <div className="space-y-2">
             <Skeleton className="h-4 w-28" />
@@ -40,8 +40,8 @@ export default function BudgetLoading() {
       {/* Expense list */}
       <div className="space-y-2">
         {[...Array(5)].map((_, i) => (
-          <div key={i} className="rounded-xl border border-white/6 p-3.5 flex items-center gap-3"
-            style={{ background: "rgba(255,255,255,0.03)" }}>
+          <div key={i} className="rounded-xl border border-slate-200 p-3.5 flex items-center gap-3"
+            style={{ background: "#ffffff" }}>
             <Skeleton className="w-1 h-8 rounded-full shrink-0" />
             <div className="flex-1 space-y-1.5">
               <Skeleton className="h-3.5 w-1/2" />
