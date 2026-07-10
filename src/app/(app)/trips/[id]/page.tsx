@@ -11,10 +11,8 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import WeatherWidget from "@/components/trips/weather-widget";
 import ImmigrationAlerts from "@/components/trips/immigration-alerts";
 import ShareRouteButton from "@/components/trips/share-route-button";
-import DestinationClocks from "@/components/trips/destination-clocks";
 import TripPublicShare from "@/components/trips/trip-public-share";
 import TripCollaboration from "@/components/trips/trip-collaboration";
 
@@ -280,8 +278,6 @@ export default async function TripOverviewPage({
         </div>
       )}
 
-      <DestinationClocks destination={trip.destination} />
-      <WeatherWidget destination={trip.destination} />
       <ImmigrationAlerts destination={trip.destination} />
       <TripPublicShare tripId={id} initialToken={trip.shareToken ?? null} />
       <TripCollaboration tripId={id} />
