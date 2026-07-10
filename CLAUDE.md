@@ -158,6 +158,7 @@ Registered routes:
 - `/trips` — GET, POST
 - `/user/export` — GET
 - `/user/group-balances` — GET
+- `/user/plan` — GET
 - `/user` — DELETE, GET, PUT
 
 ### Pages
