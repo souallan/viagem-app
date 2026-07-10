@@ -4,16 +4,19 @@ import { useEffect, useState } from "react";
 import {
   Activity, Database, CheckCircle2, AlertCircle, ExternalLink,
   BarChart3, Search, Server, Bug, Mail, Brain, Users, Plane,
-  TrendingUp, RefreshCw, Clock,
+  TrendingUp, RefreshCw, Clock, CreditCard, Image as ImageIcon, Archive,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Health {
   db: { ok: boolean; latencyMs: number };
-  totals: { users: number; trips: number };
+  totals: { users: number; trips: number; premium: number };
   recent: { newUsers24h: number; newUsers7d: number; newTrips7d: number };
-  env: { ga4Configured: boolean; sentryConfigured: boolean; resendConfigured: boolean; anthropicConfigured: boolean };
+  stripe: { configured: boolean; ok: boolean; mode: string | null; activeSubscriptions: number; mrrCents: number };
+  env: { ga4Configured: boolean; sentryConfigured: boolean; resendConfigured: boolean; anthropicConfigured: boolean; cloudinaryConfigured: boolean };
 }
+
+const fmtBRL = (v: number) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
 
 function StatusDot({ ok }: { ok: boolean }) {
   return (
@@ -91,9 +94,9 @@ export default function MonitoringPage() {
             <div className="w-8 h-8 rounded-lg bg-teal-600/20 flex items-center justify-center">
               <Activity className="h-4 w-4 text-teal-400" />
             </div>
-            Monitoramento
+            Integrações & Saúde
           </h1>
-          <p className="text-slate-500 text-sm mt-1">Saúde do sistema e ferramentas externas de analytics</p>
+          <p className="text-slate-500 text-sm mt-1">Status ao vivo de cada ferramenta usada no app — banco, pagamentos, e-mail, mídia e analytics</p>
         </div>
         <button
           onClick={load}
@@ -166,16 +169,60 @@ export default function MonitoringPage() {
         </p>
       </div>
 
+      {/* ── Pagamentos (Stripe) ── */}
+      <div>
+        <p className="text-xs font-bold text-slate-600 uppercase tracking-widest mb-3">Pagamentos — Stripe</p>
+        <Card>
+          {!health?.stripe?.configured ? (
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-4 w-4 text-slate-500 shrink-0" />
+              <p className="text-sm text-slate-400">Stripe não configurado. Defina <code className="text-slate-300 bg-white/5 px-1 rounded">STRIPE_SECRET_KEY</code> no Railway.</p>
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+              <div className="flex items-center gap-2">
+                {health.stripe.ok
+                  ? <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                  : <AlertCircle className="h-4 w-4 text-red-400 shrink-0" />}
+                <span className="text-sm font-bold text-white">{health.stripe.ok ? "Operacional" : "Chave inválida"}</span>
+                <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full", health.stripe.mode === "live" ? "bg-emerald-600/20 text-emerald-300" : "bg-amber-600/20 text-amber-300")}>
+                  {health.stripe.mode === "live" ? "PRODUÇÃO" : "TESTE"}
+                </span>
+              </div>
+              <div>
+                <p className="text-xl font-black text-white leading-none">{health.stripe.activeSubscriptions}</p>
+                <p className="text-[10px] text-slate-600 mt-0.5">assinaturas ativas</p>
+              </div>
+              <div>
+                <p className="text-xl font-black text-emerald-400 leading-none">{fmtBRL(health.stripe.mrrCents / 100)}</p>
+                <p className="text-[10px] text-slate-600 mt-0.5">MRR (receita recorrente/mês)</p>
+              </div>
+              <div>
+                <p className="text-xl font-black text-white leading-none">{health.totals.premium}</p>
+                <p className="text-[10px] text-slate-600 mt-0.5">usuários Premium</p>
+              </div>
+              <a href="https://dashboard.stripe.com" target="_blank" rel="noopener noreferrer"
+                className="ml-auto flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 transition-colors">
+                Abrir Stripe <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
+          )}
+        </Card>
+      </div>
+
       {/* ── Integrações configuradas ── */}
       {health && (
         <Card>
           <p className="text-xs font-bold text-slate-600 uppercase tracking-widest mb-4">Status das integrações</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: "Google Analytics 4", ok: health.env.ga4Configured, note: "Defina NEXT_PUBLIC_GA_ID no Railway" },
-              { label: "Sentry (erros)",     ok: health.env.sentryConfigured, note: "Defina NEXT_PUBLIC_SENTRY_DSN" },
-              { label: "Resend (emails)",    ok: health.env.resendConfigured, note: "Defina RESEND_API_KEY" },
-              { label: "Claude AI",          ok: health.env.anthropicConfigured, note: "Defina ANTHROPIC_API_KEY" },
+              { label: "Banco de dados (Neon)", ok: health.db.ok, note: "Sem conexão com o banco!" },
+              { label: "Stripe (pagamentos)",   ok: health.stripe?.configured && health.stripe?.ok, note: "Defina STRIPE_SECRET_KEY no Railway" },
+              { label: "Cloudinary (uploads)",  ok: health.env.cloudinaryConfigured, note: "Defina NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME e _UPLOAD_PRESET" },
+              { label: "Resend (e-mail/OTP)",   ok: health.env.resendConfigured, note: "Login por e-mail indisponível — defina RESEND_API_KEY" },
+              { label: "Google Analytics 4",    ok: health.env.ga4Configured, note: "Defina NEXT_PUBLIC_GA_ID no Railway" },
+              { label: "Sentry (erros)",        ok: health.env.sentryConfigured, note: "Defina NEXT_PUBLIC_SENTRY_DSN" },
+              { label: "Claude AI (sugestões)", ok: health.env.anthropicConfigured, note: "Defina ANTHROPIC_API_KEY" },
             ].map(({ label, ok, note }) => (
               <div key={label} className="flex items-start gap-2.5 p-3 rounded-xl border border-white/5 bg-white/2">
                 {ok
@@ -244,6 +291,40 @@ export default function MonitoringPage() {
             configured={health?.env.anthropicConfigured}
             configNote="Não configurado. Adicione ANTHROPIC_API_KEY para ativar as sugestões de IA."
             color="bg-amber-600/60"
+          />
+          <ToolCard
+            icon={CreditCard}
+            name="Stripe"
+            description="Pagamentos e assinaturas Premium: checkout, faturas, reembolsos, MRR e clientes."
+            href="https://dashboard.stripe.com"
+            configured={health?.stripe?.configured && health?.stripe?.ok}
+            configNote="Não configurado. Defina STRIPE_SECRET_KEY no Railway."
+            color="bg-indigo-600/60"
+          />
+          <ToolCard
+            icon={ImageIcon}
+            name="Cloudinary"
+            description="Upload e hospedagem de fotos (documentos, hospedagem, atividades). Uso e transformações."
+            href="https://cloudinary.com/console"
+            configured={health?.env.cloudinaryConfigured}
+            configNote="Não configurado. Defina NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME e _UPLOAD_PRESET."
+            color="bg-cyan-600/60"
+          />
+          <ToolCard
+            icon={Database}
+            name="Neon (banco)"
+            description="Postgres gerenciado: PITR 7 dias, uso de compute, branches e métricas do banco."
+            href="https://console.neon.tech"
+            configured={health?.db.ok}
+            configNote="Sem conexão com o banco."
+            color="bg-emerald-600/60"
+          />
+          <ToolCard
+            icon={Archive}
+            name="Backup (Cloudflare R2)"
+            description="Backup diário do banco via GitHub Actions (retenção 30 dias). Confira as execuções."
+            href="https://github.com/souallan/viagem-app/actions"
+            color="bg-orange-600/60"
           />
         </div>
       </div>
