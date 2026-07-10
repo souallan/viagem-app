@@ -26,7 +26,7 @@
 |---|---|---|
 | ✅ | **4 artigos do blog davam 404** (sitemap anunciava 12, existiam 8) — adicionados à página de detalhe | Nova |
 | ✅ | **FAB colidia com a bottom nav** — reposicionado (`bottom-safe-nav`) | Aria |
-| ⬜ | **Classes Tailwind inválidas** `h-4.5`/`h-2.5`/`w-4.5` em ~23 arquivos (ignoradas silenciosamente → tamanhos errados) | Aria |
+| ✅ | **Classes Tailwind inválidas** `h-4.5`/`w-4.5` (não existem na escala) → `h-[18px]`/`w-[18px]` em 13 ícones/9 arquivos | Aria |
 | ⬜ | Premium é um `alert()` placeholder (sem checkout real) | Nova |
 
 ---
@@ -103,8 +103,8 @@ Foco: menos cliques até o objetivo. Economias mapeadas: criar viagem **6→3**,
 | ⬜ | P1 | **Quick-add global** de itens dentro da viagem (sem caçar a aba) | 6 → 4 |
 | ⬜ | P1 | **Criar viagem 6→3**: auto-adicionar destino ao selecionar sugestão + remover bloqueio de validação | −3 toques |
 | ⬜ | P2 | Botão "Adicionar" no topo → mover para alcance do polegar (FAB/rodapé) | Fitts |
-| ⬜ | P2 | `data` default = hoje em "adicionar gasto" | −1 toque |
-| ⬜ | — | Editar/excluir hospedagem em `opacity-0 group-hover` → visível no toque *(também Aria)* | — |
+| ✅ | P2 | `data` default = hoje em "adicionar gasto" | −1 toque |
+| ✅ | — | Ações editar/excluir escondidas em `group-hover` → visíveis no toque (9 componentes) *(também Aria)* | — |
 | ⬜ | Backlog | Sitemap proposto + onboarding de ativação *(toca a Nova)* | — |
 
 ## 📱 Fases do app mobile — `docs/mobile-app/PROGRESSO.md`
