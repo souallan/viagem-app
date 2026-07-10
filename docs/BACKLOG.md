@@ -27,7 +27,8 @@
 | ✅ | **4 artigos do blog davam 404** (sitemap anunciava 12, existiam 8) — adicionados à página de detalhe | Nova |
 | ✅ | **FAB colidia com a bottom nav** — reposicionado (`bottom-safe-nav`) | Aria |
 | ✅ | **Classes Tailwind inválidas** `h-4.5`/`w-4.5` (não existem na escala) → `h-[18px]`/`w-[18px]` em 13 ícones/9 arquivos | Aria |
-| ⬜ | Premium é um `alert()` placeholder (sem checkout real) | Nova |
+| ✅ | Premium `alert()` → checkout Stripe real (`/api/stripe/checkout` + `/webhook` + `/portal`); falta só as chaves da conta Stripe | Nova |
+| ✅ | Deploys falhando: `capacitor.config.ts` importava `@capacitor/cli` (devDep) e quebrava o build de produção → excluído do tsconfig | build |
 
 ---
 
@@ -91,7 +92,7 @@
 | ✅ | **Mesma base mobile↔web** | Já atendido: Capacitar Modelo A usa o mesmo backend/DB; offline é cache (online-first). Só abrir tarefa se quiser **edição offline com sync** |
 | 🟢 | **Mapa interativo + rota** (`/map`) | ✅ transportes/aeroportos no mapa, ✅ busca por texto, ✅ rota por marcador (Google Maps/transit/Waze), ✅ "me localizar" (geolocation). Falta só: filtro por dia do itinerário |
 | ✅ | **Otimizar trajeto por distância** | `src/lib/route-opt.ts` (nearest-neighbor + 2-opt); botão "Otimizar trajeto" no mapa reordena o dia pela menor distância + mostra km/dia na legenda |
-| 🟢 | **Anexos por item (foto/upload)** | **Código pronto** em **Documentos + Hospedagem + Atividades** (`attachmentUrl`): `PhotoUpload` (câmera no celular + arquivo na web, upload unsigned). **Ativar:** criar *unsigned upload preset* no Cloudinary e pôr `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` + `NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET` no Railway |
+| ✅ | **Anexos por item (foto/upload)** | **ATIVO em produção** (2026-07-09): `PhotoUpload` em Documentos + Hospedagem + Atividades. Cloudinary `hjscxdv0` + preset `roteiroapp_unsigned` (unsigned) setados no Railway e "assados" no build. Upload testado ok |
 | ⬜ | **Guia de transporte público** | Deep-link Google Maps transit + Citymapper/Moovit por cidade (não construir do zero) |
 
 ## 🧭 UX (Théo) — `docs/auditorias/ux-2026-07-08.md`
