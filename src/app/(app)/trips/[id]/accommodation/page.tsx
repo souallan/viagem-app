@@ -202,7 +202,7 @@ function AccommodationCalendar({
 
       {/* ── Day-of-week headers ── */}
       <div className="overflow-x-auto">
-      <div className="min-w-[280px]">
+      <div className="min-w-[560px]">
       <div className="grid grid-cols-7 border-b border-sky-100/80 bg-white/50">
         {Array.from({ length: 7 }, (_, i) =>
           new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(2024, 0, 7 + i))
@@ -226,7 +226,7 @@ function AccommodationCalendar({
                   <div
                     key={di}
                     className={cn(
-                      "h-14 sm:h-16 border-r border-sky-100/50 last:border-r-0",
+                      "h-16 sm:h-20 border-r border-sky-100/50 last:border-r-0",
                       di === 0 || di === 6 ? "bg-rose-50/30" : "bg-white/20"
                     )}
                   />
@@ -242,7 +242,7 @@ function AccommodationCalendar({
                 <div
                   key={di}
                   className={cn(
-                    "h-14 sm:h-16 border-r border-sky-100/50 last:border-r-0 flex flex-col min-w-0",
+                    "h-16 sm:h-20 border-r border-sky-100/50 last:border-r-0 flex flex-col min-w-0",
                     isWeekend ? "bg-rose-50/20" : "bg-white/30",
                     accoms.length > 0 && "bg-sky-50/40"
                   )}
@@ -250,7 +250,7 @@ function AccommodationCalendar({
                   {/* Date number */}
                   <div className="flex justify-end px-1 pt-1 pb-0.5 shrink-0">
                     <span className={cn(
-                      "w-5 h-5 text-[10px] font-bold flex items-center justify-center rounded-full transition-all",
+                      "w-6 h-6 text-[11px] font-bold flex items-center justify-center rounded-full transition-all",
                       isToday
                         ? "bg-gradient-to-br from-primary-500 to-violet-600 text-white shadow-sm"
                         : isWeekend ? "text-rose-400/70" : "text-gray-500"
@@ -270,7 +270,7 @@ function AccommodationCalendar({
                           key={accom.id + idx}
                           onClick={() => onSelect(accom)}
                           title={accom.name}
-                          className="h-[16px] sm:h-[18px] flex items-center text-white text-[8px] font-bold overflow-hidden transition-all hover:brightness-110 active:opacity-70 shadow-sm"
+                          className="h-[18px] sm:h-[20px] flex items-center text-white text-[10px] font-bold overflow-hidden transition-all hover:brightness-110 active:opacity-70 shadow-sm"
                           style={{
                             background: `linear-gradient(90deg, ${c1}, ${c2})`,
                             marginLeft:  isStart ? "4px" : "0",
@@ -285,7 +285,7 @@ function AccommodationCalendar({
                       );
                     })}
                     {accoms.length > 2 && (
-                      <span className="text-[8px] text-primary-500 font-bold px-1 leading-none">
+                      <span className="text-[10px] text-primary-500 font-bold px-1 leading-none">
                         +{accoms.length - 2}
                       </span>
                     )}
