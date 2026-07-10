@@ -6,7 +6,7 @@ import {
   User, Mail, Lock, Camera, Save, LogOut,
   Plane, BookOpen, Route, CheckCircle2, AlertCircle, Pencil,
   Download, Trash2, ShieldAlert, Globe, DollarSign, FileText,
-  Share2, Copy, Check, Users,
+  Share2, Copy, Check, Users, Crown, Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,9 @@ interface UserProfile {
   currency: string | null;
   bio: string | null;
   createdAt: string;
+  plan?: string;
+  isPremium?: boolean;
+  planExpiresAt?: string | null;
   stats: {
     trips: number;
     experiences: number;
@@ -86,6 +89,25 @@ export default function ProfilePage() {
   const [deleting, setDeleting] = useState(false);
   const [deleteMsg, setDeleteMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
   const [exportLoading, setExportLoading] = useState(false);
+
+  // Assinatura (portal do Stripe)
+  const [portalLoading, setPortalLoading] = useState(false);
+  async function openPortal() {
+    setPortalLoading(true);
+    try {
+      const res = await fetch("/api/stripe/portal", { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      alert(data.error || "Não foi possível abrir o portal de assinatura.");
+    } catch {
+      alert("Não foi possível abrir o portal de assinatura.");
+    } finally {
+      setPortalLoading(false);
+    }
+  }
 
   // Saldos de grupo (quanto devo / me devem por viagem)
   const [groupBalances, setGroupBalances] = useState<{ tripId: string; title: string; currency: string; net: number }[]>([]);
@@ -226,7 +248,14 @@ export default function ProfilePage() {
             </button>
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="text-xl font-black text-gray-900 truncate">{user.name ?? tp.noName}</h1>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-xl font-black text-gray-900 truncate">{user.name ?? tp.noName}</h1>
+              {user.isPremium && (
+                <span className="shrink-0 inline-flex items-center gap-1 rounded-full border border-amber-300 bg-gradient-to-r from-amber-100 to-yellow-50 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                  <Crown className="h-3 w-3" /> PREMIUM
+                </span>
+              )}
+            </div>
             <p className="text-sm text-gray-500 mt-0.5 flex items-center gap-1.5">
               <Mail className="h-3.5 w-3.5 shrink-0" />
               {user.email}
@@ -244,6 +273,24 @@ export default function ProfilePage() {
                 </span>
               )}
               <span className="text-xs text-gray-400">{tp.memberSince} {joined}</span>
+              {user.isPremium ? (
+                <button
+                  onClick={openPortal}
+                  disabled={portalLoading}
+                  className="flex items-center gap-1 text-xs font-semibold text-amber-700 hover:text-amber-800 disabled:opacity-60"
+                >
+                  <Crown className="h-3 w-3" />
+                  {portalLoading ? "Abrindo…" : "Gerenciar assinatura"}
+                </button>
+              ) : (
+                <Link
+                  href="/pricing"
+                  className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-700"
+                >
+                  <Sparkles className="h-3 w-3" />
+                  Seja Premium
+                </Link>
+              )}
             </div>
           </div>
           <button

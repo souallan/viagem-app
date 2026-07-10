@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { auditLog } from "@/lib/audit";
 import { stripHtml } from "@/lib/sanitize";
+import { isPremium } from "@/lib/plans";
 
 export async function GET() {
   const session = await auth();
@@ -11,7 +12,7 @@ export async function GET() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, name: true, email: true, image: true, createdAt: true, country: true, currency: true, bio: true },
+    select: { id: true, name: true, email: true, image: true, createdAt: true, country: true, currency: true, bio: true, plan: true, planExpiresAt: true },
   });
   if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
@@ -21,7 +22,7 @@ export async function GET() {
     prisma.communityRoute.count({ where: { userId: session.user.id } }),
   ]);
 
-  return NextResponse.json({ ...user, stats: { trips, experiences, routes } });
+  return NextResponse.json({ ...user, isPremium: isPremium(user.plan, user.planExpiresAt), stats: { trips, experiences, routes } });
 }
 
 const ALLOWED_IMAGE_DOMAINS = ["images.unsplash.com", "res.cloudinary.com", "lh3.googleusercontent.com", "avatars.githubusercontent.com"];

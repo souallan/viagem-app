@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/language-context";
 import { SITE_CONFIG } from "@/lib/site-config";
 import { NotificationBell } from "./notification-bell";
+import { PremiumBadge } from "./premium-badge";
 import { signOut } from "next-auth/react";
 import type { Lang } from "@/lib/i18n";
 
@@ -138,8 +139,13 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
       {/* ── Bottom area ── */}
       <div className="relative z-10 border-t border-white/5 mt-auto">
 
-        {/* Logout */}
+        {/* Plan status */}
         <div className="px-3 pt-3">
+          <PremiumBadge />
+        </div>
+
+        {/* Logout */}
+        <div className="px-3 pt-2">
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
             className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-500 hover:text-red-400 hover:bg-red-500/8 border border-transparent hover:border-red-500/15 transition-all group"
