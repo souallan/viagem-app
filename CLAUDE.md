@@ -136,6 +136,9 @@ Registered routes:
 - `/referral` — GET
 - `/register` — POST
 - `/share/[token]` — GET
+- `/stripe/checkout` — POST
+- `/stripe/portal` — POST
+- `/stripe/webhook` — POST
 - `/tips/community` — GET
 - `/tips/external` — GET
 - `/trips/[id]/accommodations` — DELETE, GET, POST, PUT
