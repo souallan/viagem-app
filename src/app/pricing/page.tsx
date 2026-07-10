@@ -30,6 +30,33 @@ const PREMIUM_FEATURES = [
 
 export default function PricingPage() {
   const [annual, setAnnual] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  async function handleUpgrade() {
+    trackEvent("upgrade_click", { plan: annual ? "annual" : "monthly" });
+    setLoading(true);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: annual ? "annual" : "monthly" }),
+      });
+      if (res.status === 401) {
+        window.location.href = "/login?callbackUrl=/pricing";
+        return;
+      }
+      const data = await res.json().catch(() => ({}));
+      if (data.url) {
+        window.location.href = data.url;
+        return;
+      }
+      alert(data.error || "Pagamentos chegando em breve. Tente novamente mais tarde.");
+    } catch {
+      alert("Não foi possível iniciar o pagamento. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -143,12 +170,13 @@ export default function PricingPage() {
             </div>
 
             <button
-              className="w-full text-center py-3 px-6 rounded-xl font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-lg mb-8"
+              disabled={loading}
+              className="w-full text-center py-3 px-6 rounded-xl font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-lg mb-8 disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0"
               style={{ background: "linear-gradient(135deg, #1A5FCC, #2570E8)" }}
-              onClick={() => { trackEvent("upgrade_click", { plan: annual ? "annual" : "monthly" }); alert("Em breve! Pagamentos via Stripe chegando."); }}
+              onClick={handleUpgrade}
             >
               <Zap className="inline h-4 w-4 mr-2" />
-              Assinar Premium
+              {loading ? "Redirecionando…" : "Assinar Premium"}
             </button>
 
             <ul className="space-y-3">
