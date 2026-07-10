@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -35,7 +36,7 @@ export function TripCard({ trip }: { trip: Trip }) {
   async function handleDelete(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    if (!confirm(t.tripCard.deleteConfirm.replace("{title}", trip.title))) return;
+    if (!(await confirmDialog(t.tripCard.deleteConfirm.replace("{title}", trip.title)))) return;
     setDeleting(true);
     await fetch(`/api/trips/${trip.id}`, { method: "DELETE" });
     router.refresh();

@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useState, useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
@@ -267,7 +268,7 @@ export default function DocumentsPage() {
   }
 
   async function handleDelete(docId: string) {
-    if (!confirm(t.documents.confirmDelete)) return;
+    if (!(await confirmDialog(t.documents.confirmDelete))) return;
     await fetch(`/api/trips/${id}/documents`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },

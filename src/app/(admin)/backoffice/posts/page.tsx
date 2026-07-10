@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useState, useEffect } from "react";
 import {
@@ -118,7 +119,7 @@ export default function PostsPage() {
   }
 
   async function handleDelete(id: string, title: string) {
-    if (!confirm(`Deletar "${title}"?`)) return;
+    if (!(await confirmDialog(`Deletar "${title}"?`))) return;
     await fetch("/api/admin/posts", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },

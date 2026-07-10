@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -68,7 +69,7 @@ export default function ExperienceDetailPage() {
   }, [id]);
 
   async function handleDelete() {
-    if (!confirm("Excluir este relato? Esta ação não pode ser desfeita.")) return;
+    if (!(await confirmDialog("Excluir este relato? Esta ação não pode ser desfeita."))) return;
     await fetch(`/api/experiences/${id}`, { method: "DELETE" });
     router.push("/experiences");
   }

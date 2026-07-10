@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useState } from "react";
 import { Link2, Copy, CheckCheck, Trash2, Globe } from "lucide-react";
@@ -24,7 +25,7 @@ export default function TripPublicShare({ tripId, initialToken }: { tripId: stri
   }
 
   async function revoke() {
-    if (!confirm("Desativar o link público? Quem tiver o link não poderá mais acessar.")) return;
+    if (!(await confirmDialog("Desativar o link público? Quem tiver o link não poderá mais acessar."))) return;
     setLoading(true);
     await fetch(`/api/trips/${tripId}/share`, { method: "DELETE" });
     setToken(null);

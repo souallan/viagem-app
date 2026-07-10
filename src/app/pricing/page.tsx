@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/lib/toast";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -50,9 +51,9 @@ export default function PricingPage() {
         window.location.href = data.url;
         return;
       }
-      alert(data.error || "Pagamentos chegando em breve. Tente novamente mais tarde.");
+      toast(data.error || "Pagamentos chegando em breve. Tente novamente mais tarde.");
     } catch {
-      alert("Não foi possível iniciar o pagamento. Tente novamente.");
+      toast("Não foi possível iniciar o pagamento. Tente novamente.");
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import { confirmDialog } from "@/lib/confirm";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Plus, Trash2, Pencil, ExternalLink, ArrowRight, Users, X, Check } from "lucide-react";
@@ -287,7 +288,7 @@ export default function BudgetPage() {
   }
 
   async function handleDelete(expenseId: string) {
-    if (!confirm(t.budget.confirmDelete)) return;
+    if (!(await confirmDialog(t.budget.confirmDelete))) return;
     await fetch(`/api/trips/${id}/expenses`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },

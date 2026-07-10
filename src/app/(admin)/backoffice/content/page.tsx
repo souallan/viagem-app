@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useEffect, useState } from "react";
 import {
@@ -61,7 +62,7 @@ export default function AdminContentPage() {
   useEffect(() => { load(); }, []);
 
   async function deleteItem(type: string, id: string, label: string) {
-    if (!confirm(`Excluir "${label}"? Esta ação é irreversível.`)) return;
+    if (!(await confirmDialog(`Excluir "${label}"? Esta ação é irreversível.`))) return;
     setDeletingId(id);
     const res = await fetch("/api/admin/content", {
       method: "DELETE",

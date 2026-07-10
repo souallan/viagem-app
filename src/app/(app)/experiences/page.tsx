@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
@@ -271,7 +272,7 @@ export default function ExperiencesPage() {
   useEffect(() => { load(); }, []);
 
   async function handleDelete(id: string) {
-    if (!confirm("Excluir esta experiência?")) return;
+    if (!(await confirmDialog("Excluir esta experiência?"))) return;
     await fetch(`/api/experiences/${id}`, { method: "DELETE" });
     setExperiences((prev) => prev.filter((e) => e.id !== id));
   }

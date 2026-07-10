@@ -1,4 +1,6 @@
 "use client";
+import { toast } from "@/lib/toast";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useEffect, useState } from "react";
 import {
@@ -48,7 +50,7 @@ export default function AdminUsersPage() {
   }
 
   async function deleteUser(id: string, email: string) {
-    if (!confirm(`Excluir usuário ${email}? Esta ação é irreversível.`)) return;
+    if (!(await confirmDialog(`Excluir usuário ${email}? Esta ação é irreversível.`))) return;
     setDeletingId(id);
     const res = await fetch("/api/admin/users", {
       method: "DELETE",
@@ -59,7 +61,7 @@ export default function AdminUsersPage() {
       setUsers(prev => prev.filter(u => u.id !== id));
     } else {
       const data = await res.json().catch(() => ({}));
-      alert(data.error ?? "Erro ao excluir.");
+      toast(data.error ?? "Erro ao excluir.");
     }
     setDeletingId(null);
   }

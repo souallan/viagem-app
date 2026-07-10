@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
@@ -366,7 +367,7 @@ export default function ComparePage() {
 
   function addSegment() { setSegments(prev => [...prev, emptySegment(crypto.randomUUID())]); }
   function removeSegment(segId: string) { setSegments(prev => prev.filter(s => s.id !== segId)); }
-  function clearAll() { if (!confirm("Limpar todas as cotações?")) return; setSegments([emptySegment(crypto.randomUUID())]); }
+  async function clearAll() { if (!(await confirmDialog("Limpar todas as cotações?"))) return; setSegments([emptySegment(crypto.randomUUID())]); }
 
   return (
     <div className="space-y-6 pb-10">

@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -119,7 +120,7 @@ export default function EditTripPage() {
   }
 
   async function handleDelete() {
-    if (!confirm("Excluir esta viagem? Todos os dados (atividades, despesas, documentos) serão removidos permanentemente.")) return;
+    if (!(await confirmDialog("Excluir esta viagem? Todos os dados (atividades, despesas, documentos) serão removidos permanentemente."))) return;
     setDeleting(true);
     await fetch(`/api/trips/${id}`, { method: "DELETE" });
     router.push("/dashboard");

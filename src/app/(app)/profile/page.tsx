@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/lib/toast";
 
 import { useState, useEffect } from "react";
 import { signOut } from "next-auth/react";
@@ -101,9 +102,9 @@ export default function ProfilePage() {
         window.location.href = data.url;
         return;
       }
-      alert(data.error || "Não foi possível abrir o portal de assinatura.");
+      toast(data.error || "Não foi possível abrir o portal de assinatura.");
     } catch {
-      alert("Não foi possível abrir o portal de assinatura.");
+      toast("Não foi possível abrir o portal de assinatura.");
     } finally {
       setPortalLoading(false);
     }

@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useEffect, useState } from "react";
 import { Mail, Trash2, Download, Search, Users } from "lucide-react";
@@ -29,7 +30,7 @@ export default function AdminNewsletterPage() {
   useEffect(() => { load(); }, []);
 
   async function handleDelete(id: string, email: string) {
-    if (!confirm(`Remover ${email} da newsletter?`)) return;
+    if (!(await confirmDialog(`Remover ${email} da newsletter?`))) return;
     setDeleting(id);
     await fetch("/api/admin/newsletter", {
       method: "DELETE",

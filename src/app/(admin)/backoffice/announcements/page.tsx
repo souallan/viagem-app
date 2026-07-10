@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useState, useEffect } from "react";
 import { Megaphone, Plus, Trash2, RefreshCw, ToggleLeft, ToggleRight } from "lucide-react";
@@ -60,7 +61,7 @@ export default function AnnouncementsPage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Excluir anúncio?")) return;
+    if (!(await confirmDialog("Excluir anúncio?"))) return;
     await fetch("/api/admin/announcements", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },

@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useState, useEffect } from "react";
 import { MessageSquare, Trash2, RefreshCw, Search, Route } from "lucide-react";
@@ -28,7 +29,7 @@ export default function CommentsPage() {
   useEffect(() => { load(); }, []);
 
   async function handleDelete(id: string) {
-    if (!confirm("Excluir este comentário?")) return;
+    if (!(await confirmDialog("Excluir este comentário?"))) return;
     const res = await fetch("/api/admin/comments", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },

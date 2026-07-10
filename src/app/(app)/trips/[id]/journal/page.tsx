@@ -1,4 +1,5 @@
 "use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
@@ -93,7 +94,7 @@ export default function JournalPage() {
   }
 
   async function handleDelete(entryId: string) {
-    if (!confirm("Excluir esta entrada do diário?")) return;
+    if (!(await confirmDialog("Excluir esta entrada do diário?"))) return;
     setEntries(prev => prev.filter(e => e.id !== entryId));
     await fetch(`/api/trips/${id}/journal`, {
       method: "DELETE",

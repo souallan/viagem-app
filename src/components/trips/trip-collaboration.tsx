@@ -1,4 +1,5 @@
 ﻿"use client";
+import { confirmDialog } from "@/lib/confirm";
 
 import { useState, useEffect, useCallback } from "react";
 import { Users, UserPlus, Trash2, Crown, Eye, Pencil } from "lucide-react";
@@ -80,7 +81,7 @@ export default function TripCollaboration({ tripId }: { tripId: string }) {
   }
 
   async function handleRemove(memberId: string) {
-    if (!confirm("Remover este membro da viagem?")) return;
+    if (!(await confirmDialog("Remover este membro da viagem?"))) return;
     await fetch(`/api/trips/${tripId}/members`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },

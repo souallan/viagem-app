@@ -1,4 +1,6 @@
 "use client";
+import { toast } from "@/lib/toast";
+import { confirmDialog } from "@/lib/confirm";
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
@@ -724,7 +726,7 @@ export default function ItineraryPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (form.startTime && form.endTime && form.endTime < form.startTime) {
-      alert(t.itinerary.timeError);
+      toast(t.itinerary.timeError);
       return;
     }
     setLoading(true);
@@ -744,7 +746,7 @@ export default function ItineraryPage() {
   }
 
   async function handleDelete(activityId: string) {
-    if (!confirm(t.common.delete + "?")) return;
+    if (!(await confirmDialog(t.common.delete + "?"))) return;
     await fetch(`/api/trips/${id}/activities`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
