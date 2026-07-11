@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Shield, ArrowLeft, Mail, Plane } from "lucide-react";
 import { SITE_CONFIG } from "@/lib/site-config";
 
-const LAST_UPDATED = "25 de maio de 2026";
+const LAST_UPDATED = "10 de julho de 2026";
 const CONTROLLER_EMAIL = SITE_CONFIG.admin.email;
 
 export default function PublicPrivacyPage() {
@@ -39,7 +39,7 @@ export default function PublicPrivacyPage() {
           </div>
           <h1 className="text-2xl font-black text-gray-900">Política de Privacidade</h1>
         </div>
-        <p className="text-sm text-gray-500">Última atualização: {LAST_UPDATED} · Versão 1.0</p>
+        <p className="text-sm text-gray-500">Última atualização: {LAST_UPDATED} · Versão 2.0</p>
       </div>
 
       <div className="space-y-8 text-sm text-gray-700 leading-relaxed">
@@ -72,12 +72,15 @@ export default function PublicPrivacyPage() {
               ["Senha (hash bcrypt)", "Autenticação segura", "Execução de contrato (art. 7º, V)"],
               ["Foto de perfil (URL)", "Personalização da conta", "Consentimento (art. 7º, I)"],
               ["Dados de viagens, roteiros e despesas", "Funcionalidade principal do app", "Execução de contrato (art. 7º, V)"],
+              ["Fotos enviadas (documentos, reservas, atividades)", "Anexar comprovantes às suas viagens", "Consentimento (art. 7º, I)"],
+              ["Dados de assinatura (identificadores de cliente e de assinatura na Stripe, plano contratado)", "Gerenciar o plano Premium", "Execução de contrato (art. 7º, V)"],
               ["Endereço IP (ações admin)", "Segurança e auditoria", "Legítimo interesse (art. 7º, IX)"],
               ["Cookies de sessão (JWT)", "Manter sessão autenticada", "Execução de contrato (art. 7º, V)"],
             ]}
           />
           <p className="mt-3 text-xs text-gray-500">
             Não coletamos dados sensíveis (saúde, biometria, origem racial, etc.) nem realizamos perfilamento para publicidade.
+            <strong> Os dados do seu cartão são processados diretamente pela Stripe e nunca passam pelos nossos servidores</strong> — recebemos apenas identificadores de pagamento e o status da assinatura.
           </p>
         </Section>
 
@@ -93,13 +96,18 @@ export default function PublicPrivacyPage() {
         </Section>
 
         <Section title="4. Compartilhamento de dados">
-          <p>Seus dados podem ser acessados por:</p>
+          <p>Para operar o serviço, contamos com operadores (processadores) de dados selecionados. Cada um acessa apenas o mínimo necessário:</p>
           <ul className="space-y-2 list-disc list-inside mt-2">
-            <li><strong>Provedor de infraestrutura em nuvem:</strong> hospedagem do aplicativo e banco de dados. Dados armazenados com criptografia em repouso e em trânsito.</li>
-            <li><strong>Google Analytics 4 (analytics):</strong> coletamos dados anônimos de uso (páginas visitadas, tempo de sessão, eventos de navegação) para entender como o app é utilizado. Nenhum dado pessoal identificável é transmitido. Baseado no legítimo interesse conforme LGPD art. 7º, IX. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Política de Privacidade do Google</a>.</li>
-            <li><strong>Serviço de e-mail transacional:</strong> seu endereço de e-mail é utilizado exclusivamente para envio de verificação de conta e recuperação de senha. Não utilizado para marketing sem consentimento.</li>
-            <li><strong>Administradores do RoteiroApp:</strong> acesso restrito ao painel de gestão para fins de moderação, suporte e conformidade.</li>
+            <li><strong>Neon (banco de dados):</strong> hospeda seus dados de conta e viagens, com criptografia em trânsito (TLS) e em repouso. Servidores nos EUA.</li>
+            <li><strong>Railway (hospedagem):</strong> executa a aplicação web.</li>
+            <li><strong>Stripe (pagamentos):</strong> processa a assinatura Premium. Os dados do cartão são tratados diretamente pela Stripe (certificada PCI-DSS); não os armazenamos. <a href="https://stripe.com/br/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Privacidade da Stripe</a>.</li>
+            <li><strong>Cloudinary (mídia):</strong> armazena as fotos que você anexa às viagens.</li>
+            <li><strong>Resend (e-mail):</strong> envia o código de login (OTP), a verificação de conta e a redefinição de senha. Não usamos para marketing sem consentimento.</li>
+            <li><strong>Google Analytics 4:</strong> dados anônimos de uso (páginas, sessões, eventos), sem dados identificáveis, com base no legítimo interesse (LGPD art. 7º, IX). <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Política do Google</a>.</li>
+            <li><strong>Sentry (monitoramento):</strong> registra erros técnicos para manter a estabilidade do app.</li>
+            <li><strong>Administradores do RoteiroApp:</strong> acesso restrito ao painel para moderação, suporte e conformidade.</li>
           </ul>
+          <p className="mt-3"><strong>Transferência internacional (LGPD art. 33):</strong> alguns desses provedores processam dados fora do Brasil (ex.: EUA). A transferência ocorre com salvaguardas contratuais e técnicas adequadas, exclusivamente para viabilizar o serviço que você contratou.</p>
           <p className="mt-3 text-xs text-gray-500">Não vendemos, alugamos nem compartilhamos seus dados com anunciantes ou terceiros para fins comerciais.</p>
         </Section>
 
@@ -129,7 +137,8 @@ export default function PublicPrivacyPage() {
             <li>Cabeçalhos de segurança HTTP configurados (proteção contra XSS, clickjacking e injeção de conteúdo)</li>
             <li>Mecanismos de limitação de taxa nas rotas de autenticação para prevenir ataques de força bruta</li>
             <li>Log de auditoria de ações administrativas sensíveis</li>
-            <li>Banco de dados acessível apenas via rede privada, sem exposição direta à internet</li>
+            <li>Banco de dados gerenciado com criptografia em repouso, acesso restrito por credenciais e conexão exclusivamente por TLS</li>
+            <li>Backups automáticos com restauração a um ponto no tempo (proteção contra perda de dados)</li>
           </ul>
         </Section>
 
@@ -154,8 +163,10 @@ export default function PublicPrivacyPage() {
 
         <Section title="8. Retenção de dados">
           <p>
-            Seus dados são mantidos enquanto sua conta estiver ativa. Ao excluir sua conta, todos os dados pessoais
+            Seus dados são mantidos enquanto sua conta estiver ativa. Ao excluir sua conta, seus dados pessoais
             são apagados permanentemente em cascata. Logs de auditoria são retidos por até 90 dias para fins de segurança.
+            Registros de pagamento podem ser mantidos pela Stripe e por nós pelo prazo exigido pela legislação fiscal aplicável,
+            mesmo após o encerramento da conta.
           </p>
         </Section>
 

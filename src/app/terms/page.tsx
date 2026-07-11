@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FileText, ArrowLeft, Plane } from "lucide-react";
 
-const LAST_UPDATED = "27 de maio de 2026";
+const LAST_UPDATED = "10 de julho de 2026";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -45,7 +45,7 @@ export default function TermsPage() {
             </div>
             <h1 className="text-2xl font-black text-gray-900">Termos de Uso</h1>
           </div>
-          <p className="text-sm text-gray-500">Última atualização: {LAST_UPDATED} · Versão 1.0</p>
+          <p className="text-sm text-gray-500">Última atualização: {LAST_UPDATED} · Versão 2.0</p>
         </div>
 
         <div className="space-y-8 text-sm text-gray-700 leading-relaxed">
@@ -111,16 +111,19 @@ export default function TermsPage() {
             </p>
           </Section>
 
-          <Section title="5. Planos e pagamentos">
+          <Section title="5. Planos, assinatura e pagamentos">
             <p>
-              O RoteiroApp oferece um plano gratuito com funcionalidades básicas. Planos pagos (quando disponíveis)
-              serão cobrados conforme descrito na página de preços no momento da contratação.
+              O RoteiroApp oferece um <strong>plano gratuito</strong> com funcionalidades básicas e um plano{" "}
+              <strong>Premium</strong> pago. Os preços e limites vigentes estão na{" "}
+              <Link href="/pricing" className="text-blue-600 hover:underline">página de planos</Link>.
             </p>
-            <p className="mt-2">
-              Cancelamentos de planos pagos podem ser realizados a qualquer momento. O acesso ao plano pago
-              permanece ativo até o fim do período já pago. Não realizamos reembolsos parciais de períodos já faturados,
-              salvo exigência legal.
-            </p>
+            <ul className="list-disc pl-5 space-y-1.5 mt-2">
+              <li><strong>Cobrança:</strong> o Premium é uma assinatura recorrente (mensal ou anual), processada com segurança pela <strong>Stripe</strong>. A renovação é automática ao fim de cada período, no mesmo valor, até que você cancele.</li>
+              <li><strong>Cancelamento:</strong> você pode cancelar a qualquer momento pelo próprio app. O acesso Premium permanece ativo até o fim do período já pago; não há novas cobranças após o cancelamento.</li>
+              <li><strong>Direito de arrependimento (CDC, art. 49):</strong> por ser contratação pela internet, você pode desistir em até <strong>7 dias</strong> a partir da contratação e solicitar o reembolso integral, bastando entrar em contato conosco.</li>
+              <li><strong>Reembolsos:</strong> fora do prazo de arrependimento, não realizamos reembolsos parciais de períodos já faturados, salvo exigência legal.</li>
+              <li><strong>Alteração de preços:</strong> mudanças de preço são comunicadas com antecedência e valem apenas para períodos futuros — você pode cancelar antes da renovação.</li>
+            </ul>
           </Section>
 
           <Section title="6. Links de afiliados">
