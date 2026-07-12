@@ -60,6 +60,12 @@ export default function TermsPage() {
 
           <Section title="1. O serviço">
             <p>
+              O RoteiroApp é operado por <strong>Carla Alessandra Acero Zausa (MEI)</strong>, inscrita no
+              CNPJ nº <strong>67.950.249/0001-39</strong>, com sede na Rua Epitácio Pessoa, nº 204, Isaura Parente,
+              Rio Branco/AC, CEP 69918-300 ("nós"). Contato:{" "}
+              <a href="mailto:contato@roteiroapp.com" className="text-blue-600 hover:underline">contato@roteiroapp.com</a>.
+            </p>
+            <p>
               O RoteiroApp é uma plataforma de planejamento de viagens que permite criar roteiros, gerenciar
               orçamentos, organizar documentos, registrar experiências e compartilhar viagens com outros usuários.
             </p>

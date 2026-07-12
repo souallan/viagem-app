@@ -55,6 +55,9 @@ export default function PublicPrivacyPage() {
         <Section title="1. Controlador dos dados">
           <p>O controlador responsável pelo tratamento dos seus dados pessoais é:</p>
           <ul className="mt-3 space-y-1 list-none">
+            <li><strong>Razão social:</strong> Carla Alessandra Acero Zausa (MEI)</li>
+            <li><strong>CNPJ:</strong> 67.950.249/0001-39</li>
+            <li><strong>Endereço:</strong> Rua Epitácio Pessoa, nº 204, Isaura Parente, Rio Branco/AC, CEP 69918-300</li>
             <li><strong>Produto:</strong> RoteiroApp</li>
             <li><strong>Site:</strong> roteiroapp.com</li>
             <li><strong>E-mail de contato:</strong>{" "}
