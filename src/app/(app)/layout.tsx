@@ -5,7 +5,6 @@ export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { AppShell } from "@/components/layout/app-shell";
 import { LanguageProvider } from "@/contexts/language-context";
-import { CookieBanner } from "@/components/lgpd/cookie-banner";
 import { EmailVerificationBanner } from "@/components/layout/email-verification-banner";
 import { AnnouncementBanner } from "@/components/layout/announcement-banner";
 
@@ -29,7 +28,6 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         {!emailVerified && !isAdmin && <EmailVerificationBanner email={user?.email ?? ""} />}
         <main className="flex-1 p-4 sm:p-8">{children}</main>
       </AppShell>
-      <CookieBanner />
     </LanguageProvider>
   );
 }

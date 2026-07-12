@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import { GATracker } from "@/components/analytics/ga-tracker";
+import { ConsentedAnalytics } from "@/components/analytics/consented-analytics";
+import { CookieBanner } from "@/components/lgpd/cookie-banner";
 import { NativeBootstrap } from "@/components/native/native-bootstrap";
 import { AppBanner } from "@/components/marketing/app-banner";
 import { SITE_CONFIG } from "@/lib/site-config";
@@ -96,27 +98,19 @@ export default function RootLayout({
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD_WEBSITE) }} />
         {/* Google Search Console verification */}
         {GSC_ID && <meta name="google-site-verification" content={GSC_ID} />}
-        {GA_ID && (
-          <>
-            {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-            <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`,
-              }}
-            />
-          </>
-        )}
+        {/* GA4 NÃO é injetado aqui: <ConsentedAnalytics/> carrega apenas após consentimento (LGPD). */}
       </head>
       <body className={inter.className}>
         <NativeBootstrap />
         <AppBanner />
+        <ConsentedAnalytics />
         {GA_ID && (
           <Suspense fallback={null}>
             <GATracker gaId={GA_ID} />
           </Suspense>
         )}
         {children}
+        <CookieBanner />
         <script dangerouslySetInnerHTML={{ __html: `
           // Registra o service worker (web e app nativo — o WebView carrega o
           // https origin, então o SW dá cache/offline dos dados também no app).

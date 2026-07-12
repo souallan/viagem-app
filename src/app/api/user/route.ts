@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { auditLog } from "@/lib/audit";
 import { stripHtml } from "@/lib/sanitize";
 import { isPremium } from "@/lib/plans";
+import { stripe } from "@/lib/stripe";
 
 export async function GET() {
   const session = await auth();
@@ -115,6 +116,34 @@ export async function DELETE(req: NextRequest) {
   if (user.password) {
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return NextResponse.json({ error: "Senha incorreta." }, { status: 400 });
+  }
+
+  // Cancela a assinatura na Stripe ANTES de apagar o usuário. Se apagássemos primeiro,
+  // perderíamos o vínculo (stripeCustomerId/SubscriptionId) e o cartão do ex-cliente
+  // continuaria sendo cobrado — cobrança indevida (CDC arts. 39/42). Por isso, se o
+  // cancelamento falhar (Stripe fora do ar), abortamos a exclusão para o usuário tentar de novo.
+  if (stripe && user.stripeSubscriptionId) {
+    try {
+      await stripe.subscriptions.cancel(user.stripeSubscriptionId);
+    } catch (e) {
+      const err = e as { statusCode?: number; code?: string };
+      const alreadyGone = err?.statusCode === 404 || err?.code === "resource_missing";
+      if (!alreadyGone) {
+        console.error("[account-delete] falha ao cancelar assinatura Stripe:", e);
+        return NextResponse.json(
+          { error: "Não foi possível cancelar sua assinatura agora. Tente novamente em alguns instantes." },
+          { status: 502 }
+        );
+      }
+    }
+  }
+  // Remove o cliente na Stripe (limpeza — não bloqueia a exclusão se falhar).
+  if (stripe && user.stripeCustomerId) {
+    try {
+      await stripe.customers.del(user.stripeCustomerId);
+    } catch (e) {
+      console.error("[account-delete] falha ao remover cliente Stripe:", e);
+    }
   }
 
   await auditLog({

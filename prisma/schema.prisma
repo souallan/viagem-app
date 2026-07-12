@@ -344,7 +344,7 @@ model CommunityActivity {
   route CommunityRoute @relation(fields: [routeId], references: [id], onDelete: Cascade)
 }
 
-// AuditAction values: USER_DELETE | USER_ROLE_CHANGE | CONTENT_DELETE | DATA_EXPORT | ACCOUNT_DELETE
+// AuditAction values: USER_DELETE | USER_ROLE_CHANGE | CONTENT_DELETE | DATA_EXPORT | ACCOUNT_DELETE | CONSENT_ACCEPT
 model AuditLog {
   id         String   @id @default(cuid())
   actorId    String

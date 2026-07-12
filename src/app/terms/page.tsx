@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FileText, ArrowLeft, Plane } from "lucide-react";
 
-const LAST_UPDATED = "10 de julho de 2026";
+const LAST_UPDATED = "11 de julho de 2026";
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -45,7 +45,7 @@ export default function TermsPage() {
             </div>
             <h1 className="text-2xl font-black text-gray-900">Termos de Uso</h1>
           </div>
-          <p className="text-sm text-gray-500">Última atualização: {LAST_UPDATED} · Versão 2.0</p>
+          <p className="text-sm text-gray-500">Última atualização: {LAST_UPDATED} · Versão 2.1</p>
         </div>
 
         <div className="space-y-8 text-sm text-gray-700 leading-relaxed">
@@ -151,6 +151,10 @@ export default function TermsPage() {
             <p className="mt-2">
               Nossa responsabilidade máxima, em qualquer hipótese, fica limitada ao valor pago pelo usuário
               nos últimos 12 meses (ou R$0 para usuários do plano gratuito).
+            </p>
+            <p className="mt-2">
+              As limitações acima <strong>não afastam</strong> a responsabilidade do RoteiroApp por dolo ou culpa grave,
+              nem restringem os direitos indisponíveis assegurados ao consumidor pelo Código de Defesa do Consumidor.
             </p>
           </Section>
 

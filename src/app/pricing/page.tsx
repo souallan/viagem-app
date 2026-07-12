@@ -180,6 +180,12 @@ export default function PricingPage() {
               {loading ? "Redirecionando…" : "Assinar Premium"}
             </button>
 
+            <p className="text-[11px] text-slate-500 leading-relaxed -mt-5 mb-8">
+              Assinatura recorrente com renovação automática ({annual ? "anual" : "mensal"}). Cobrança via Stripe.
+              Cancele quando quiser pelo app. Direito de arrependimento de 7 dias (CDC art. 49). Ao assinar, você aceita os{" "}
+              <Link href="/terms" className="underline hover:text-slate-300">Termos de Uso</Link>.
+            </p>
+
             <ul className="space-y-3">
               <li className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-4">
                 Tudo do gratuito, mais:
@@ -209,7 +215,7 @@ export default function PricingPage() {
             },
             {
               q: "Quais formas de pagamento são aceitas?",
-              a: "Cartão de crédito e débito, PIX e boleto (em breve). Processamento seguro via Stripe.",
+              a: "Cartão de crédito e débito, com processamento seguro via Stripe.",
             },
             {
               q: "Existe plano para equipes?",

@@ -1,6 +1,5 @@
 ﻿import { Plane } from "lucide-react";
 import Link from "next/link";
-import { CookieBanner } from "@/components/lgpd/cookie-banner";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -69,7 +68,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           {" · "}LGPD compliant
         </p>
       </div>
-      <CookieBanner />
     </div>
   );
 }

@@ -5,6 +5,10 @@ import { createVerifyToken } from "@/lib/otp";
 import { sendVerificationEmail } from "@/lib/email";
 import { rateLimit, getIp } from "@/lib/rate-limit";
 import { stripHtml } from "@/lib/sanitize";
+import { auditLog } from "@/lib/audit";
+
+// Versão vigente dos documentos aceitos no cadastro (mantém prova do consentimento).
+const LEGAL_VERSION = "2.0";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -21,6 +25,14 @@ export async function POST(request: NextRequest) {
     const email: string = (body.email ?? "").trim().toLowerCase();
     const password: string = body.password ?? "";
     const refCode: string = (body.ref ?? "").trim().toUpperCase();
+    const consent: boolean = body.consent === true;
+
+    if (!consent) {
+      return NextResponse.json(
+        { error: "É necessário aceitar os Termos de Uso e a Política de Privacidade." },
+        { status: 400 }
+      );
+    }
 
     if (!name || !email || !password) {
       return NextResponse.json(
@@ -66,6 +78,18 @@ export async function POST(request: NextRequest) {
     const user = await prisma.user.create({
       data: { name, email, password: hashed, ...(validatedRef ? { referredBy: validatedRef } : {}) },
       select: { id: true, name: true, email: true },
+    });
+
+    // Registra a prova do consentimento (LGPD art. 8º, §2º): aceite dos Termos + Privacidade
+    // e declaração de idade, com versão dos documentos, no momento do cadastro.
+    await auditLog({
+      actorId: user.id,
+      actorEmail: user.email,
+      action: "CONSENT_ACCEPT",
+      targetId: user.id,
+      targetType: "User",
+      detail: `Aceitou Termos de Uso e Política de Privacidade (v${LEGAL_VERSION}) e declarou ter 13+ anos, no cadastro.`,
+      ip: getIp(request),
     });
 
     // Send verification email (non-blocking — don't fail registration if email fails)

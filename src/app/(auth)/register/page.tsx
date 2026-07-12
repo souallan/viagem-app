@@ -51,7 +51,7 @@ function RegisterContent() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (password !== confirm) { setError("As senhas não coincidem."); return; }
-    if (!accepted) { setError("Você precisa aceitar a Política de Privacidade para criar uma conta."); return; }
+    if (!accepted) { setError("Você precisa aceitar os Termos de Uso e a Política de Privacidade para criar uma conta."); return; }
     setError("");
     setLoading(true);
 
@@ -59,7 +59,7 @@ function RegisterContent() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, ref: refCode || undefined }),
+        body: JSON.stringify({ name, email, password, ref: refCode || undefined, consent: accepted }),
       });
 
       const data = await res.json();
@@ -181,7 +181,15 @@ function RegisterContent() {
             className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/10 text-blue-500 focus:ring-blue-500/30 cursor-pointer shrink-0"
           />
           <span className="text-xs text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors">
-            Li e aceito a{" "}
+            Li e aceito os{" "}
+            <Link
+              href="/terms"
+              target="_blank"
+              className="text-blue-400 hover:text-blue-300 underline underline-offset-2"
+            >
+              Termos de Uso
+            </Link>
+            {" "}e a{" "}
             <Link
               href="/privacy"
               target="_blank"
@@ -189,7 +197,7 @@ function RegisterContent() {
             >
               Política de Privacidade
             </Link>
-            {" "}e concordo com o tratamento dos meus dados conforme a LGPD (Lei 13.709/2018).
+            , concordo com o tratamento dos meus dados conforme a LGPD (Lei 13.709/2018) e declaro ter pelo menos 13 anos.
           </span>
         </label>
 

@@ -7,6 +7,7 @@ Especialistas com "cérebro" próprio (system prompt) que analisam o projeto sob
 | 📈 Marketing | **Nova** (`marketing-nova`) | Audita SEO, ASO, conteúdo, growth, aquisição, retenção, e-mail, afiliados e conversão | [marketing-nova.md](./marketing-nova.md) |
 | 🎨 Design (UI) | **Aria** (`design-aria`) | Audita UI, design system, acessibilidade, responsividade mobile/tablet — o **visual** | [design-aria.md](./design-aria.md) |
 | 🧭 UX | **Théo** (`ux-theo`) | Facilidade de uso: comportamento do usuário, arquitetura da informação, lógica dos fluxos e **mínimo de cliques** até o objetivo | [ux-theo.md](./ux-theo.md) |
+| ⚖️ Jurídico | **Lívia** (`juridico-livia`) | Conformidade **LGPD + CDC**: revisa Privacidade/Termos, bases legais, direitos do titular, transferência internacional, cookies, arrependimento e assinatura — com minutas prontas | [juridico-livia.md](./juridico-livia.md) |
 
 ## Como chamar
 
@@ -14,8 +15,9 @@ Especialistas com "cérebro" próprio (system prompt) que analisam o projeto sob
 - *"Roda a Nova"* / *"chama o agente de marketing"* → análise de marketing.
 - *"Roda a Aria"* / *"análise de design"* → análise de UI/visual.
 - *"Roda o Théo"* / *"análise de UX"* → análise de usabilidade/fluxos.
+- *"Roda a Lívia"* / *"revisão jurídica"* → auditoria de conformidade **LGPD + CDC** e revisão dos documentos legais.
 
-**Direto:** também aparecem no seletor de agentes do Claude Code (Agent) pelos nomes `marketing-nova`, `design-aria` e `ux-theo`.
+**Direto:** também aparecem no seletor de agentes do Claude Code (Agent) pelos nomes `marketing-nova`, `design-aria`, `ux-theo` e `juridico-livia`.
 
 > **Aria × Théo:** a Aria cuida do **visual** (UI, cores, tipografia, design system); o Théo cuida da **facilidade de uso** (estrutura, fluxo, nº de cliques). Rode os dois para uma visão completa.
 

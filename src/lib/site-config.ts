@@ -6,7 +6,7 @@ export const SITE_CONFIG = {
   name:        "RoteiroApp",
   tagline:     "Travel Planner",
   description: "Planeje roteiros, organize hospedagens e compartilhe experiências de viagem.",
-  url:         "https://RoteiroApp.com.br",
+  url:         "https://roteiroapp.com",
 
   admin: {
     name:  "Allan Souza",

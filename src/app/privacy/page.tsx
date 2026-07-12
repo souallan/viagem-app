@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Shield, ArrowLeft, Mail, Plane } from "lucide-react";
 import { SITE_CONFIG } from "@/lib/site-config";
 
-const LAST_UPDATED = "10 de julho de 2026";
+const LAST_UPDATED = "11 de julho de 2026";
 const CONTROLLER_EMAIL = SITE_CONFIG.admin.email;
 
 export default function PublicPrivacyPage() {
@@ -39,7 +39,7 @@ export default function PublicPrivacyPage() {
           </div>
           <h1 className="text-2xl font-black text-gray-900">Política de Privacidade</h1>
         </div>
-        <p className="text-sm text-gray-500">Última atualização: {LAST_UPDATED} · Versão 2.0</p>
+        <p className="text-sm text-gray-500">Última atualização: {LAST_UPDATED} · Versão 2.1</p>
       </div>
 
       <div className="space-y-8 text-sm text-gray-700 leading-relaxed">
@@ -58,6 +58,9 @@ export default function PublicPrivacyPage() {
             <li><strong>Produto:</strong> RoteiroApp</li>
             <li><strong>Site:</strong> roteiroapp.com</li>
             <li><strong>E-mail de contato:</strong>{" "}
+              <a href={`mailto:${CONTROLLER_EMAIL}`} className="text-blue-600 hover:underline">{CONTROLLER_EMAIL}</a>
+            </li>
+            <li><strong>Encarregado pelo Tratamento de Dados (DPO — LGPD art. 41):</strong>{" "}
               <a href={`mailto:${CONTROLLER_EMAIL}`} className="text-blue-600 hover:underline">{CONTROLLER_EMAIL}</a>
             </li>
           </ul>
@@ -122,8 +125,15 @@ export default function PublicPrivacyPage() {
               ["Cookies de análise (_ga, _ga_*)", "2 anos", "Google Analytics 4 — dados de uso anônimos"],
             ]}
           />
+          <p className="mt-3">
+            <strong>Consentimento (LGPD arts. 7º/8º):</strong> os cookies de análise (Google Analytics 4) e o
+            diagnóstico de erros com gravação de sessão (Sentry) <strong>só são ativados após o seu aceite</strong> no
+            aviso de cookies. Sem o seu consentimento, carregamos apenas os cookies estritamente necessários ao
+            funcionamento e à autenticação. Você pode escolher "Aceitar todos" ou "Só essenciais" no aviso; para
+            rever a escolha, limpe os dados de navegação deste site e recarregue a página.
+          </p>
           <p className="mt-3 text-sm text-gray-600">
-            Para optar por não ser rastreado pelo Google Analytics, você pode instalar o{" "}
+            Você também pode recusar o Google Analytics instalando o{" "}
             <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
               complemento de recusa do Google Analytics
             </a>.
@@ -142,7 +152,16 @@ export default function PublicPrivacyPage() {
           </ul>
         </Section>
 
-        <Section title="7. Seus direitos (LGPD — arts. 17 a 22)">
+        <Section title="7. Incidentes de segurança">
+          <p>
+            Caso ocorra um incidente de segurança que possa acarretar risco ou dano relevante aos titulares,
+            comunicaremos a <strong>Autoridade Nacional de Proteção de Dados (ANPD)</strong> e os titulares afetados
+            em prazo razoável, informando a natureza dos dados envolvidos, os riscos e as medidas adotadas para
+            mitigar os efeitos, nos termos do <strong>art. 48 da LGPD</strong>.
+          </p>
+        </Section>
+
+        <Section title="8. Seus direitos (LGPD — arts. 17 a 22)">
           <Table
             headers={["Direito", "Como exercer"]}
             rows={[
@@ -161,16 +180,34 @@ export default function PublicPrivacyPage() {
           </p>
         </Section>
 
-        <Section title="8. Retenção de dados">
+        <Section title="9. Retenção e eliminação de dados">
           <p>
-            Seus dados são mantidos enquanto sua conta estiver ativa. Ao excluir sua conta, seus dados pessoais
-            são apagados permanentemente em cascata. Logs de auditoria são retidos por até 90 dias para fins de segurança.
-            Registros de pagamento podem ser mantidos pela Stripe e por nós pelo prazo exigido pela legislação fiscal aplicável,
-            mesmo após o encerramento da conta.
+            Mantemos seus dados enquanto sua conta estiver ativa. <strong>Ao excluir sua conta</strong>, seus dados
+            pessoais e o conteúdo das suas viagens são apagados do nosso banco de dados em cascata, e a sua
+            <strong> assinatura na Stripe é cancelada automaticamente</strong> — nenhuma nova cobrança é feita.
+          </p>
+          <p className="mt-3">Após o encerramento, alguns registros podem ser retidos pelos prazos legais aplicáveis:</p>
+          <ul className="space-y-1.5 list-disc list-inside mt-2">
+            <li>Logs de auditoria de segurança: até <strong>90 dias</strong>.</li>
+            <li>Registros de pagamento (mantidos por nós e pela Stripe): pelo prazo da legislação fiscal, em regra <strong>5 anos</strong>.</li>
+          </ul>
+          <p className="mt-3 text-xs text-gray-500">
+            As fotos que você anexou às viagens ficam armazenadas no provedor de mídia (Cloudinary). Se desejar a
+            remoção definitiva dessas imagens após excluir a conta, solicite pelo e-mail de contato e atenderemos
+            no prazo legal.
           </p>
         </Section>
 
-        <Section title="9. Alterações nesta Política">
+        <Section title="10. Menores de idade">
+          <p>
+            O RoteiroApp destina-se a maiores de <strong>13 anos</strong>. O tratamento de dados de menores de 18 anos
+            ocorre sempre em seu melhor interesse; para menores de 13 anos, é exigido o consentimento específico de ao
+            menos um dos pais ou responsável legal, nos termos do <strong>art. 14 da LGPD</strong>. Ao criar a conta,
+            você declara ter no mínimo 13 anos de idade.
+          </p>
+        </Section>
+
+        <Section title="11. Alterações nesta Política">
           <p>
             Podemos atualizar esta Política periodicamente. Em caso de alterações relevantes, notificaremos
             por e-mail ou aviso em destaque no app. O uso continuado implica aceite da nova versão.
