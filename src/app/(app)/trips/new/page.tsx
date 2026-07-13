@@ -18,6 +18,7 @@ import { Select } from "@/components/ui/select";
 import { CurrencyInput } from "@/components/ui/currency-input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTemplateById } from "@/lib/route-templates";
+import { UpgradeNotice } from "@/components/plan/upgrade-notice";
 import { cn } from "@/lib/utils";
 
 const POPULAR_DESTINATIONS = [
@@ -312,6 +313,7 @@ function NewTripForm() {
   const [applyingTemplate, setApplyingTemplate] = useState(false);
   const [templateProgress, setTemplateProgress] = useState(0);
   const [error, setError] = useState("");
+  const [planLimit, setPlanLimit] = useState(false);
   const [communityRoute, setCommunityRoute] = useState<CommunityRouteData | null>(null);
 
   const [destinations, setDestinations] = useState<string[]>(
@@ -433,6 +435,7 @@ function NewTripForm() {
 
       const data = await res.json();
       if (!res.ok) {
+        setPlanLimit(data.code === "PLAN_LIMIT");
         setError(data.error ?? "Erro ao criar viagem");
         setLoading(false);
         return;
@@ -774,9 +777,13 @@ function NewTripForm() {
             </div>
 
             {error && (
-              <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-md border border-red-100">
-                {error}
-              </p>
+              planLimit ? (
+                <UpgradeNotice message={error} />
+              ) : (
+                <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-md border border-red-100">
+                  {error}
+                </p>
+              )
             )}
 
             <div className="flex gap-3 pt-1">

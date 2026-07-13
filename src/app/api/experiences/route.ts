@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { stripHtml } from "@/lib/sanitize";
 import { logger } from "@/lib/logger";
+import { planLimitFor, planLimitError } from "@/lib/plan-guard";
 
 export async function GET() {
   const session = await auth();
@@ -25,6 +26,17 @@ export async function POST(req: NextRequest) {
 
   if (!title || !destination || !tripDate || !content) {
     return NextResponse.json({ error: "Campos obrigatórios faltando" }, { status: 400 });
+  }
+
+  const limit = await planLimitFor(session.user.id, "experiences");
+  if (limit !== Infinity) {
+    const count = await prisma.experience.count({ where: { userId: session.user.id } });
+    if (count >= limit) {
+      return NextResponse.json(
+        planLimitError(`O plano gratuito permite até ${limit} experiências. Faça upgrade para o Premium para publicar quantas quiser.`),
+        { status: 403 }
+      );
+    }
   }
 
   try {

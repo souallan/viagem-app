@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { stripHtml } from "@/lib/sanitize";
 import { containsProfanity } from "@/lib/content-filter";
+import { planLimitFor, planLimitError } from "@/lib/plan-guard";
 
 export async function GET() {
   const routes = await prisma.communityRoute.findMany({
@@ -33,6 +34,17 @@ export async function POST(req: NextRequest) {
 
   if (containsProfanity(cleanTitle) || containsProfanity(cleanDescription)) {
     return NextResponse.json({ error: "O conteúdo contém linguagem inapropriada." }, { status: 422 });
+  }
+
+  const limit = await planLimitFor(session.user.id, "communityRoutes");
+  if (limit !== Infinity) {
+    const count = await prisma.communityRoute.count({ where: { userId: session.user.id } });
+    if (count >= limit) {
+      return NextResponse.json(
+        planLimitError(`O plano gratuito permite publicar ${limit} roteiro na comunidade. Faça upgrade para o Premium para publicar quantos quiser.`),
+        { status: 403 }
+      );
+    }
   }
 
   const cleanHighlights = (Array.isArray(highlights) ? highlights : []).map(stripHtml).filter(Boolean);

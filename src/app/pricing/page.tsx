@@ -10,12 +10,14 @@ import { trackEvent } from "@/lib/analytics";
 const FREE_FEATURES = [
   "Até 3 viagens ativas",
   "Até 20 atividades por viagem",
+  "1 roteiro na comunidade",
+  "Até 5 experiências",
   "Orçamento e controle de gastos",
   "Lista de malas inteligente",
   "Documentos e alertas de validade",
   "Diário de viagem",
-  "1 rota na comunidade",
   "Compartilhamento de viagem",
+  "Imprimir / salvar roteiro em PDF",
 ];
 
 const PREMIUM_FEATURES = [
@@ -23,7 +25,6 @@ const PREMIUM_FEATURES = [
   "Atividades ilimitadas por viagem",
   "Roteiros da comunidade ilimitados",
   "Experiências ilimitadas",
-  "Exportar roteiro em PDF",
   "Suporte prioritário por email",
   "Acesso antecipado a novidades",
   "Badge de apoiador no perfil",
@@ -208,6 +209,10 @@ export default function PricingPage() {
             {
               q: "Posso cancelar quando quiser?",
               a: "Sim. Cancele a qualquer momento pelo app. Você mantém acesso Premium até o fim do período pago.",
+            },
+            {
+              q: "E se eu me arrepender? Como funciona o reembolso?",
+              a: "Se cancelar em até 7 dias da contratação, devolvemos 100% do valor (direito de arrependimento, CDC art. 49). Depois disso: no plano mensal você mantém o acesso até o fim do mês pago, sem novas cobranças; no plano anual devolvemos proporcionalmente os meses não usados.",
             },
             {
               q: "Meus dados ficam salvos se eu cancelar?",

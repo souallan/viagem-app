@@ -70,6 +70,9 @@ export async function DELETE(
   if (!session?.user?.id) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
 
   const { id } = await params;
+  const trip = await verifyTrip(id, session.user.id);
+  if (!trip) return NextResponse.json({ error: "Viagem não encontrada" }, { status: 404 });
+
   const { docId } = await req.json();
 
   await prisma.document.deleteMany({ where: { id: docId, tripId: id } });

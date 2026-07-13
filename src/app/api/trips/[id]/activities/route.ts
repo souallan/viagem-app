@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { planLimitFor, planLimitError } from "@/lib/plan-guard";
 
 async function verifyTrip(tripId: string, userId: string) {
   return prisma.trip.findFirst({ where: { id: tripId, OR: [{ userId }, { members: { some: { userId, role: "EDITOR" } } }] } });
@@ -36,6 +37,19 @@ export async function POST(
   const { id } = await params;
   const trip = await verifyTrip(id, session.user.id);
   if (!trip) return NextResponse.json({ error: "Viagem não encontrada" }, { status: 404 });
+
+  // Limite de atividades por viagem — vale o plano do DONO da viagem (um editor
+  // convidado não amplia nem reduz a capacidade da viagem alheia).
+  const limit = await planLimitFor(trip.userId, "activitiesPerTrip");
+  if (limit !== Infinity) {
+    const count = await prisma.activity.count({ where: { tripId: id } });
+    if (count >= limit) {
+      return NextResponse.json(
+        planLimitError(`O plano gratuito permite até ${limit} atividades por viagem. Faça upgrade para o Premium para adicionar quantas quiser.`),
+        { status: 403 }
+      );
+    }
+  }
 
   try {
     const body = await req.json();
@@ -122,6 +136,11 @@ export async function DELETE(
   if (!session?.user?.id) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
 
   const { id } = await params;
+  // Sem esta checagem, qualquer usuário logado que soubesse os IDs poderia apagar
+  // atividades de viagens de OUTRAS pessoas (o filtro por tripId não prova posse).
+  const trip = await verifyTrip(id, session.user.id);
+  if (!trip) return NextResponse.json({ error: "Viagem não encontrada" }, { status: 404 });
+
   const { activityId } = await req.json();
 
   await prisma.activity.deleteMany({ where: { id: activityId, tripId: id } });

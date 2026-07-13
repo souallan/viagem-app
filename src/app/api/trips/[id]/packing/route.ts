@@ -86,6 +86,14 @@ export async function PUT(
       return NextResponse.json({ error: "ID e nome são obrigatórios" }, { status: 400 });
     }
 
+    // Amarra o item à viagem da URL — sem isto, um itemId de OUTRA viagem/usuário
+    // seria atualizado globalmente (a verificação da viagem acima não basta).
+    const owned = await prisma.packingItem.findFirst({
+      where: { id: itemId, packingList: { tripId: id } },
+      select: { id: true },
+    });
+    if (!owned) return NextResponse.json({ error: "Item não encontrado" }, { status: 404 });
+
     const item = await prisma.packingItem.update({
       where: { id: itemId },
       data: {
@@ -114,6 +122,12 @@ export async function PATCH(
 
   const { itemId, isPacked } = await req.json();
 
+  const owned = await prisma.packingItem.findFirst({
+    where: { id: itemId, packingList: { tripId: id } },
+    select: { id: true },
+  });
+  if (!owned) return NextResponse.json({ error: "Item não encontrado" }, { status: 404 });
+
   const item = await prisma.packingItem.update({
     where: { id: itemId },
     data: { isPacked },
@@ -129,8 +143,13 @@ export async function DELETE(
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
 
+  const { id } = await params;
+  const trip = await verifyTrip(id, session.user.id);
+  if (!trip) return NextResponse.json({ error: "Viagem não encontrada" }, { status: 404 });
+
   const { itemId } = await req.json();
 
-  await prisma.packingItem.deleteMany({ where: { id: itemId } });
+  // Escopo pela viagem: só apaga itens da lista desta viagem.
+  await prisma.packingItem.deleteMany({ where: { id: itemId, packingList: { tripId: id } } });
   return NextResponse.json({ success: true });
 }

@@ -125,11 +125,45 @@ export default function TermsPage() {
             </p>
             <ul className="list-disc pl-5 space-y-1.5 mt-2">
               <li><strong>Cobrança:</strong> o Premium é uma assinatura recorrente (mensal ou anual), processada com segurança pela <strong>Stripe</strong>. A renovação é automática ao fim de cada período, no mesmo valor, até que você cancele.</li>
-              <li><strong>Cancelamento:</strong> você pode cancelar a qualquer momento pelo próprio app. O acesso Premium permanece ativo até o fim do período já pago; não há novas cobranças após o cancelamento.</li>
-              <li><strong>Direito de arrependimento (CDC, art. 49):</strong> por ser contratação pela internet, você pode desistir em até <strong>7 dias</strong> a partir da contratação e solicitar o reembolso integral, bastando entrar em contato conosco.</li>
-              <li><strong>Reembolsos:</strong> fora do prazo de arrependimento, não realizamos reembolsos parciais de períodos já faturados, salvo exigência legal.</li>
+              <li><strong>Cancelamento:</strong> você pode cancelar a qualquer momento pelo próprio app, sem burocracia e sem precisar falar com atendimento.</li>
               <li><strong>Alteração de preços:</strong> mudanças de preço são comunicadas com antecedência e valem apenas para períodos futuros — você pode cancelar antes da renovação.</li>
             </ul>
+
+            <p className="mt-4 font-semibold text-gray-900">Política de reembolso</p>
+            <div className="overflow-x-auto mt-2 rounded-xl border border-gray-100">
+              <table className="w-full text-xs">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="text-left px-3 py-2 font-semibold text-gray-700 border-b border-gray-100">Situação</th>
+                    <th className="text-left px-3 py-2 font-semibold text-gray-700 border-b border-gray-100">O que acontece</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  <tr className="bg-white">
+                    <td className="px-3 py-2 text-gray-600"><strong>Cancelamento em até 7 dias</strong> da contratação (mensal ou anual)</td>
+                    <td className="px-3 py-2 text-gray-600"><strong>Reembolso integral (100%)</strong> — direito de arrependimento, art. 49 do CDC. O acesso Premium é encerrado.</td>
+                  </tr>
+                  <tr className="bg-white">
+                    <td className="px-3 py-2 text-gray-600"><strong>Plano mensal</strong>, cancelamento após 7 dias</td>
+                    <td className="px-3 py-2 text-gray-600">Sem reembolso do mês em curso. Você <strong>mantém o acesso Premium até o fim do período já pago</strong> e não há novas cobranças.</td>
+                  </tr>
+                  <tr className="bg-white">
+                    <td className="px-3 py-2 text-gray-600"><strong>Plano anual</strong>, cancelamento após 7 dias</td>
+                    <td className="px-3 py-2 text-gray-600"><strong>Reembolso proporcional</strong> aos meses inteiros ainda não utilizados (ex.: cancelou no 3º mês → devolvemos 9/12 do valor pago).</td>
+                  </tr>
+                  <tr className="bg-white">
+                    <td className="px-3 py-2 text-gray-600"><strong>Renovação automática</strong> que você não queria</td>
+                    <td className="px-3 py-2 text-gray-600">Avisamos por e-mail antes de renovar o plano anual. Se você solicitar em até <strong>7 dias após a renovação</strong>, devolvemos o valor integral.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-3 text-xs text-gray-500">
+              Para solicitar reembolso, escreva para{" "}
+              <a href="mailto:contato@roteiroapp.com" className="text-blue-600 hover:underline">contato@roteiroapp.com</a>.
+              O estorno é feito no mesmo meio de pagamento e costuma aparecer na fatura em até <strong>10 dias úteis</strong>,
+              conforme o prazo do seu banco ou operadora do cartão.
+            </p>
           </Section>
 
           <Section title="6. Links de afiliados">
