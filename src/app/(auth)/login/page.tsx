@@ -18,7 +18,7 @@ function LoginForm() {
   const passwordReset  = searchParams.get("reset") === "1";
 
   const [step, setStep]       = useState<Step>("credentials");
-  const [email, setEmail]     = useState("");
+  const [email, setEmail]     = useState(searchParams.get("email") ?? "");
   const [password, setPassword] = useState("");
   const [otp, setOtp]         = useState("");
   const [error, setError]     = useState("");

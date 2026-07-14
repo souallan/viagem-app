@@ -8,6 +8,7 @@ import {
   Activity, Map, BarChart2, ExternalLink, Globe,
   Hotel, Star, Compass, Newspaper,
   Plane, TrendingUp, Package, Pencil, Clock, ArrowRight,
+  ListChecks, CheckCircle2, Circle, Sparkles,
 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -186,6 +187,51 @@ export default async function TripOverviewPage({
           )}
         </div>
       )}
+
+      {/* ── Guia de prontidão (Théo/UX): o "fio condutor" — o que falta para a viagem ficar pronta ── */}
+      {(() => {
+        const checks = [
+          { ok: trip._count.transports > 0,     label: "Transporte / voo", href: `/trips/${id}/transport` },
+          { ok: trip._count.accommodations > 0, label: "Hospedagem",        href: `/trips/${id}/accommodation` },
+          { ok: trip._count.activities > 0,     label: "Roteiro de atividades", href: `/trips/${id}/itinerary` },
+          { ok: trip._count.documents > 0,      label: "Documentos",        href: `/trips/${id}/documents` },
+          { ok: totalItems > 0,                 label: "Lista de malas",     href: `/trips/${id}/packing` },
+        ];
+        const ready = checks.filter((c) => c.ok).length;
+        if (ready === checks.length) return null; // tudo pronto → não polui a tela
+        return (
+          <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-4 sm:p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center">
+                  <ListChecks className="h-4 w-4 text-amber-600" />
+                </div>
+                <h3 className="text-sm font-bold text-gray-900">Guia de prontidão</h3>
+              </div>
+              <span className="text-xs font-bold text-amber-700">{ready}/{checks.length} prontos</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {checks.map((c) => c.ok ? (
+                <div key={c.label} className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/70 border border-gray-100 text-sm text-gray-400">
+                  <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+                  <span className="line-through">{c.label}</span>
+                </div>
+              ) : (
+                <Link key={c.label} href={c.href} className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white border border-amber-200 text-sm font-medium text-gray-800 hover:border-amber-300 hover:shadow-sm transition-all group min-h-[44px]">
+                  <Circle className="h-4 w-4 text-amber-400 shrink-0" />
+                  <span className="flex-1">{c.label}</span>
+                  <ArrowRight className="h-3.5 w-3.5 text-amber-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                </Link>
+              ))}
+            </div>
+            {trip._count.activities === 0 && (
+              <Link href={`/trips/${id}/itinerary`} className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-primary-600 hover:text-primary-700">
+                <Sparkles className="h-3.5 w-3.5" /> Gerar um roteiro com IA em segundos
+              </Link>
+            )}
+          </div>
+        );
+      })()}
 
       {/* ── Stats grid ── */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">

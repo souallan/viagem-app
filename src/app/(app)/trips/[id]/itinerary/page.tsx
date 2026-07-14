@@ -449,7 +449,7 @@ function GeneratorDialog({
     if (!date || selected.size === 0) return;
     setAdding(true);
     const toAdd = suggestions.filter((_, i) => selected.has(i));
-    await Promise.all(
+    const statuses = await Promise.all(
       toAdd.map((s) =>
         fetch(`/api/trips/${tripId}/activities`, {
           method: "POST",
@@ -463,11 +463,26 @@ function GeneratorDialog({
             cost: s.cost,
             city: activeCity,
           }),
-        })
+        }).then((r) => r.status).catch(() => 0)
       )
     );
     setAdding(false);
-    onAdded();
+
+    const added = statuses.filter((st) => st === 200 || st === 201).length;
+    const blocked = statuses.filter((st) => st === 403).length;
+
+    // Sem isto, atividades recusadas pelo limite do plano sumiam em silêncio.
+    if (blocked > 0) {
+      toast(
+        `${blocked} atividade${blocked > 1 ? "s" : ""} não ${blocked > 1 ? "foram adicionadas" : "foi adicionada"}: ` +
+        `o plano gratuito permite até 20 atividades por viagem. Assine o Premium em "Planos" para adicionar sem limite.`
+      );
+    } else if (added > 0) {
+      toast(`${added} atividade${added > 1 ? "s adicionadas" : " adicionada"} ao roteiro.`);
+    }
+
+    // Só fecha/atualiza se algo entrou; se tudo foi bloqueado, mantém o diálogo aberto.
+    if (added > 0) onAdded();
   }
 
   const PERIOD_LABEL: Record<string, { label: string; icon: string }> = {

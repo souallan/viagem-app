@@ -73,6 +73,18 @@ export default function PrepPage() {
 
   useEffect(() => { load(); }, [load]);
 
+  const [seeding, setSeeding] = useState(false);
+  async function handleSeed() {
+    setSeeding(true);
+    await fetch(`/api/trips/${id}/prep`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ seed: true }),
+    });
+    setSeeding(false);
+    load();
+  }
+
   async function handleSave() {
     if (!form.title.trim()) return;
     setSaving(true);
@@ -136,6 +148,12 @@ export default function PrepPage() {
           <p className="text-sm text-gray-400">Organize tudo antes de partir</p>
         </div>
         <div className="flex gap-2">
+          {total > 0 && (
+            <Button variant="outline" size="sm" onClick={handleSeed} disabled={seeding} className="gap-1.5">
+              <Sparkles className="h-3.5 w-3.5" />
+              {seeding ? "Gerando…" : "Lembretes com prazo"}
+            </Button>
+          )}
           <Button variant="outline" size="sm" onClick={() => setShowTemplates(v => !v)} className="gap-1.5">
             <Sparkles className="h-3.5 w-3.5" />
             {showTemplates ? "Ocultar" : "Sugestões"}
@@ -197,13 +215,13 @@ export default function PrepPage() {
         <div className="text-center py-16 text-gray-400">
           <div className="text-5xl mb-4">✅</div>
           <p className="font-semibold text-gray-500">Nenhuma tarefa ainda</p>
-          <p className="text-sm mt-1">Adicione os preparativos para a sua viagem</p>
-          <div className="flex justify-center gap-2 mt-6">
-            <Button size="sm" variant="outline" onClick={() => setShowTemplates(true)} className="gap-1.5">
-              <Sparkles className="h-3.5 w-3.5" /> Ver sugestões
+          <p className="text-sm mt-1">Comece com os lembretes essenciais — nós calculamos os prazos pela sua data de ida.</p>
+          <div className="flex flex-wrap justify-center gap-2 mt-6">
+            <Button size="sm" onClick={handleSeed} disabled={seeding} className="gap-1.5">
+              <Sparkles className="h-3.5 w-3.5" /> {seeding ? "Gerando…" : "Gerar lembretes recomendados"}
             </Button>
-            <Button size="sm" onClick={() => setOpen(true)} className="gap-1.5">
-              <Plus className="h-3.5 w-3.5" /> Adicionar
+            <Button size="sm" variant="outline" onClick={() => setShowTemplates(true)} className="gap-1.5">
+              <Plus className="h-3.5 w-3.5" /> Ver sugestões
             </Button>
           </div>
         </div>

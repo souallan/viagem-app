@@ -71,7 +71,8 @@ function RegisterContent() {
       }
 
       trackEvent("sign_up", { method: "email" });
-      router.push("/login?registered=1");
+      // Pré-preenche o e-mail no login (menos fricção; o 2FA por OTP continua exigido).
+      router.push(`/login?registered=1&email=${encodeURIComponent(email.trim().toLowerCase())}`);
     } catch {
       setError("Erro de conexão. Tente novamente.");
       setLoading(false);
@@ -94,8 +95,9 @@ function RegisterContent() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-slate-300">Nome</label>
+          <label htmlFor="reg-name" className="text-sm font-semibold text-slate-300">Nome</label>
           <input
+            id="reg-name"
             placeholder="Seu nome completo"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -107,8 +109,9 @@ function RegisterContent() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-slate-300">Email</label>
+          <label htmlFor="reg-email" className="text-sm font-semibold text-slate-300">Email</label>
           <input
+            id="reg-email"
             type="email"
             placeholder="seu@email.com"
             value={email}
@@ -121,8 +124,9 @@ function RegisterContent() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-slate-300">Senha</label>
+          <label htmlFor="reg-password" className="text-sm font-semibold text-slate-300">Senha</label>
           <input
+            id="reg-password"
             type="password"
             placeholder="Mínimo 8 caracteres"
             value={password}
@@ -154,8 +158,9 @@ function RegisterContent() {
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-slate-300">Confirmar senha</label>
+          <label htmlFor="reg-confirm" className="text-sm font-semibold text-slate-300">Confirmar senha</label>
           <input
+            id="reg-confirm"
             type="password"
             placeholder="Digite a senha novamente"
             value={confirm}
