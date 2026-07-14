@@ -156,6 +156,7 @@ Registered routes:
 - `/trips/[id]/share-route` — POST
 - `/trips/[id]/transports` — DELETE, GET, POST, PUT
 - `/trips` — GET, POST
+- `/upload/sign` — POST
 - `/user/export` — GET
 - `/user/group-balances` — GET
 - `/user/plan` — GET
