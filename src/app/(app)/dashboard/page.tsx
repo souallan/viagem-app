@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { Plus, Globe, Plane, Calendar, TrendingUp, MapPin, ArrowRight, FileWarning, Search } from "lucide-react";
+import { Plus, Globe, Plane, Calendar, TrendingUp, MapPin, ArrowRight, FileWarning, Search, Route, Sparkles, ListChecks } from "lucide-react";
 import { TripCard } from "@/components/trips/trip-card";
 import { useLanguage } from "@/contexts/language-context";
 
@@ -230,21 +230,65 @@ export default function DashboardPage() {
         </p>
       )}
 
-      {/* ── Empty state ── */}
+      {/* ── Onboarding / empty state (Théo/UX): dois caminhos claros + como funciona ── */}
       {!hasTrips && (
-        <div className="text-center py-20">
-          <div className="w-20 h-20 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-center mx-auto mb-5">
-            <MapPin className="h-9 w-9 text-sky-400" aria-hidden="true" />
+        <div className="max-w-2xl mx-auto py-8">
+          <div className="text-center mb-8">
+            <div className="w-20 h-20 rounded-2xl bg-primary-50 border border-primary-100 flex items-center justify-center mx-auto mb-5">
+              <MapPin className="h-9 w-9 text-primary-500" aria-hidden="true" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Bora planejar sua primeira viagem?</h3>
+            <p className="text-gray-500 max-w-md mx-auto">
+              Em poucos minutos você tem roteiro, orçamento, mala e lembretes por prazo — tudo num lugar só.
+            </p>
           </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">{t.dashboard.noTrips}</h3>
-          <p className="text-gray-500 mb-8 max-w-sm mx-auto">{t.dashboard.noTripsDesc}</p>
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Link href="/trips/new" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-base font-semibold bg-sky-600 hover:bg-sky-700 text-white transition-colors shadow-sm">
-              <Plus className="h-5 w-5" aria-hidden="true" /> {t.dashboard.newTrip}
+
+          {/* Dois caminhos — o modelo pronto é o mais rápido */}
+          <div className="grid sm:grid-cols-2 gap-3 mb-8">
+            <Link href="/routes" className="group rounded-2xl border-2 border-primary-500/60 bg-gradient-to-b from-primary-50 to-white p-5 hover:shadow-md transition-all">
+              <div className="flex items-center gap-2 mb-1">
+                <Route className="h-5 w-5 text-primary-600" />
+                <span className="font-bold text-gray-900">Começar por um modelo pronto</span>
+              </div>
+              <p className="text-sm text-gray-500">Roteiros da comunidade prontos para copiar e adaptar. O jeito mais rápido de começar.</p>
+              <span className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-primary-600">
+                Ver roteiros <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+              </span>
             </Link>
-            <Link href="/routes" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-base font-semibold border border-gray-200 bg-white text-gray-700 hover:border-sky-400 hover:text-sky-600 transition-colors">
-              {t.dashboard.createFirst}
+            <Link href="/trips/new" className="group rounded-2xl border border-gray-200 bg-white p-5 hover:border-primary-300 hover:shadow-sm transition-all">
+              <div className="flex items-center gap-2 mb-1">
+                <Plus className="h-5 w-5 text-gray-700" />
+                <span className="font-bold text-gray-900">Criar do zero</span>
+              </div>
+              <p className="text-sm text-gray-500">Você define destino e datas e monta o roteiro do seu jeito.</p>
+              <span className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-gray-700">
+                Nova viagem <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+              </span>
             </Link>
+          </div>
+
+          {/* Como funciona em 3 passos */}
+          <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Como funciona</p>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {[
+                { n: 1, icon: MapPin,     title: "Crie a viagem",   desc: "Destino, datas e uma foto de capa." },
+                { n: 2, icon: Sparkles,   title: "Monte o roteiro", desc: "Adicione atividades ou gere com IA." },
+                { n: 3, icon: ListChecks, title: "Fique pronto",    desc: "Prontidão, mala e lembretes por prazo." },
+              ].map((s) => (
+                <div key={s.n} className="flex sm:flex-col gap-3 sm:gap-2">
+                  <div className="w-9 h-9 rounded-xl bg-primary-100 text-primary-700 flex items-center justify-center font-black text-sm shrink-0">
+                    {s.n}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
+                      <s.icon className="h-3.5 w-3.5 text-primary-500" /> {s.title}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-0.5">{s.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

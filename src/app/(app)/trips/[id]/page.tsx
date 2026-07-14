@@ -13,6 +13,7 @@ import {
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import ImmigrationAlerts from "@/components/trips/immigration-alerts";
+import EmergencyInfo from "@/components/trips/emergency-info";
 import ShareRouteButton from "@/components/trips/share-route-button";
 import TripPublicShare from "@/components/trips/trip-public-share";
 import DestinationAlertsToggle from "@/components/trips/destination-alerts-toggle";
@@ -81,6 +82,10 @@ export default async function TripOverviewPage({
   const ongoingStay = trip.accommodations.find((a) => a.checkIn.getTime() <= now.getTime() && now.getTime() <= a.checkOut.getTime()) ?? null;
   const kindIcon = { checkin: Hotel, checkout: Hotel, transport: Plane, activity: Activity } as const;
   const NextIcon = nextEvent ? kindIcon[nextEvent.kind] : null;
+
+  // Fase da viagem (Théo/UX): antes = prontidão · durante = agora & próximo · depois = memórias.
+  const isPast = trip.status === "COMPLETED" || trip.status === "CANCELLED" ||
+    (!!trip.endDate && trip.endDate.getTime() < now.getTime());
 
   const travelResources = [
     { name: "TripAdvisor", icon: Star, color: "text-green-600 bg-green-50 border-green-100", desc: "Avaliações e atrações", url: `https://www.tripadvisor.com/Search?q=${dest}` },
@@ -188,6 +193,27 @@ export default async function TripOverviewPage({
         </div>
       )}
 
+      {/* ── Fase "depois": viagem concluída → registrar memórias e ajudar a comunidade ── */}
+      {isPast && trip.status !== "CANCELLED" && (
+        <div className="rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 to-white p-4 sm:p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-7 h-7 rounded-lg bg-violet-100 flex items-center justify-center">
+              <Star className="h-4 w-4 text-violet-600" />
+            </div>
+            <h3 className="text-sm font-bold text-gray-900">Viagem concluída 🎉</h3>
+          </div>
+          <p className="text-sm text-gray-500 mb-3">Registre suas memórias enquanto estão frescas — e, se quiser, ajude outros viajantes com o seu roteiro.</p>
+          <div className="flex flex-wrap gap-2">
+            <Link href={`/trips/${id}/journal`} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-violet-600 text-white text-sm font-semibold hover:bg-violet-700 transition-colors min-h-[44px]">
+              <Newspaper className="h-4 w-4" /> Escrever no diário
+            </Link>
+            <Link href={`/experiences/new`} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-violet-200 text-violet-700 text-sm font-semibold hover:bg-violet-50 transition-colors min-h-[44px]">
+              <Star className="h-4 w-4" /> Publicar experiência
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* ── Guia de prontidão (Théo/UX): o "fio condutor" — o que falta para a viagem ficar pronta ── */}
       {(() => {
         const checks = [
@@ -198,7 +224,7 @@ export default async function TripOverviewPage({
           { ok: totalItems > 0,                 label: "Lista de malas",     href: `/trips/${id}/packing` },
         ];
         const ready = checks.filter((c) => c.ok).length;
-        if (ready === checks.length) return null; // tudo pronto → não polui a tela
+        if (isPast || ready === checks.length) return null; // viagem passada, ou tudo pronto
         return (
           <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-4 sm:p-5 shadow-sm">
             <div className="flex items-center justify-between mb-3">
@@ -329,6 +355,7 @@ export default async function TripOverviewPage({
         <DestinationAlertsToggle tripId={id} initialEnabled={trip.alertsEnabled} />
       )}
       <ImmigrationAlerts destination={trip.destination} />
+      <EmergencyInfo />
       <TripPublicShare tripId={id} initialToken={trip.shareToken ?? null} />
       <TripCollaboration tripId={id} />
 
