@@ -8,8 +8,11 @@ import { Camera, Loader2, ImagePlus } from "lucide-react";
 // (crie um "unsigned upload preset" no painel do Cloudinary).
 const CLOUD = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+// Quando "true", o upload passa a ser ASSINADO (exige login): o cliente pede a
+// assinatura em /api/upload/sign em vez de usar o preset unsigned exposto no bundle.
+const SIGNED = process.env.NEXT_PUBLIC_CLOUDINARY_SIGNED === "true";
 
-export const uploadConfigured = Boolean(CLOUD && PRESET);
+export const uploadConfigured = Boolean(CLOUD && (SIGNED || PRESET));
 
 export function PhotoUpload({
   onUploaded,
@@ -39,7 +42,20 @@ export function PhotoUpload({
     try {
       const fd = new FormData();
       fd.append("file", file);
-      fd.append("upload_preset", PRESET!);
+
+      if (SIGNED) {
+        // Upload assinado: só usuários autenticados obtêm a assinatura.
+        const signRes = await fetch("/api/upload/sign", { method: "POST" });
+        if (!signRes.ok) { setErr("Faça login para enviar fotos."); setUploading(false); return; }
+        const s = await signRes.json();
+        fd.append("api_key", s.apiKey);
+        fd.append("timestamp", String(s.timestamp));
+        fd.append("signature", s.signature);
+        fd.append("folder", s.folder);
+      } else {
+        fd.append("upload_preset", PRESET!);
+      }
+
       const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD}/image/upload`, {
         method: "POST",
         body: fd,
