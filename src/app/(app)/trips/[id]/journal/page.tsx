@@ -145,7 +145,7 @@ export default function JournalPage() {
               <div className={cn("h-1.5", mood ? (
                 mood.value === "AMAZING" ? "bg-gradient-to-r from-yellow-400 to-orange-400" :
                 mood.value === "GREAT"   ? "bg-gradient-to-r from-green-400 to-emerald-500" :
-                mood.value === "GOOD"    ? "bg-gradient-to-r from-blue-400 to-sky-500" :
+                mood.value === "GOOD"    ? "bg-gradient-to-r from-blue-400 to-primary-500" :
                 mood.value === "MIXED"   ? "bg-gray-300" :
                 "bg-gradient-to-r from-red-400 to-rose-500"
               ) : "bg-gradient-to-r from-primary-400 to-primary-600")} />

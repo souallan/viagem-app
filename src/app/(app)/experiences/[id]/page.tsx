@@ -33,7 +33,7 @@ const MOOD_CONFIG: Record<string, {
 }> = {
   AMAZING:     { emoji: "✨", label: "Incrível",    bg: "bg-purple-100", text: "text-purple-700", border: "border-purple-200", accent: "#7c3aed", gradient: "from-purple-600 to-violet-800"   },
   GREAT:       { emoji: "😃", label: "Ótima",       bg: "bg-green-100",  text: "text-green-700",  border: "border-green-200",  accent: "#059669", gradient: "from-green-600 to-emerald-800"   },
-  GOOD:        { emoji: "😊", label: "Boa",         bg: "bg-blue-100",   text: "text-blue-700",   border: "border-blue-200",   accent: "#2563eb", gradient: "from-blue-600 to-sky-800"       },
+  GOOD:        { emoji: "😊", label: "Boa",         bg: "bg-blue-100",   text: "text-blue-700",   border: "border-blue-200",   accent: "#2563eb", gradient: "from-blue-600 to-primary-800"       },
   MIXED:       { emoji: "🤔", label: "Mista",       bg: "bg-amber-100",  text: "text-amber-700",  border: "border-amber-200",  accent: "#d97706", gradient: "from-amber-500 to-orange-700"   },
   CHALLENGING: { emoji: "💪", label: "Desafiadora", bg: "bg-red-100",    text: "text-red-700",    border: "border-red-200",    accent: "#dc2626", gradient: "from-red-600 to-rose-800"       },
 };

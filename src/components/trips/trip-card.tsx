@@ -57,7 +57,7 @@ export function TripCard({ trip }: { trip: Trip }) {
     <Link href={`/trips/${trip.id}`} className="block group">
       <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 bg-white">
         {/* Cover image */}
-        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-sky-400 to-indigo-600">
+        <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary-400 to-indigo-600">
           {trip.coverImage ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -119,7 +119,7 @@ export function TripCard({ trip }: { trip: Trip }) {
               <MapPin className="h-3 w-3 text-white/70 shrink-0" aria-hidden="true" />
               <span className="text-xs text-white/80 truncate">{primaryDest}</span>
               {isMulti && (
-                <span className="text-xs text-sky-300 font-medium shrink-0">
+                <span className="text-xs text-primary-300 font-medium shrink-0">
                   {destinations.length - 1 > 1
                     ? t.tripCard.moreDestinationsPlural.replace("{n}", String(destinations.length - 1))
                     : t.tripCard.moreDestinations.replace("{n}", String(destinations.length - 1))}

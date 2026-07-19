@@ -140,13 +140,13 @@ export default function CurrencyPage() {
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-            <ArrowLeftRight className="h-5 w-5 text-sky-500" aria-hidden="true" />
+            <ArrowLeftRight className="h-5 w-5 text-primary-500" aria-hidden="true" />
             Conversor de Moedas
           </h2>
           <button
             onClick={fetchRates}
             disabled={ratesLoading}
-            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-sky-600 transition-colors"
+            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-primary-600 transition-colors"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${ratesLoading ? "animate-spin" : ""}`} aria-hidden="true" />
             {lastUpdated ? `Atualizado ${lastUpdated}` : "Atualizar"}
@@ -171,7 +171,7 @@ export default function CurrencyPage() {
                 <select
                   value={from}
                   onChange={(e) => setFrom(e.target.value)}
-                  className="w-full h-10 rounded-md border border-gray-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  className="w-full h-10 rounded-md border border-gray-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   {CURRENCIES.map((c) => (
                     <option key={c.code} value={c.code}>{c.flag} {c.code} — {c.name}</option>
@@ -181,7 +181,7 @@ export default function CurrencyPage() {
 
               <button
                 onClick={() => { setFrom(to); setTo(from); }}
-                className="h-10 w-10 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-sky-50 hover:border-sky-300 transition-colors"
+                className="h-10 w-10 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-primary-50 hover:border-primary-300 transition-colors"
                 title="Inverter moedas"
               >
                 <ArrowLeftRight className="h-4 w-4 text-gray-500" aria-hidden="true" />
@@ -192,7 +192,7 @@ export default function CurrencyPage() {
                 <select
                   value={to}
                   onChange={(e) => setTo(e.target.value)}
-                  className="w-full h-10 rounded-md border border-gray-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  className="w-full h-10 rounded-md border border-gray-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   {CURRENCIES.map((c) => (
                     <option key={c.code} value={c.code}>{c.flag} {c.code} — {c.name}</option>
@@ -212,7 +212,7 @@ export default function CurrencyPage() {
               />
             </div>
 
-            <div className="rounded-xl bg-gradient-to-r from-sky-50 to-teal-50 border border-sky-100 p-4">
+            <div className="rounded-xl bg-gradient-to-r from-primary-50 to-teal-50 border border-primary-100 p-4">
               <p className="text-xs text-gray-500 mb-1">Resultado</p>
               <p className="text-3xl font-bold text-gray-900">
                 {converted !== null
@@ -231,7 +231,7 @@ export default function CurrencyPage() {
                 <button
                   key={v}
                   onClick={() => setAmount(String(v))}
-                  className="text-xs text-center py-2 rounded-lg bg-gray-50 hover:bg-sky-50 hover:text-sky-700 border border-gray-100 hover:border-sky-200 transition-colors font-medium"
+                  className="text-xs text-center py-2 rounded-lg bg-gray-50 hover:bg-primary-50 hover:text-primary-700 border border-gray-100 hover:border-primary-200 transition-colors font-medium"
                 >
                   {v}
                 </button>
@@ -272,13 +272,13 @@ export default function CurrencyPage() {
             {people.map((p) => (
               <div
                 key={p.id}
-                className="flex items-center gap-1.5 bg-sky-50 border border-sky-100 rounded-full px-3 py-1"
+                className="flex items-center gap-1.5 bg-primary-50 border border-primary-100 rounded-full px-3 py-1"
               >
-                <span className="text-xs font-medium text-sky-700">{p.name}</span>
+                <span className="text-xs font-medium text-primary-700">{p.name}</span>
                 {people.length > 2 && (
                   <button
                     onClick={() => removePerson(p.id)}
-                    className="text-sky-300 hover:text-red-500 transition-colors ml-0.5 text-base leading-none"
+                    className="text-primary-300 hover:text-red-500 transition-colors ml-0.5 text-base leading-none"
                     aria-label={`Remover ${p.name}`}
                   >
                     ×
@@ -333,7 +333,7 @@ export default function CurrencyPage() {
                 <select
                   value={expForm.currency}
                   onChange={(e) => setExpForm((p) => ({ ...p, currency: e.target.value }))}
-                  className="w-full h-9 rounded-md border border-gray-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  className="w-full h-9 rounded-md border border-gray-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   {CURRENCIES.map((c) => (
                     <option key={c.code} value={c.code}>{c.flag} {c.code}</option>
@@ -345,7 +345,7 @@ export default function CurrencyPage() {
                 <select
                   value={expForm.paidBy}
                   onChange={(e) => setExpForm((p) => ({ ...p, paidBy: e.target.value }))}
-                  className="w-full h-9 rounded-md border border-gray-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  className="w-full h-9 rounded-md border border-gray-200 px-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   {people.map((p) => (
                     <option key={p.id} value={p.id}>{p.name}</option>

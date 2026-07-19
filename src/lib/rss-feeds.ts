@@ -25,7 +25,7 @@ export const RSS_FEEDS: RssFeedConfig[] = [
     url: "https://www.nomadicmatt.com/feed/",
     lang: "en",
     category: "Travel Tips",
-    categoryColor: "bg-sky-100 text-sky-700",
+    categoryColor: "bg-primary-100 text-primary-700",
   },
   {
     name: "The Broke Backpacker",

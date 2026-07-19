@@ -1,13 +1,18 @@
 // Service worker do RoteiroApp.
 // Estratégias:
+//  - /_next/static/* e assets estáticos hasheados: cache-first (imutáveis).
 //  - Navegação/assets same-origin: network-first com fallback a cache e /offline.
 //  - GET /api/* (dados): stale-while-revalidate → offline mostra o último dado
 //    conhecido (reservas, itinerário, documentos). /api/auth/* nunca é cacheado.
 // Funciona na web (PWA) e dentro do app nativo (WebView carrega o https origin).
-const CACHE = "roteiroapp-v3";
+const CACHE = "roteiroapp-v4";
 const API_CACHE = "roteiroapp-api-v1";
+const ASSET_CACHE = "roteiroapp-assets-v1";
 const OFFLINE = "/offline";
 const STATIC = ["/", "/dashboard", "/manifest.json", OFFLINE];
+
+// Extensões de asset estático que podem ser servidas cache-first com segurança.
+const ASSET_EXT = /\.(?:js|css|woff2?|ttf|otf|png|jpe?g|svg|gif|webp|avif|ico)$/i;
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
@@ -16,13 +21,12 @@ self.addEventListener("install", (e) => {
 });
 
 self.addEventListener("activate", (e) => {
+  const keep = [CACHE, API_CACHE, ASSET_CACHE];
   e.waitUntil(
     caches
       .keys()
       .then((keys) =>
-        Promise.all(
-          keys.filter((k) => k !== CACHE && k !== API_CACHE).map((k) => caches.delete(k))
-        )
+        Promise.all(keys.filter((k) => !keep.includes(k)).map((k) => caches.delete(k)))
       )
       .then(() => self.clients.claim())
   );
@@ -40,10 +44,18 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  // Internos do Next (têm hash próprio) — deixa o navegador cuidar.
+  // Chunks do Next e assets estáticos hasheados → cache-first (imutáveis).
+  // Sem isso, um reload/navegação offline falha ao carregar o JS da página.
+  if (url.pathname.startsWith("/_next/static/") || ASSET_EXT.test(url.pathname)) {
+    e.respondWith(cacheFirst(e));
+    return;
+  }
+
+  // RSC/data do Next (payloads de navegação client-side) → deixa a rede;
+  // a navegação de documento já é cacheada abaixo para o fallback offline.
   if (url.pathname.startsWith("/_next/")) return;
 
-  // Navegação e assets same-origin → network-first, fallback cache/offline.
+  // Navegação e demais same-origin → network-first, fallback cache/offline.
   e.respondWith(
     fetch(e.request)
       .then((res) => {
@@ -58,6 +70,21 @@ self.addEventListener("fetch", (e) => {
       )
   );
 });
+
+// Cache-first: serve do cache se houver; senão busca na rede e guarda.
+async function cacheFirst(event) {
+  const cache = await caches.open(ASSET_CACHE);
+  const cached = await cache.match(event.request);
+  if (cached) return cached;
+  try {
+    const res = await fetch(event.request);
+    if (res.ok) cache.put(event.request, res.clone());
+    return res;
+  } catch {
+    // Asset não cacheado e sem rede: devolve erro silencioso (não quebra a página).
+    return cached ?? Response.error();
+  }
+}
 
 async function staleWhileRevalidate(event) {
   const request = event.request;

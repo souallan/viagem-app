@@ -152,8 +152,8 @@ export default function MonitoringPage() {
 
           {/* New trips 7d */}
           <Card className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-sky-600/20 flex items-center justify-center shrink-0">
-              <Plane className="h-4 w-4 text-sky-400" />
+            <div className="w-9 h-9 rounded-xl bg-primary-600/20 flex items-center justify-center shrink-0">
+              <Plane className="h-4 w-4 text-primary-400" />
             </div>
             <div>
               <p className="text-xl font-black text-white leading-none">{health?.recent.newTrips7d ?? "—"}</p>
@@ -281,7 +281,7 @@ export default function MonitoringPage() {
             href="https://resend.com/emails"
             configured={health?.env.resendConfigured}
             configNote="Não configurado. Adicione RESEND_API_KEY no Railway."
-            color="bg-sky-600/60"
+            color="bg-primary-600/60"
           />
           <ToolCard
             icon={Brain}

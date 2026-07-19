@@ -500,7 +500,7 @@ export default function PackingPage() {
             <div
               className={cn(
                 "h-2.5 rounded-full transition-all",
-                packed === total ? "bg-green-500" : "bg-sky-400"
+                packed === total ? "bg-green-500" : "bg-primary-400"
               )}
               style={{ width: `${(packed / total) * 100}%` }}
             />
@@ -619,7 +619,7 @@ export default function PackingPage() {
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-1 mb-2">
                   <div
-                    className={`h-1 rounded-full transition-all ${catPct === 100 ? "bg-green-500" : "bg-sky-400"}`}
+                    className={`h-1 rounded-full transition-all ${catPct === 100 ? "bg-green-500" : "bg-primary-400"}`}
                     style={{ width: `${catPct}%` }}
                   />
                 </div>

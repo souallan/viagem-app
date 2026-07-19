@@ -292,7 +292,7 @@ export default function AdminStatsPage() {
       {/* ── Transporte + Atividades ── */}
       <div className="grid grid-cols-2 gap-5">
         <Card>
-          <SectionTitle icon={Plane} label="Modais de transporte" color="bg-sky-600/60" />
+          <SectionTitle icon={Plane} label="Modais de transporte" color="bg-primary-600/60" />
           <div className="space-y-2.5">
             {transportTypes.map(({ type, count }) => (
               <HBar key={type} label={TRANSPORT_LABEL[type] ?? type} value={count}

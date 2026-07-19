@@ -329,7 +329,7 @@ export default function MapView({
             >
               <Popup>
                 <p className="font-semibold text-sm">{m.label}</p>
-                {m.day != null && <p className="text-xs text-sky-600 font-medium">Dia {m.day}</p>}
+                {m.day != null && <p className="text-xs text-primary-600 font-medium">Dia {m.day}</p>}
                 <p className="text-xs text-gray-500">{m.location}</p>
                 <RouteLinks lat={m.lat} lng={m.lng} origin={userLoc} />
               </Popup>

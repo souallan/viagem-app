@@ -126,7 +126,7 @@ export default function EditTripPage() {
       <Card className="mb-5">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
-            <ImageIcon className="h-4 w-4 text-sky-500" aria-hidden="true" />
+            <ImageIcon className="h-4 w-4 text-primary-500" aria-hidden="true" />
             Foto de capa
           </CardTitle>
         </CardHeader>
@@ -166,7 +166,7 @@ export default function EditTripPage() {
               onClick={() => setPhotoMode("preset")}
               className={cn(
                 "flex-1 py-2 transition-colors",
-                photoMode === "preset" ? "bg-sky-500 text-white" : "bg-white text-gray-600 hover:bg-gray-50"
+                photoMode === "preset" ? "bg-primary-500 text-white" : "bg-white text-gray-600 hover:bg-gray-50"
               )}
             >
               Fotos prontas
@@ -176,7 +176,7 @@ export default function EditTripPage() {
               onClick={() => setPhotoMode("url")}
               className={cn(
                 "flex-1 py-2 transition-colors border-l border-gray-200",
-                photoMode === "url" ? "bg-sky-500 text-white" : "bg-white text-gray-600 hover:bg-gray-50"
+                photoMode === "url" ? "bg-primary-500 text-white" : "bg-white text-gray-600 hover:bg-gray-50"
               )}
             >
               URL personalizada
@@ -197,14 +197,14 @@ export default function EditTripPage() {
                         onClick={() => selectPreset(url)}
                         className={cn(
                           "relative rounded-lg overflow-hidden aspect-video border-2 transition-all",
-                          selectedPhoto === url ? "border-sky-500 scale-95" : "border-transparent hover:border-gray-300"
+                          selectedPhoto === url ? "border-primary-500 scale-95" : "border-transparent hover:border-gray-300"
                         )}
                         title={label}
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={url} alt={label} className="w-full h-full object-cover" loading="lazy" />
                         {selectedPhoto === url && (
-                          <div className="absolute inset-0 bg-sky-500/30 flex items-center justify-center">
+                          <div className="absolute inset-0 bg-primary-500/30 flex items-center justify-center">
                             <Check className="h-5 w-5 text-white drop-shadow" aria-hidden="true" />
                           </div>
                         )}
@@ -239,7 +239,7 @@ export default function EditTripPage() {
                 </Button>
               </div>
               <p className="text-xs text-gray-400">
-                Dica: use <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" className="text-sky-600 hover:underline">unsplash.com</a> para fotos gratuitas. Clique em qualquer foto → botão "Share" → "Copy image URL".
+                Dica: use <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">unsplash.com</a> para fotos gratuitas. Clique em qualquer foto → botão "Share" → "Copy image URL".
               </p>
             </div>
           )}

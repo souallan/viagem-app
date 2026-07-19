@@ -40,7 +40,7 @@ const MODE_STYLE: Record<ModeKey, {
   Icon: React.ElementType; emoji: string;
   color: string; bg: string; border: string; accentBar: string;
 }> = {
-  FLIGHT: { Icon: Plane,      emoji: "✈️", color: "text-sky-700",    bg: "bg-sky-50",    border: "border-sky-200",    accentBar: "bg-sky-400"    },
+  FLIGHT: { Icon: Plane,      emoji: "✈️", color: "text-primary-700",    bg: "bg-primary-50",    border: "border-primary-200",    accentBar: "bg-primary-400"    },
   TRAIN:  { Icon: TrainFront, emoji: "🚆", color: "text-blue-700",   bg: "bg-blue-50",   border: "border-blue-200",   accentBar: "bg-blue-400"   },
   BUS:    { Icon: Bus,        emoji: "🚌", color: "text-green-700",  bg: "bg-green-50",  border: "border-green-200",  accentBar: "bg-green-400"  },
   CAR:    { Icon: Car,        emoji: "🚗", color: "text-orange-700", bg: "bg-orange-50", border: "border-orange-200", accentBar: "bg-orange-400" },
@@ -56,13 +56,13 @@ function AffiliateTransportBanner({ destinations }: { destinations: string[] }) 
   const partners = affiliates.flights;
 
   return (
-    <div className="rounded-2xl border border-sky-100 bg-gradient-to-r from-sky-50 to-indigo-50 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-      <div className="w-10 h-10 rounded-xl bg-sky-600 flex items-center justify-center shrink-0">
+    <div className="rounded-2xl border border-primary-100 bg-gradient-to-r from-primary-50 to-indigo-50 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+      <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center shrink-0">
         <Plane className="h-5 w-5 text-white" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-sky-900">{t.transport.affiliateTitle}</p>
-        <p className="text-xs text-sky-600 mt-0.5">{t.transport.affiliateDesc}</p>
+        <p className="text-sm font-bold text-primary-900">{t.transport.affiliateTitle}</p>
+        <p className="text-xs text-primary-600 mt-0.5">{t.transport.affiliateDesc}</p>
       </div>
       <div className="flex items-center gap-2 shrink-0 flex-wrap">
         {partners.map((p) => {
@@ -73,7 +73,7 @@ function AffiliateTransportBanner({ destinations }: { destinations: string[] }) 
               href={url}
               target="_blank"
               rel="noopener noreferrer sponsored"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-sky-600 text-white hover:bg-sky-700 transition-colors shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-primary-600 text-white hover:bg-primary-700 transition-colors shadow-sm"
             >
               <ExternalLink className="h-3.5 w-3.5" />
               {p.name}

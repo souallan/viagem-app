@@ -128,7 +128,7 @@ function DestinationBuilder({
       <Label>
         Destinos *
         {destinations.length > 1 && (
-          <span className="ml-2 text-xs font-normal text-sky-600 bg-sky-50 border border-sky-100 rounded-full px-2 py-0.5">
+          <span className="ml-2 text-xs font-normal text-primary-600 bg-primary-50 border border-primary-100 rounded-full px-2 py-0.5">
             <Route className="inline h-3 w-3 mr-1" />
             Roteiro multi-destino
           </span>
@@ -174,9 +174,9 @@ function DestinationBuilder({
               className={cn(
                 "flex items-center gap-2.5 rounded-xl border px-3 py-2.5 transition-all cursor-grab active:cursor-grabbing",
                 dragOverIdx === i && dragIdx !== i
-                  ? "border-sky-400 bg-sky-50 shadow-md"
+                  ? "border-primary-400 bg-primary-50 shadow-md"
                   : i === 0
-                  ? "bg-gradient-to-r from-sky-50 to-teal-50 border-sky-200"
+                  ? "bg-gradient-to-r from-primary-50 to-teal-50 border-primary-200"
                   : "bg-white border-gray-200 hover:border-gray-300"
               )}
             >
@@ -186,7 +186,7 @@ function DestinationBuilder({
               {/* Step number */}
               <div className={cn(
                 "w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0",
-                i === 0 ? "bg-sky-500 text-white" : "bg-gray-100 text-gray-500"
+                i === 0 ? "bg-primary-500 text-white" : "bg-gray-100 text-gray-500"
               )}>
                 {i + 1}
               </div>
@@ -204,7 +204,7 @@ function DestinationBuilder({
 
               {/* Badge: primary */}
               {i === 0 && (
-                <span className="text-xs text-sky-600 font-medium shrink-0">Principal</span>
+                <span className="text-xs text-primary-600 font-medium shrink-0">Principal</span>
               )}
 
               {/* Remove */}
@@ -256,7 +256,7 @@ function DestinationBuilder({
                 key={label}
                 type="button"
                 onClick={() => addPopular(label)}
-                className="inline-flex items-center gap-1 text-xs bg-gray-50 hover:bg-sky-50 hover:text-sky-700 text-gray-600 px-2.5 py-1 rounded-full transition-colors border border-gray-200 hover:border-sky-200"
+                className="inline-flex items-center gap-1 text-xs bg-gray-50 hover:bg-primary-50 hover:text-primary-700 text-gray-600 px-2.5 py-1 rounded-full transition-colors border border-gray-200 hover:border-primary-200"
               >
                 <span aria-hidden="true">{flag}</span>
                 {label.split(",")[0]}
@@ -471,7 +471,7 @@ function NewTripForm() {
         </p>
         <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
           <div
-            className="bg-gradient-to-r from-sky-500 to-teal-500 h-3 rounded-full transition-all duration-300"
+            className="bg-gradient-to-r from-primary-500 to-teal-500 h-3 rounded-full transition-all duration-300"
             style={{ width: `${templateProgress}%` }}
           />
         </div>
@@ -492,7 +492,7 @@ function NewTripForm() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Nova viagem</h1>
           {template && (
-            <p className="text-sm text-sky-600 mt-0.5">
+            <p className="text-sm text-primary-600 mt-0.5">
               Usando roteiro: <span className="font-semibold">{template.title}</span>{" "}
               <span aria-hidden="true">{template.flag}</span>
             </p>
@@ -507,7 +507,7 @@ function NewTripForm() {
 
       {/* Template banner */}
       {template && (
-        <div className="mb-5 p-4 rounded-xl bg-gradient-to-r from-sky-50 to-teal-50 border border-sky-100">
+        <div className="mb-5 p-4 rounded-xl bg-gradient-to-r from-primary-50 to-teal-50 border border-primary-100">
           <div className="flex items-start gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -523,7 +523,7 @@ function NewTripForm() {
               <p className="text-xs text-gray-500 mt-0.5">
                 {template.destination} · {template.duration} dias
               </p>
-              <p className="text-xs text-sky-700 mt-1">
+              <p className="text-xs text-primary-700 mt-1">
                 {template.activities.length} atividades serão adicionadas automaticamente
               </p>
             </div>
@@ -665,14 +665,14 @@ function NewTripForm() {
                           onClick={() => setForm((p) => ({ ...p, coverImage: url }))}
                           className={cn(
                             "relative rounded-lg overflow-hidden aspect-video border-2 transition-all",
-                            form.coverImage === url ? "border-sky-500 scale-95" : "border-transparent hover:border-gray-300"
+                            form.coverImage === url ? "border-primary-500 scale-95" : "border-transparent hover:border-gray-300"
                           )}
                           title={label}
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={url} alt={label} className="w-full h-full object-cover" loading="lazy" />
                           {form.coverImage === url && (
-                            <div className="absolute inset-0 bg-sky-500/30 flex items-center justify-center">
+                            <div className="absolute inset-0 bg-primary-500/30 flex items-center justify-center">
                               <Check className="h-5 w-5 text-white drop-shadow" aria-hidden="true" />
                             </div>
                           )}
@@ -689,16 +689,16 @@ function NewTripForm() {
 
             {/* Template highlights */}
             {template && (
-              <div className="rounded-xl border border-sky-100 bg-sky-50 p-4 space-y-2">
-                <p className="text-xs font-semibold text-sky-700 uppercase tracking-wider">O que está incluído neste roteiro</p>
+              <div className="rounded-xl border border-primary-100 bg-primary-50 p-4 space-y-2">
+                <p className="text-xs font-semibold text-primary-700 uppercase tracking-wider">O que está incluído neste roteiro</p>
                 <ul className="space-y-1">
                   {template.highlights.map((h, i) => (
                     <li key={i} className="text-xs text-gray-700 flex items-start gap-1.5">
-                      <span className="text-sky-500 mt-0.5">✓</span> {h}
+                      <span className="text-primary-500 mt-0.5">✓</span> {h}
                     </li>
                   ))}
                 </ul>
-                <p className="text-xs text-gray-500 pt-1 border-t border-sky-100">
+                <p className="text-xs text-gray-500 pt-1 border-t border-primary-100">
                   <span className="font-medium">Orçamento estimado:</span> {template.estimatedBudget} por pessoa · {template.activities.length} atividades planejadas
                 </p>
               </div>

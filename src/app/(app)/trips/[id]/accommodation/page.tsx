@@ -49,7 +49,7 @@ function getCurrencySymbol(code: string): string {
 const ACCOM_TYPE_KEYS = ["HOTEL", "HOSTEL", "AIRBNB", "RESORT", "POUSADA", "OTHER"] as const;
 
 const TYPE_STYLE: Record<string, { bg: string; text: string; bar: string }> = {
-  HOTEL:   { bg: "bg-sky-50",   text: "text-sky-700",   bar: "bg-sky-400"   },
+  HOTEL:   { bg: "bg-primary-50",   text: "text-primary-700",   bar: "bg-primary-400"   },
   HOSTEL:  { bg: "bg-teal-50",  text: "text-teal-700",  bar: "bg-teal-400"  },
   AIRBNB:  { bg: "bg-rose-50",  text: "text-rose-700",  bar: "bg-rose-400"  },
   RESORT:  { bg: "bg-amber-50", text: "text-amber-700", bar: "bg-amber-400" },
@@ -203,7 +203,7 @@ function AccommodationCalendar({
       {/* ── Day-of-week headers ── */}
       <div className="overflow-x-auto">
       <div className="min-w-[560px]">
-      <div className="grid grid-cols-7 border-b border-sky-100/80 bg-white/50">
+      <div className="grid grid-cols-7 border-b border-primary-100/80 bg-white/50">
         {Array.from({ length: 7 }, (_, i) =>
           new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(2024, 0, 7 + i))
         ).map((d, i) => (
@@ -219,14 +219,14 @@ function AccommodationCalendar({
       {/* ── Week rows ── */}
       <div className="bg-white/40">
         {weeks.map((week, wi) => (
-          <div key={wi} className="grid grid-cols-7 border-b border-sky-100/50 last:border-b-0">
+          <div key={wi} className="grid grid-cols-7 border-b border-primary-100/50 last:border-b-0">
             {week.map((date, di) => {
               if (!date) {
                 return (
                   <div
                     key={di}
                     className={cn(
-                      "h-16 sm:h-20 border-r border-sky-100/50 last:border-r-0",
+                      "h-16 sm:h-20 border-r border-primary-100/50 last:border-r-0",
                       di === 0 || di === 6 ? "bg-rose-50/30" : "bg-white/20"
                     )}
                   />
@@ -242,9 +242,9 @@ function AccommodationCalendar({
                 <div
                   key={di}
                   className={cn(
-                    "h-16 sm:h-20 border-r border-sky-100/50 last:border-r-0 flex flex-col min-w-0",
+                    "h-16 sm:h-20 border-r border-primary-100/50 last:border-r-0 flex flex-col min-w-0",
                     isWeekend ? "bg-rose-50/20" : "bg-white/30",
-                    accoms.length > 0 && "bg-sky-50/40"
+                    accoms.length > 0 && "bg-primary-50/40"
                   )}
                 >
                   {/* Date number */}
@@ -301,7 +301,7 @@ function AccommodationCalendar({
 
       {/* ── Legend ── */}
       {items.length > 0 && (
-        <div className="px-3 py-3 border-t border-sky-100/60 bg-white/60">
+        <div className="px-3 py-3 border-t border-primary-100/60 bg-white/60">
           <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">{t.accommodation.legend}</p>
           <div className="flex flex-wrap gap-1.5">
             {sorted.map((item) => {
@@ -479,7 +479,7 @@ function AffiliateBanner({ destination }: { destination: string }) {
   const partners = affiliates.accommodation;
 
   return (
-    <div className="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 to-sky-50 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+    <div className="rounded-2xl border border-primary-100 bg-gradient-to-r from-primary-50 to-primary-100/60 p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
       <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shrink-0">
         <Search className="h-5 w-5 text-white" />
       </div>

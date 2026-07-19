@@ -148,7 +148,7 @@ export default function AdminDashboard() {
           {[
             { label: "Novos usuários (7d)", value: activity.newUsers7d, color: "text-emerald-400", bg: "bg-emerald-600/15" },
             { label: "Novos usuários (30d)", value: activity.newUsers30d, color: "text-teal-400", bg: "bg-teal-600/15" },
-            { label: "Usuários ativos (7d)", value: activity.activeUsers7d, color: "text-sky-400", bg: "bg-sky-600/15" },
+            { label: "Usuários ativos (7d)", value: activity.activeUsers7d, color: "text-primary-400", bg: "bg-primary-600/15" },
             { label: "Usuários ativos (30d)", value: activity.activeUsers30d, color: "text-blue-400", bg: "bg-blue-600/15" },
           ].map(({ label, value, color, bg }) => (
             <div key={label} className="rounded-xl border border-white/6 p-3.5" style={{ background: "rgba(255,255,255,0.03)" }}>

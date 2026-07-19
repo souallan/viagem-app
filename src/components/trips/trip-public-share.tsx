@@ -42,8 +42,8 @@ export default function TripPublicShare({ tripId, initialToken }: { tripId: stri
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
-          <Globe className="h-4 w-4 text-sky-500" />
+        <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center">
+          <Globe className="h-4 w-4 text-primary-500" />
         </div>
         <div>
           <h3 className="text-sm font-bold text-gray-900">Link público</h3>

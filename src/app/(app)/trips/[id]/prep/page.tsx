@@ -26,7 +26,7 @@ const CATEGORIES: Record<string, { label: string; emoji: string; color: string; 
   FINANCEIRO:  { label: "Financeiro",   emoji: "💳", color: "text-green-700",  bg: "bg-green-50",  border: "border-green-200" },
   BAGAGEM:     { label: "Bagagem",      emoji: "🧳", color: "text-purple-700", bg: "bg-purple-50", border: "border-purple-200" },
   HOSPEDAGEM:  { label: "Hospedagem",   emoji: "🏨", color: "text-orange-700", bg: "bg-orange-50", border: "border-orange-200" },
-  TRANSPORTE:  { label: "Transporte",   emoji: "✈️", color: "text-sky-700",    bg: "bg-sky-50",    border: "border-sky-200" },
+  TRANSPORTE:  { label: "Transporte",   emoji: "✈️", color: "text-primary-700",    bg: "bg-primary-50",    border: "border-primary-200" },
   OUTRO:       { label: "Outro",        emoji: "📌", color: "text-gray-600",   bg: "bg-gray-50",   border: "border-gray-200" },
 };
 

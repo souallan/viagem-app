@@ -362,8 +362,8 @@ export default async function TripOverviewPage({
       {/* ── Travel resources ── */}
       <div>
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
-            <Globe className="h-4 w-4 text-sky-500" />
+          <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center">
+            <Globe className="h-4 w-4 text-primary-500" />
           </div>
           <div>
             <h3 className="text-sm font-bold text-gray-900">Recursos de pesquisa</h3>

@@ -545,7 +545,7 @@ export default function SummaryPage() {
                                           </span>
                                         )}
                                         {act.city && (
-                                          <span className="text-[10px] text-sky-600 font-medium flex items-center gap-0.5">
+                                          <span className="text-[10px] text-primary-600 font-medium flex items-center gap-0.5">
                                             <MapPin className="h-2.5 w-2.5" />
                                             {act.city.split(",")[0]}
                                           </span>

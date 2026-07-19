@@ -45,7 +45,7 @@ function emptySegment(id: string): Segment {
 const MODES: { key: Mode; label: Record<string, string>; icon: React.ElementType; color: string; bg: string; border: string }[] = [
   { key: "bus",   label: { pt: "Ônibus", es: "Autobús", en: "Bus" },   icon: Bus,        color: "text-green-700", bg: "bg-green-50", border: "border-green-200" },
   { key: "train", label: { pt: "Trem",   es: "Tren",    en: "Train" }, icon: TrainFront, color: "text-blue-700",  bg: "bg-blue-50",  border: "border-blue-200" },
-  { key: "plane", label: { pt: "Avião",  es: "Avión",   en: "Plane" }, icon: Plane,      color: "text-sky-700",   bg: "bg-sky-50",   border: "border-sky-200" },
+  { key: "plane", label: { pt: "Avião",  es: "Avión",   en: "Plane" }, icon: Plane,      color: "text-primary-700",   bg: "bg-primary-50",   border: "border-primary-200" },
   { key: "car",   label: { pt: "Carro",  es: "Auto",    en: "Car" },   icon: Car,        color: "text-orange-700",bg: "bg-orange-50",border: "border-orange-200" },
 ];
 

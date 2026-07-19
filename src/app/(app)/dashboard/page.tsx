@@ -41,7 +41,7 @@ function CountdownBanner({ trip }: { trip: Trip }) {
   const gradient = isToday || isTomorrow
     ? "from-emerald-600 to-teal-700"
     : isThisWeek
-    ? "from-sky-600 to-blue-700"
+    ? "from-primary-600 to-blue-700"
     : "from-violet-600 to-purple-700";
 
   const pulse = isToday || isTomorrow;
@@ -168,7 +168,7 @@ export default function DashboardPage() {
         <div className="relative z-10 flex-1">
           <div className="flex items-center gap-2 mb-1">
             <span className="text-2xl" aria-hidden="true">✈️</span>
-            <p className="text-sky-400 text-sm font-semibold tracking-wide uppercase">{t.dashboard.welcomeBack}</p>
+            <p className="text-primary-400 text-sm font-semibold tracking-wide uppercase">{t.dashboard.welcomeBack}</p>
           </div>
           <h1 className="text-3xl font-bold text-white mb-1">{t.dashboard.hello}!</h1>
           <p className="text-slate-300 text-sm">
@@ -186,7 +186,7 @@ export default function DashboardPage() {
             { icon: Calendar,   label: t.dashboard.upcoming, value: upcoming.length },
           ].map(({ icon: Icon, label, value }) => (
             <div key={label} className="travel-glass rounded-xl px-5 py-4 text-center min-w-[88px]">
-              <Icon className="h-4 w-4 text-sky-400 mx-auto mb-1" aria-hidden="true" />
+              <Icon className="h-4 w-4 text-primary-400 mx-auto mb-1" aria-hidden="true" />
               <p className="text-2xl font-bold text-white">{value}</p>
               <p className="text-xs text-slate-400">{label}</p>
             </div>
@@ -195,7 +195,7 @@ export default function DashboardPage() {
 
         <Link
           href="/trips/new"
-          className="relative z-10 hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-sky-500 hover:bg-sky-400 text-white shadow-lg shadow-sky-900/40 transition-colors shrink-0"
+          className="relative z-10 hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold bg-primary-500 hover:bg-primary-400 text-white shadow-lg shadow-primary-900/40 transition-colors shrink-0"
         >
           <Plus className="h-4 w-4" aria-hidden="true" /> {t.dashboard.newTrip}
         </Link>
@@ -297,7 +297,7 @@ export default function DashboardPage() {
         <TripSection icon={<Plane className="h-5 w-5 text-emerald-500" />} title={t.dashboard.ongoing} accent="border-emerald-200 bg-emerald-50 text-emerald-700" trips={ongoing} newLabel={t.common.new} />
       )}
       {upcoming.length > 0 && (
-        <TripSection icon={<Calendar className="h-5 w-5 text-sky-500" />} title={t.dashboard.upcoming} accent="border-sky-200 bg-sky-50 text-sky-700" trips={upcoming} newLabel={t.common.new} />
+        <TripSection icon={<Calendar className="h-5 w-5 text-primary-500" />} title={t.dashboard.upcoming} accent="border-primary-200 bg-primary-50 text-primary-700" trips={upcoming} newLabel={t.common.new} />
       )}
       {past.length > 0 && (
         <TripSection icon={<Globe className="h-5 w-5 text-slate-400" />} title={t.dashboard.past} accent="border-gray-200 bg-gray-50 text-gray-500" trips={past} muted newLabel={t.common.new} />
@@ -305,7 +305,7 @@ export default function DashboardPage() {
 
       {hasTrips && (
         <div className="fixed bottom-safe-nav right-6 sm:hidden z-50">
-          <Link href="/trips/new" className="w-14 h-14 rounded-full bg-sky-500 hover:bg-sky-400 text-white flex items-center justify-center shadow-xl transition-colors" aria-label={t.dashboard.newTrip}>
+          <Link href="/trips/new" className="w-14 h-14 rounded-full bg-primary-500 hover:bg-primary-400 text-white flex items-center justify-center shadow-xl transition-colors" aria-label={t.dashboard.newTrip}>
             <Plus className="h-6 w-6" />
           </Link>
         </div>
@@ -332,7 +332,7 @@ function TripSection({
           <h2 className="text-lg font-bold text-gray-900">{title}</h2>
           <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${accent}`}>{trips.length}</span>
         </div>
-        <Link href="/trips/new" className="inline-flex items-center gap-1 text-xs font-medium text-sky-600 hover:text-sky-700">
+        <Link href="/trips/new" className="inline-flex items-center gap-1 text-xs font-medium text-primary-600 hover:text-primary-700">
           <Plus className="h-3.5 w-3.5" /> {newLabel}
         </Link>
       </div>

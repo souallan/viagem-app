@@ -70,7 +70,7 @@ type Period = "manha" | "tarde" | "noite" | "sem-horario";
 
 const PERIOD_STYLE: Record<Period, { Icon: React.ElementType; gradient: string; textColor: string; bg: string; border: string; timeRange: string }> = {
   "manha":       { Icon: Sunrise, gradient: "from-amber-400 to-orange-400",  textColor: "text-amber-700",  bg: "bg-amber-50",  border: "border-amber-200", timeRange: "06:00–11:59" },
-  "tarde":       { Icon: Sun,     gradient: "from-blue-400 to-sky-500",      textColor: "text-blue-700",   bg: "bg-blue-50",   border: "border-blue-200",  timeRange: "12:00–17:59" },
+  "tarde":       { Icon: Sun,     gradient: "from-blue-400 to-primary-500",      textColor: "text-blue-700",   bg: "bg-blue-50",   border: "border-blue-200",  timeRange: "12:00–17:59" },
   "noite":       { Icon: Moon,    gradient: "from-indigo-500 to-purple-600", textColor: "text-indigo-700", bg: "bg-indigo-50", border: "border-indigo-200",timeRange: "18:00–23:59" },
   "sem-horario": { Icon: Clock,   gradient: "from-gray-400 to-gray-500",     textColor: "text-gray-500",   bg: "bg-gray-50",   border: "border-gray-200",  timeRange: ""            },
 };
@@ -158,7 +158,7 @@ function ActivityItem({
                 {typeLabel}
               </span>
               {cityLabel && (
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-primary-50 text-primary-700 border border-primary-200">
                   <MapPin className="h-2.5 w-2.5" />
                   {cityLabel}
                 </span>
@@ -263,7 +263,7 @@ function PeriodActivityCard({ activity, onDelete, onEdit }: { activity: Activity
             </span>
           )}
           {cityLabel && (
-            <span className="text-xs text-sky-600 font-medium flex items-center gap-0.5">
+            <span className="text-xs text-primary-600 font-medium flex items-center gap-0.5">
               <MapPin className="h-3 w-3 shrink-0" />{cityLabel}
             </span>
           )}
@@ -1022,8 +1022,8 @@ export default function ItineraryPage() {
                         className={cn(
                           "inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border font-medium transition-all",
                           isSelected
-                            ? "bg-sky-50 border-sky-300 text-sky-700"
-                            : "bg-gray-50 border-gray-200 text-gray-600 hover:border-sky-200 hover:text-sky-600"
+                            ? "bg-primary-50 border-primary-300 text-primary-700"
+                            : "bg-gray-50 border-gray-200 text-gray-600 hover:border-primary-200 hover:text-primary-600"
                         )}
                       >
                         <MapPin className="h-2.5 w-2.5" />

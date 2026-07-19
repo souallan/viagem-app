@@ -76,7 +76,7 @@ function TipCard({ tip, isNew }: { tip: Tip; isNew: boolean }) {
 
   return (
     <article className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col">
-      <div className={`h-1.5 ${isNew ? "bg-gradient-to-r from-teal-400 via-sky-400 to-teal-500 animate-pulse" : "bg-gradient-to-r from-gray-200 to-gray-300"}`} />
+      <div className={`h-1.5 ${isNew ? "bg-gradient-to-r from-teal-400 via-primary-400 to-teal-500 animate-pulse" : "bg-gradient-to-r from-gray-200 to-gray-300"}`} />
 
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-start justify-between gap-3 mb-3">
@@ -143,7 +143,7 @@ function TipCard({ tip, isNew }: { tip: Tip; isNew: boolean }) {
 function ExternalTipCard({ tip, isNew }: { tip: ExternalTip; isNew: boolean }) {
   return (
     <article className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col">
-      <div className={`h-1.5 ${isNew ? "bg-gradient-to-r from-teal-400 via-sky-400 to-teal-500 animate-pulse" : "bg-gradient-to-r from-gray-200 to-gray-300"}`} />
+      <div className={`h-1.5 ${isNew ? "bg-gradient-to-r from-teal-400 via-primary-400 to-teal-500 animate-pulse" : "bg-gradient-to-r from-gray-200 to-gray-300"}`} />
 
       <div className="p-5 flex flex-col flex-1">
         <div className="flex items-start justify-between gap-3 mb-3">

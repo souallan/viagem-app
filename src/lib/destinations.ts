@@ -44,7 +44,7 @@ export const DESTINATIONS: Record<string, DestinationData> = {
   },
   "buenos-aires": {
     name: "Buenos Aires", country: "Argentina", flag: "🇦🇷",
-    heroColor: "from-sky-700 to-blue-900",
+    heroColor: "from-primary-700 to-blue-900",
     highlight: "Câmbio favorável · Gastronomia incrível · Tango",
     description: "A Paris da América do Sul. Cultura, gastronomia de altíssimo nível, vida noturna incrível e câmbio favorável para brasileiros.",
     bestTime: "Setembro–Novembro (primavera argentina)",
@@ -308,7 +308,7 @@ export const DESTINATIONS: Record<string, DestinationData> = {
   },
   "orlando": {
     name: "Orlando", country: "Estados Unidos", flag: "🇺🇸",
-    heroColor: "from-sky-600 to-indigo-800",
+    heroColor: "from-primary-600 to-indigo-800",
     highlight: "Disney · Universal · Outlets · Destino em família",
     description: "A capital mundial dos parques temáticos: Disney, Universal, compras em outlets e diversão garantida para famílias. Planejamento é tudo aqui.",
     bestTime: "Setembro–Novembro e Janeiro–Maio (menos filas e calor)",
