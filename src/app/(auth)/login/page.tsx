@@ -21,12 +21,19 @@ function LoginForm() {
   const [email, setEmail]     = useState(searchParams.get("email") ?? "");
   const [password, setPassword] = useState("");
   const [otp, setOtp]         = useState("");
+  const [trustDevice, setTrustDevice] = useState(true);
   const [error, setError]     = useState("");
   const [loading, setLoading] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
   const cooldownRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // ── Step 1: validate email + password, send OTP ──────────────
+  function goToDashboard() {
+    router.push("/dashboard");
+    router.refresh();
+  }
+
+  // ── Step 1: valida email + senha; se o dispositivo é confiável entra direto,
+  //            senão envia o OTP por email ──────────────────────
 
   async function handleCredentials(e: React.FormEvent) {
     e.preventDefault();
@@ -39,19 +46,40 @@ function LoginForm() {
       body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
     });
 
-    setLoading(false);
-
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
+      setLoading(false);
       setError(data.error ?? "Email ou senha incorretos.");
       return;
     }
 
+    const data = await res.json().catch(() => ({}));
+
+    // Dispositivo confiável → login direto, sem OTP.
+    if (data.trusted) {
+      const result = await signIn("credentials", {
+        email: email.trim().toLowerCase(),
+        mode: "device",
+        redirect: false,
+      });
+      if (!result?.error) {
+        goToDashboard();
+        return;
+      }
+      // Fallback raro (cookie invalidado no meio): força o envio do OTP.
+      await fetch("/api/auth/check-credentials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim().toLowerCase(), password, forceOtp: true }),
+      });
+    }
+
+    setLoading(false);
     setStep("otp");
     startCooldown();
   }
 
-  // ── Step 2: verify OTP via NextAuth ──────────────────────────
+  // ── Step 2: verifica o OTP via NextAuth ──────────────────────
 
   async function handleOtp(e: React.FormEvent) {
     e.preventDefault();
@@ -64,14 +92,19 @@ function LoginForm() {
       redirect: false,
     });
 
-    setLoading(false);
-
     if (result?.error) {
+      setLoading(false);
       setError("Código inválido ou expirado. Solicite um novo.");
-    } else {
-      router.push("/dashboard");
-      router.refresh();
+      return;
     }
+
+    // Login OK — se pediu para confiar, registra o dispositivo (pula o OTP nos próximos).
+    if (trustDevice) {
+      await fetch("/api/auth/trust-device", { method: "POST" }).catch(() => {});
+    }
+
+    setLoading(false);
+    goToDashboard();
   }
 
   // ── Resend OTP ────────────────────────────────────────────────
@@ -94,7 +127,7 @@ function LoginForm() {
     const res = await fetch("/api/auth/check-credentials", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
+      body: JSON.stringify({ email: email.trim().toLowerCase(), password, forceOtp: true }),
     });
 
     setLoading(false);
@@ -236,6 +269,22 @@ function LoginForm() {
                 {error}
               </p>
             )}
+
+            <label className="flex items-start gap-2.5 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={trustDevice}
+                onChange={(e) => setTrustDevice(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-slate-600 bg-slate-800 text-blue-500 focus:ring-blue-500/40 focus:ring-2 cursor-pointer"
+              />
+              <span className="text-sm text-slate-300 leading-snug">
+                Confiar neste dispositivo por 30 dias
+                <span className="block text-xs text-slate-500">
+                  Não pediremos o código de novo neste aparelho, só em novos logins de outro
+                  lugar.
+                </span>
+              </span>
+            </label>
 
             <Button type="submit" className="w-full h-11 text-base" disabled={loading || otp.length < 6}>
               {loading ? "Verificando..." : "Entrar"}

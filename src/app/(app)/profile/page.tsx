@@ -80,6 +80,20 @@ export default function ProfilePage() {
   const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" });
   const [pwSaving, setPwSaving] = useState(false);
   const [pwMsg, setPwMsg] = useState<{ type: "ok" | "err"; text: string } | null>(null);
+  const [forgettingDevices, setForgettingDevices] = useState(false);
+
+  async function handleForgetDevices() {
+    setForgettingDevices(true);
+    try {
+      const res = await fetch("/api/auth/trust-device", { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      toast("Dispositivos confiáveis removidos. O código voltará a ser pedido em todos.", "success");
+    } catch {
+      toast("Não foi possível remover agora. Tente novamente.", "error");
+    } finally {
+      setForgettingDevices(false);
+    }
+  }
 
   // Referral state
   const [referral, setReferral] = useState<{ code: string; referredCount: number } | null>(null);
@@ -537,6 +551,23 @@ export default function ProfilePage() {
           <LogOut className="h-4 w-4" />
           {tp.signOut}
         </Button>
+
+        <div className="mt-5 pt-5 border-t border-gray-100">
+          <p className="text-sm text-gray-500 mb-3">
+            Dispositivos confiáveis pulam o código de verificação no login. Perdeu o
+            celular ou o computador? Remova todos para exigir o código novamente.
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleForgetDevices}
+            disabled={forgettingDevices}
+            className="gap-2"
+          >
+            <ShieldAlert className="h-4 w-4" />
+            {forgettingDevices ? "Removendo..." : "Esquecer dispositivos confiáveis"}
+          </Button>
+        </div>
       </div>
 
       {/* ── Convite de amigos ── */}

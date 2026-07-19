@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import { verifyOtp } from "@/lib/otp";
+import { readTrustCookie, consumeTrustedDevice } from "@/lib/trusted-device";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -17,19 +18,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       credentials: {
         email: { label: "Email", type: "email" },
         otp:   { label: "Código", type: "text" },
+        mode:  { label: "Modo", type: "text" }, // "device" = login por dispositivo confiável
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.otp) return null;
-
+      async authorize(credentials, request) {
+        if (!credentials?.email) return null;
         const email = String(credentials.email).trim().toLowerCase();
-        const otp   = String(credentials.otp).trim();
-
-        const valid = await verifyOtp(email, otp);
-        if (!valid) return null;
 
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user) return null;
         if (user.bannedAt) return null; // conta suspensa não autentica
+
+        // Caminho 1 — dispositivo confiável: valida o cookie httpOnly `rdt`.
+        // Sem OTP: o próprio cookie (só existe neste dispositivo) é o 2º fator.
+        if (credentials.mode === "device") {
+          const rdt = readTrustCookie(request?.headers?.get("cookie"));
+          if (!rdt) return null;
+          const ok = await consumeTrustedDevice(rdt, user.id);
+          if (!ok) return null;
+        } else {
+          // Caminho 2 — OTP por email (padrão).
+          if (!credentials.otp) return null;
+          const valid = await verifyOtp(email, String(credentials.otp).trim());
+          if (!valid) return null;
+        }
 
         return {
           id:    user.id,

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { createOtp } from "@/lib/otp";
 import { sendOtpEmail } from "@/lib/email";
 import { rateLimit, getIp } from "@/lib/rate-limit";
+import { TRUST_COOKIE, isTrustedDeviceValid } from "@/lib/trusted-device";
 
 export async function POST(req: NextRequest) {
   // 10 attempts per IP per 15 minutes
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { email, password } = await req.json();
+    const { email, password, forceOtp } = await req.json();
 
     if (!email || !password) {
       return NextResponse.json({ error: "Campos obrigatórios." }, { status: 400 });
@@ -44,11 +45,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Credentials valid — generate and send OTP
+    // Dispositivo confiável ("confiar neste computador") → pula o OTP.
+    // Só vale se o cookie httpOnly `rdt` bate com um registro válido DESTE usuário;
+    // outro navegador/dispositivo/local não tem o cookie e cai no OTP normal.
+    if (!forceOtp) {
+      const rdt = req.cookies.get(TRUST_COOKIE)?.value;
+      if (rdt && (await isTrustedDeviceValid(rdt, user.id))) {
+        return NextResponse.json({ ok: true, trusted: true });
+      }
+    }
+
+    // Caso padrão — gera e envia o OTP por email
     const otp = await createOtp(user.email);
     await sendOtpEmail(user.email, otp, user.name);
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, trusted: false });
   } catch {
     return NextResponse.json({ error: "Erro interno." }, { status: 500 });
   }

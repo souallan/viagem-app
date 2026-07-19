@@ -42,6 +42,7 @@ model User {
   communityRoutes  CommunityRoute[]
   routeComments    RouteComment[]
   posts            Post[]
+  trustedDevices   TrustedDevice[]
 }
 
 model Account {
@@ -77,6 +78,23 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// Dispositivo marcado como confiável ("confiar neste computador"): pula o OTP
+// nos próximos logins até expirar. Guarda só o HASH do segredo (o cookie httpOnly
+// `rdt` = `id.segredo`). expiresAt renova a cada uso (janela deslizante de 30 dias).
+model TrustedDevice {
+  id         String   @id @default(cuid())
+  userId     String
+  tokenHash  String
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  lastUsedAt DateTime @default(now())
+  expiresAt  DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 // TripStatus values: PLANNING | CONFIRMED | IN_PROGRESS | COMPLETED | CANCELLED
