@@ -61,6 +61,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `Account` | |
 | `Session` | |
 | `VerificationToken` | |
+| `TrustedDevice` | |
 | `Trip` | |
 | `TripMember` | |
 | `Activity` | |
@@ -120,6 +121,7 @@ Registered routes:
 - `/auth/forgot-password` — POST
 - `/auth/reset-password` — POST
 - `/auth/send-verification` — POST
+- `/auth/trust-device` — DELETE, POST
 - `/auth/verify-email` — GET
 - `/community-routes/[id]/comments` — GET, POST
 - `/community-routes/[id]` — DELETE, GET
