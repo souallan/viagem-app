@@ -28,6 +28,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Usuário não encontrado." }, { status: 404 });
   }
 
+  // Já é Premium com assinatura ativa → NÃO abrir novo checkout. A Stripe aceita
+  // criar uma segunda assinatura para o mesmo customer sem reclamar, ou seja, um
+  // clique a mais em "Assinar Premium" cobraria o cliente DUAS vezes.
+  const planoNoPrazo = !user.planExpiresAt || user.planExpiresAt > new Date();
+  if (user.plan === "PREMIUM" && user.stripeSubscriptionId && planoNoPrazo) {
+    return NextResponse.json(
+      { error: "Você já tem o Premium ativo. Gerencie sua assinatura no seu perfil." },
+      { status: 409 }
+    );
+  }
+
   try {
     // Reaproveita o customer da Stripe ou cria um novo (1 por usuário).
     // O ID salvo pode ser órfão: criado em OUTRO ambiente/conta da Stripe (ex.:
