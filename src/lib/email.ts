@@ -110,7 +110,10 @@ export async function sendPasswordResetEmail(email: string, token: string, name?
 }
 
 export async function sendVerificationEmail(email: string, token: string, name?: string | null) {
-  const url = `${APP_URL}/verify-email?token=${token}&email=${encodeURIComponent(email)}`;
+  // Aponta para a ROTA DE API (que valida o token e redireciona para a página com
+  // ?success=1 / ?error=...). Apontar para a página `/verify-email` direto faz o
+  // token ser ignorado e o usuário cair no texto "enviamos um link" para sempre.
+  const url = `${APP_URL}/api/auth/verify-email?token=${token}&email=${encodeURIComponent(email)}`;
   return getResend().emails.send({
     from: FROM,
     to: email,

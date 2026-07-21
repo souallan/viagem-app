@@ -5,12 +5,40 @@ import Link from "next/link";
 import { CheckCircle, XCircle, Mail } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 
 function VerifyEmailContent() {
   const params = useSearchParams();
   const success = params.get("success") === "1";
   const error = params.get("error");
+  const token = params.get("token");
+  const email = params.get("email");
+
+  // Emails antigos apontavam para ESTA página com o token na URL (em vez da rota
+  // de API), então o token era ignorado e a pessoa ficava presa no "enviamos um
+  // link" para sempre. Aqui reencaminhamos para a API que de fato valida — assim
+  // os links já entregues nas caixas de entrada continuam funcionando.
+  const precisaValidar = !success && !error && !!token && !!email;
+
+  useEffect(() => {
+    if (precisaValidar) {
+      window.location.replace(
+        `/api/auth/verify-email?token=${encodeURIComponent(token!)}&email=${encodeURIComponent(email!)}`
+      );
+    }
+  }, [precisaValidar, token, email]);
+
+  if (precisaValidar) {
+    return (
+      <div className="text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/15 border border-blue-500/30 mb-5">
+          <Mail className="h-8 w-8 text-blue-400" />
+        </div>
+        <h1 className="text-xl font-bold text-white mb-2">Confirmando seu email…</h1>
+        <p className="text-sm text-slate-400">Só um instante.</p>
+      </div>
+    );
+  }
 
   if (success) {
     return (
