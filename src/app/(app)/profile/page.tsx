@@ -472,6 +472,69 @@ export default function ProfilePage() {
         </div>
       )}
 
+      {/* ── Assinatura ──
+          Cancelar precisa ser tão fácil quanto assinar (CDC art. 51). Antes, o
+          único acesso ao portal era um link de 12px espremido entre os metadados
+          do header, enquanto "Seja Premium" aparecia como botão grande em dois
+          lugares — desequilíbrio que a auditoria jurídica já havia apontado. */}
+      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
+        <h2 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <Crown className="h-4 w-4 text-amber-500" />
+          Assinatura
+        </h2>
+
+        {user.isPremium ? (
+          <>
+            <div className="flex items-center gap-2 flex-wrap mb-2">
+              <span className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-gradient-to-r from-amber-100 to-yellow-50 px-2.5 py-0.5 text-xs font-bold text-amber-700">
+                <Crown className="h-3 w-3" /> PREMIUM
+              </span>
+              <span className="text-sm font-semibold text-gray-700">Plano ativo</span>
+            </div>
+            <p className="text-sm text-gray-500 mb-4">
+              {user.planExpiresAt ? (
+                <>
+                  Renova automaticamente em{" "}
+                  <span className="font-semibold text-gray-700">
+                    {new Date(user.planExpiresAt).toLocaleDateString("pt-BR")}
+                  </span>
+                  .{" "}
+                </>
+              ) : (
+                <>Assinatura recorrente com renovação automática. </>
+              )}
+              No portal você pode trocar o cartão, ver as faturas ou{" "}
+              <span className="font-semibold text-gray-700">cancelar quando quiser</span> — o
+              acesso continua até o fim do período já pago.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={openPortal}
+              disabled={portalLoading}
+              className="gap-2"
+            >
+              <Crown className="h-4 w-4" />
+              {portalLoading ? "Abrindo…" : "Gerenciar ou cancelar assinatura"}
+            </Button>
+          </>
+        ) : (
+          <>
+            <p className="text-sm text-gray-500 mb-4">
+              Você está no plano <span className="font-semibold text-gray-700">Gratuito</span>.
+              O Premium libera viagens e atividades ilimitadas, roteiros na comunidade,
+              experiências ilimitadas e suporte prioritário.
+            </p>
+            <Link href="/pricing">
+              <Button size="sm" className="gap-2">
+                <Sparkles className="h-4 w-4" />
+                Conhecer o Premium
+              </Button>
+            </Link>
+          </>
+        )}
+      </div>
+
       {/* ── Change password ── */}
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-5">
         <h2 className="font-bold text-gray-800 flex items-center gap-2">
