@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LandingClient } from "@/components/landing/landing-client";
+import { NativeLandingGuard } from "@/components/native/native-landing-guard";
 
 export const metadata: Metadata = {
   title: "RoteiroApp — Planeje viagens sem 27 abas | Grátis",
@@ -25,5 +26,11 @@ export const metadata: Metadata = {
 };
 
 export default function LandingPage() {
-  return <LandingClient />;
+  return (
+    <>
+      {/* No app nativo, manda para /dashboard em vez de mostrar marketing */}
+      <NativeLandingGuard />
+      <LandingClient />
+    </>
+  );
 }

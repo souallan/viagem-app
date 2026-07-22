@@ -10,7 +10,11 @@ const config: CapacitorConfig = {
   appName: "RoteiroApp",
   webDir: "mobile/www",
   server: {
-    url: "https://roteiroapp.com",
+    // Abre direto na área do app, NÃO na landing page. Um app que abre em página
+    // de marketing ("conheça o RoteiroApp", planos, FAQ) parece um site dentro de
+    // uma moldura. /dashboard exige sessão: o middleware manda para /login quando
+    // não há, que é exatamente o que se espera ao abrir um app.
+    url: "https://roteiroapp.com/dashboard",
     cleartext: false,
   },
   backgroundColor: "#0E1520",

@@ -31,8 +31,13 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
   ];
 
   return (
+    // NÃO usar `fixed` aqui. Este componente é reaproveitado dentro do drawer
+    // mobile, que esconde o menu com `-translate-x-full`. Um filho `fixed` sai do
+    // fluxo, o wrapper fica com largura 0 e `translateX(-100%)` vira translateX(0)
+    // — o menu ficava permanentemente na tela, sem fechar nem pelo X.
+    // Quem posiciona é o wrapper (fixed no desktop, fixed + translate no mobile).
     <aside
-      className="w-64 flex flex-col h-screen fixed left-0 top-0 overflow-hidden border-r border-white/5"
+      className="w-64 flex flex-col h-screen overflow-hidden border-r border-white/5"
       style={{
         background: "linear-gradient(180deg, #0E1520 0%, #111827 100%)",
       }}

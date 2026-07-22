@@ -39,8 +39,10 @@ export function AppShell({
   return (
     <div className="flex min-h-screen bg-background">
 
-      {/* ── Desktop sidebar (always visible md+) ── */}
-      <div className="hidden md:block print:hidden">
+      {/* ── Desktop sidebar (always visible md+) ──
+          O `fixed` mora aqui, e não no Sidebar: dentro do drawer mobile um filho
+          fixed zerava a largura do wrapper e quebrava o translate de fechar. */}
+      <div className="hidden md:block fixed inset-y-0 left-0 z-30 print:hidden">
         <Sidebar isAdmin={isAdmin} />
       </div>
 
