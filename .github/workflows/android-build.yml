@@ -1,0 +1,120 @@
+name: Build Android
+
+# Compila o app Android na nuvem. Existe porque a máquina de desenvolvimento não
+# tem Java nem Android SDK — os runners do GitHub já vêm com os dois, então dá
+# para gerar um APK instalável sem instalar ~GBs localmente.
+#
+# - debug (padrão): APK assinado com a chave de debug do Android, serve para
+#   instalar no celular e testar. NÃO serve para a Play Store.
+# - release: AAB para a Play Store. Só funciona depois que os secrets do keystore
+#   existirem (ver bloco "Assinar" abaixo).
+#
+# Roda sob demanda (workflow_dispatch) e quando algo do app nativo muda.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tipo:
+        description: "O que compilar"
+        type: choice
+        options: [debug, release]
+        default: debug
+  push:
+    branches: [main]
+    paths:
+      - "android/**"
+      - "capacitor.config.ts"
+      - "mobile/**"
+      - ".github/workflows/android-build.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      # Não usamos `npm ci` porque o package-lock pode estar defasado em relação
+      # a instalações feitas na mão; `npm install` resolve e segue.
+      - name: Instalar dependências
+        run: npm install --no-audit --no-fund
+
+      # Modelo A (WebView remoto): o webDir `mobile/www` é só o fallback de cold
+      # start, então NÃO é preciso rodar `next build` aqui — o app carrega
+      # roteiroapp.com em tempo de execução.
+      - name: Sincronizar Capacitor
+        run: npx cap sync android
+
+      - name: Definir tipo de build
+        id: tipo
+        run: echo "valor=${{ github.event.inputs.tipo || 'debug' }}" >> "$GITHUB_OUTPUT"
+
+      # ── Assinar (só release) ────────────────────────────────────────────────
+      # Requer os secrets: ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD,
+      # ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD.
+      # Gerar o keystore uma única vez e guardar em local seguro:
+      #   keytool -genkeypair -v -keystore upload.jks -keyalg RSA -keysize 2048 \
+      #           -validity 10000 -alias upload
+      #   base64 -w0 upload.jks   → conteúdo do secret ANDROID_KEYSTORE_BASE64
+      # PERDER esse arquivo significa não conseguir mais atualizar o app na loja.
+      - name: Restaurar keystore
+        if: steps.tipo.outputs.valor == 'release'
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$KEYSTORE_B64" ]; then
+            echo "::error::Secret ANDROID_KEYSTORE_BASE64 ausente — configure os secrets do keystore antes de compilar release."
+            exit 1
+          fi
+          echo "$KEYSTORE_B64" | base64 -d > android/app/upload.jks
+
+      - name: Compilar APK de debug
+        if: steps.tipo.outputs.valor == 'debug'
+        working-directory: android
+        run: ./gradlew --no-daemon assembleDebug
+
+      - name: Compilar AAB de release
+        if: steps.tipo.outputs.valor == 'release'
+        working-directory: android
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          ./gradlew --no-daemon bundleRelease \
+            -Pandroid.injected.signing.store.file="$GITHUB_WORKSPACE/android/app/upload.jks" \
+            -Pandroid.injected.signing.store.password="$ANDROID_KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$ANDROID_KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$ANDROID_KEY_PASSWORD"
+
+      - name: Publicar APK de debug
+        if: steps.tipo.outputs.valor == 'debug'
+        uses: actions/upload-artifact@v4
+        with:
+          name: roteiroapp-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Publicar AAB de release
+        if: steps.tipo.outputs.valor == 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: roteiroapp-release-aab
+          path: android/app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+
+      # O keystore fica no disco efêmero do runner, mas apagamos explicitamente
+      # para não sobrar em nenhum passo posterior.
+      - name: Limpar keystore
+        if: always()
+        run: rm -f android/app/upload.jks
