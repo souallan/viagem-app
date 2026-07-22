@@ -62,6 +62,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `Session` | |
 | `VerificationToken` | |
 | `TrustedDevice` | |
+| `DeviceToken` | |
 | `Trip` | |
 | `TripMember` | |
 | `Activity` | |
@@ -114,6 +115,7 @@ Registered routes:
 - `/admin/stats` — GET
 - `/admin/users` — DELETE, GET, PATCH
 - `/announcement` — GET
+- `/assetlinks` — GET
 - `/auth/[...nextauth]` — 
 - `/auth/check-admin-credentials` — POST
 - `/auth/check-credentials` — POST
@@ -135,6 +137,7 @@ Registered routes:
 - `/posts/[slug]` — GET
 - `/posts` — GET
 - `/public-stats` — GET
+- `/push/register` — DELETE, POST
 - `/referral` — GET
 - `/register` — POST
 - `/share/[token]` — GET
