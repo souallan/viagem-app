@@ -54,7 +54,7 @@ export const landingI18n = {
         name: "Grátis", price: "R$ 0", period: "/sempre",
         desc: "Para começar a organizar suas viagens.",
         cta: "Começar grátis",
-        features: ["Até 3 viagens ativas", "Até 20 atividades por viagem", "Orçamento e controle de gastos", "Malas, documentos e diário", "1 roteiro na comunidade"],
+        features: ["Até 3 viagens ativas", "Até 20 atividades por viagem", "Orçamento e controle de gastos", "Malas, documentos e diário", "1 roteiro na comunidade", "Exportar roteiro em PDF"],
       },
       premium: {
         name: "Premium", price: "R$ 13,25", period: "/mês",
@@ -62,7 +62,7 @@ export const landingI18n = {
         desc: "Para quem viaja de verdade.",
         cta: "Assinar Premium",
         featuresIntro: "Tudo do grátis, mais:",
-        features: ["Viagens e atividades ilimitadas", "Roteiros da comunidade ilimitados", "Exportar roteiro em PDF", "Suporte prioritário", "Selo de apoiador no perfil"],
+        features: ["Viagens e atividades ilimitadas", "Roteiros da comunidade ilimitados", "Suporte prioritário", "Selo de apoiador no perfil"],
       },
     },
     app: {
@@ -160,7 +160,7 @@ export const landingI18n = {
         name: "Free", price: "$ 0", period: "/forever",
         desc: "To start organizing your trips.",
         cta: "Start for free",
-        features: ["Up to 3 active trips", "Up to 20 activities per trip", "Budget and expense tracking", "Packing, documents and diary", "1 community route"],
+        features: ["Up to 3 active trips", "Up to 20 activities per trip", "Budget and expense tracking", "Packing, documents and diary", "1 community route", "Export itinerary to PDF"],
       },
       premium: {
         name: "Premium", price: "$ 13.25", period: "/mo",
@@ -168,7 +168,7 @@ export const landingI18n = {
         desc: "For those who really travel.",
         cta: "Get Premium",
         featuresIntro: "Everything in Free, plus:",
-        features: ["Unlimited trips and activities", "Unlimited community routes", "Export itinerary to PDF", "Priority support", "Supporter badge on profile"],
+        features: ["Unlimited trips and activities", "Unlimited community routes", "Priority support", "Supporter badge on profile"],
       },
     },
     app: {
@@ -266,7 +266,7 @@ export const landingI18n = {
         name: "Gratis", price: "$ 0", period: "/siempre",
         desc: "Para empezar a organizar tus viajes.",
         cta: "Empezar gratis",
-        features: ["Hasta 3 viajes activos", "Hasta 20 actividades por viaje", "Presupuesto y control de gastos", "Equipaje, documentos y diario", "1 ruta en la comunidad"],
+        features: ["Hasta 3 viajes activos", "Hasta 20 actividades por viaje", "Presupuesto y control de gastos", "Equipaje, documentos y diario", "1 ruta en la comunidad", "Exportar itinerario en PDF"],
       },
       premium: {
         name: "Premium", price: "$ 13,25", period: "/mes",
@@ -274,7 +274,7 @@ export const landingI18n = {
         desc: "Para quienes viajan de verdad.",
         cta: "Obtener Premium",
         featuresIntro: "Todo lo gratis, y además:",
-        features: ["Viajes y actividades ilimitados", "Rutas de la comunidad ilimitadas", "Exportar itinerario en PDF", "Soporte prioritario", "Insignia de apoyo en el perfil"],
+        features: ["Viajes y actividades ilimitados", "Rutas de la comunidad ilimitadas", "Soporte prioritario", "Insignia de apoyo en el perfil"],
       },
     },
     app: {
