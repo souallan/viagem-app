@@ -62,6 +62,13 @@ jobs:
         id: tipo
         run: echo "valor=${{ github.event.inputs.tipo || 'debug' }}" >> "$GITHUB_OUTPUT"
 
+      # Rede de segurança: o bit de executável do gradlew se perde com facilidade
+      # quando o repositório é manipulado no Windows, e o Gradle falha com exit
+      # 126 ("found but not executable"). O modo correto já está versionado, mas
+      # isto evita que uma regressão volte a quebrar o build.
+      - name: Garantir gradlew executável
+        run: chmod +x android/gradlew
+
       # ── Assinar (só release) ────────────────────────────────────────────────
       # Requer os secrets: ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD,
       # ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD.
