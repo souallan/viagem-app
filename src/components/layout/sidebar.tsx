@@ -36,8 +36,13 @@ export function Sidebar({ isAdmin = false, onClose }: { isAdmin?: boolean; onClo
     // fluxo, o wrapper fica com largura 0 e `translateX(-100%)` vira translateX(0)
     // — o menu ficava permanentemente na tela, sem fechar nem pelo X.
     // Quem posiciona é o wrapper (fixed no desktop, fixed + translate no mobile).
+    // `relative`: a grade e a linha de acento internas são `absolute` e sem isto
+    // se ancoravam no viewport no desktop.
+    // `100dvh` + scroll + áreas seguras: com viewportFit=cover, `h-screen` +
+    // `overflow-hidden` deixava o topo sob a status bar e o rodapé (idioma,
+    // Sair) sob a barra de gestos, sem como rolar até eles.
     <aside
-      className="w-64 flex flex-col h-screen overflow-hidden border-r border-white/5"
+      className="relative w-64 flex flex-col h-[100dvh] overflow-y-auto overscroll-contain border-r border-white/5"
       style={{
         background: "linear-gradient(180deg, #0E1520 0%, #111827 100%)",
       }}

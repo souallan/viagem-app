@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import { isNativeApp } from "@/lib/native";
+import { dismissTop } from "@/lib/dismissable-stack";
+import { toast } from "@/lib/toast";
 
 /**
  * Inicializa os plugins nativos quando o app roda dentro do Capacitor.
@@ -37,9 +39,27 @@ export function NativeBootstrap() {
         await StatusBar.setBackgroundColor({ color: "#0E1520" }).catch(() => {});
         await SplashScreen.hide().catch(() => {});
 
+        // Botão VOLTAR do Android. Antes era cego para o estado da UI: com um
+        // modal aberto, voltar navegava para fora (perdendo o formulário) ou,
+        // sem histórico, FECHAVA O APP. Agora respeita a hierarquia esperada.
+        let ultimoBack = 0;
         const backSub = await App.addListener("backButton", ({ canGoBack }) => {
-          if (canGoBack) window.history.back();
-          else App.exitApp();
+          // 1) Fecha o que estiver aberto por cima (modal, confirmação, drawer)
+          if (dismissTop()) return;
+          // 2) Volta no histórico
+          if (canGoBack) {
+            window.history.back();
+            return;
+          }
+          // 3) Na raiz: duplo toque para sair. Fechar no primeiro toque, sem
+          //    aviso, é percebido como travamento — convenção do Android.
+          const agora = Date.now();
+          if (agora - ultimoBack < 2000) {
+            App.exitApp();
+            return;
+          }
+          ultimoBack = agora;
+          toast("Toque em voltar novamente para sair");
         });
         cleanups.push(() => backSub.remove());
 

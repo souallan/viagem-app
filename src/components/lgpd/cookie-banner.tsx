@@ -4,11 +4,17 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Shield, X } from "lucide-react";
 import { getConsent, setConsent } from "@/lib/consent";
+import { isNativeApp } from "@/lib/native";
 
 export function CookieBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    // Dentro do app nativo o banner não aparece: é aviso de cookies de site, e
+    // ficava flutuando (z-50) por cima da bottom-nav (z-40) logo no primeiro
+    // uso — nada denuncia mais "isto é um site" do que isso. No app o
+    // tratamento de dados é o declarado na ficha da loja / política do app.
+    if (isNativeApp()) return;
     // Só aparece enquanto não houver uma escolha explícita registrada.
     if (!getConsent()) setVisible(true);
   }, []);

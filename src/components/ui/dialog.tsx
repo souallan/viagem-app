@@ -3,6 +3,7 @@
 import * as React from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { pushDismissable } from "@/lib/dismissable-stack";
 
 interface DialogProps {
   open: boolean;
@@ -51,8 +52,14 @@ function Dialog({ open, onClose, children, className }: DialogProps) {
       }
     };
 
+    // Registra na pilha de dispensáveis para o botão VOLTAR do Android fechar
+    // este modal em vez de navegar para fora (ou fechar o app). `Escape` acima
+    // resolve só no desktop — no Android essa tecla não existe.
+    const unregister = pushDismissable(onClose);
+
     document.addEventListener("keydown", handleKey);
     return () => {
+      unregister();
       document.removeEventListener("keydown", handleKey);
       document.body.style.overflow = prevOverflow;
       previouslyFocused?.focus?.();
