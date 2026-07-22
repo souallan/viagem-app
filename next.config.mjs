@@ -32,6 +32,14 @@ const nextConfig = {
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
+  async rewrites() {
+    return [
+      // O Android exige o arquivo exatamente em /.well-known/assetlinks.json.
+      // Uma pasta iniciada por ponto dentro de app/ não vira rota, então servimos
+      // pela rota de API e reescrevemos o caminho.
+      { source: "/.well-known/assetlinks.json", destination: "/api/assetlinks" },
+    ];
+  },
 };
 
 // Only wrap with Sentry if DSN + auth token are both set (auth token needed for source map upload)

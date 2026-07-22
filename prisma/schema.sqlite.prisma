@@ -43,6 +43,7 @@ model User {
   routeComments    RouteComment[]
   posts            Post[]
   trustedDevices   TrustedDevice[]
+  deviceTokens     DeviceToken[]
 }
 
 model Account {
@@ -91,6 +92,22 @@ model TrustedDevice {
   createdAt  DateTime @default(now())
   lastUsedAt DateTime @default(now())
   expiresAt  DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// Token de push (FCM) de um aparelho. Um usuario pode ter varios (celular, tablet).
+// `token` e unico: se o mesmo aparelho for usado por outra conta, o registro migra
+// de dono em vez de duplicar. Tokens invalidados pelo FCM sao apagados no envio.
+model DeviceToken {
+  id         String   @id @default(cuid())
+  userId     String
+  token      String   @unique
+  platform   String
+  createdAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

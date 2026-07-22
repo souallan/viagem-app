@@ -22,6 +22,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!-- Android App Links: links roteiroapp.com abrem no app em vez do
+                 navegador. `autoVerify` faz o sistema conferir o arquivo
+                 https://roteiroapp.com/.well-known/assetlinks.json, que só passa a
+                 responder quando ANDROID_CERT_FINGERPRINTS estiver setada com a
+                 impressão SHA-256 do Play App Signing. Sem isso o link continua
+                 abrindo no navegador (degrada, não quebra). -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="roteiroapp.com" />
+                <data android:scheme="https" android:host="www.roteiroapp.com" />
+            </intent-filter>
+
         </activity>
 
         <provider
