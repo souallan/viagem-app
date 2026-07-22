@@ -93,6 +93,20 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
+        {/* Marca o app nativo ANTES da primeira pintura. Precisa ser aqui e não num
+            useEffect: as ofertas de assinatura são escondidas por CSS dentro do app
+            (política de Pagamentos do Google — ver .hide-in-app em globals.css), e um
+            botão de compra piscando por um frame é justamente o que não pode aparecer.
+            O NativeBootstrap reaplica a classe depois, caso a ponte do Capacitor
+            ainda não tenha sido injetada neste ponto. */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          try {
+            var c = window.Capacitor;
+            if (c && typeof c.isNativePlatform === 'function' && c.isNativePlatform()) {
+              document.documentElement.classList.add('is-native-app');
+            }
+          } catch (e) {}
+        ` }} />
         {/* JSON-LD structured data */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD_ORGANIZATION) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD_WEBSITE) }} />

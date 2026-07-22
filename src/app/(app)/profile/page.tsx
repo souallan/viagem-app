@@ -300,7 +300,7 @@ export default function ProfilePage() {
               ) : (
                 <Link
                   href="/pricing"
-                  className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-700"
+                  className="hide-in-app flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-700"
                 >
                   <Sparkles className="h-3 w-3" />
                   Seja Premium
@@ -521,11 +521,17 @@ export default function ProfilePage() {
         ) : (
           <>
             <p className="text-sm text-gray-500 mb-4">
-              Você está no plano <span className="font-semibold text-gray-700">Gratuito</span>.
-              O Premium libera viagens e atividades ilimitadas, roteiros na comunidade,
-              experiências ilimitadas e suporte prioritário.
+              Você está no plano <span className="font-semibold text-gray-700">Gratuito</span>
+              <span className="hide-in-app">
+                . O Premium libera viagens e atividades ilimitadas, roteiros na
+                comunidade, experiências ilimitadas e suporte prioritário
+              </span>
+              .
             </p>
-            <Link href="/pricing">
+            {/* Dentro do app nativo não pode haver oferta de compra nem indicação de
+                onde comprar (política de Pagamentos do Google). O card continua
+                existindo para o usuário saber em que plano está. */}
+            <Link href="/pricing" className="hide-in-app inline-block">
               <Button size="sm" className="gap-2">
                 <Sparkles className="h-4 w-4" />
                 Conhecer o Premium

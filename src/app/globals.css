@@ -267,3 +267,22 @@
     transition: background-color 9999s ease-in-out 0s;
   }
 }
+
+/* ── App nativo: política de Pagamentos do Google ────────────────────────────
+   O Google exige que conteúdo digital consumido dentro do app seja vendido pelo
+   faturamento do Play. Nossa assinatura é cobrada pela Stripe no site, então o
+   app Android NÃO pode oferecer a compra nem apontar para onde comprar — isso é
+   motivo de REMOÇÃO da loja, não só de rejeição. Mesmo modelo de Netflix/Spotify:
+   dentro do app não se vende, apenas se reconhece quem já assina.
+   A classe `is-native-app` é aplicada no <head> (layout.tsx), antes da primeira
+   pintura, para o botão de compra não piscar nem por um frame.
+
+   Ficam FORA de @layer para não dependerem da detecção de classes do Tailwind:
+   `hide-in-app` só aparece no HTML junto de outras classes, e uma mudança futura
+   na varredura de conteúdo poderia purgá-la. Aqui a emissão é garantida.
+   Na web nada muda. */
+.is-native-app .hide-in-app { display: none !important; }
+
+/* Conteúdo que só aparece dentro do app (ex.: aviso neutro no lugar do botão) */
+.only-in-app { display: none; }
+.is-native-app .only-in-app { display: block; }

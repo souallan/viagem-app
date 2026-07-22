@@ -172,19 +172,32 @@ export default function PricingPage() {
               )}
             </div>
 
+            {/* Ponto de venda propriamente dito: sai de cena dentro do app nativo.
+                A cobrança é feita pela Stripe, fora do faturamento do Play; manter
+                o botão aqui violaria a política de Pagamentos do Google e é motivo
+                de remoção da loja. A comparação de planos abaixo continua visível
+                (é informação, não oferta). */}
             <button
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl font-bold text-white bg-cta-blue shadow-primary-md transition-all hover:opacity-90 hover:scale-[1.02] mb-8 disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
+              className="hide-in-app w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl font-bold text-white bg-cta-blue shadow-primary-md transition-all hover:opacity-90 hover:scale-[1.02] mb-8 disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
               onClick={handleUpgrade}
             >
               <Zap className="h-4 w-4" />
               {loading ? "Redirecionando…" : "Assinar Premium"}
             </button>
 
-            <p className="text-[11px] text-slate-500 leading-relaxed -mt-5 mb-8">
+            <p className="hide-in-app text-[11px] text-slate-500 leading-relaxed -mt-5 mb-8">
               Assinatura recorrente com renovação automática ({annual ? "anual" : "mensal"}). Cobrança via Stripe.
               Cancele quando quiser pelo app. Direito de arrependimento de 7 dias (CDC art. 49). Ao assinar, você aceita os{" "}
               <Link href="/terms" className="underline hover:text-slate-300">Termos de Uso</Link>.
+            </p>
+
+            {/* Substituto neutro no app: explica o que o plano inclui sem oferecer
+                a compra nem dizer onde comprar (a regra de anti-direcionamento
+                proíbe apontar para o canal externo). */}
+            <p className="only-in-app text-xs text-slate-500 leading-relaxed mb-8 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+              Recursos disponíveis para assinantes Premium. Se você já é assinante,
+              entre com sua conta para liberá-los automaticamente.
             </p>
 
             <ul className="space-y-3">

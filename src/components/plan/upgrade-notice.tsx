@@ -7,6 +7,11 @@ import { Crown } from "lucide-react";
  * Aviso mostrado quando o usuário bate um limite do plano gratuito.
  * A API responde 403 com `{ error, code: "PLAN_LIMIT" }` — este é o momento
  * de maior intenção de compra, então oferece o upgrade em vez de só dar erro.
+ *
+ * No app nativo o link some (`hide-in-app`): oferecer a compra dentro do app,
+ * com a cobrança acontecendo fora do faturamento do Play, é motivo de remoção
+ * da loja. A mensagem do limite continua aparecendo — o usuário precisa saber
+ * por que a ação não funcionou.
  */
 export function UpgradeNotice({ message }: { message: string }) {
   return (
@@ -18,7 +23,7 @@ export function UpgradeNotice({ message }: { message: string }) {
         <p className="text-sm text-amber-900">{message}</p>
         <Link
           href="/pricing"
-          className="inline-flex items-center gap-1.5 mt-2 text-sm font-bold text-amber-900 underline underline-offset-2 hover:text-amber-700 transition-colors"
+          className="hide-in-app inline-flex items-center gap-1.5 mt-2 text-sm font-bold text-amber-900 underline underline-offset-2 hover:text-amber-700 transition-colors"
         >
           Ver planos Premium →
         </Link>

@@ -37,10 +37,12 @@ export function PremiumBadge() {
     );
   }
 
+  // `hide-in-app`: oferta de assinatura não pode aparecer dentro do app nativo
+  // (política de Pagamentos do Google — ver globals.css). Na web segue normal.
   return (
     <Link
       href="/pricing"
-      className="flex items-center gap-2 px-3 py-2 rounded-lg border border-white/8 hover:border-primary-500/30 hover:bg-white/5 transition-all group"
+      className="hide-in-app flex items-center gap-2 px-3 py-2 rounded-lg border border-white/8 hover:border-primary-500/30 hover:bg-white/5 transition-all group"
     >
       <Sparkles className="h-3.5 w-3.5 text-slate-500 group-hover:text-primary-400 shrink-0 transition-colors" />
       <span className="text-xs font-semibold text-slate-400 group-hover:text-slate-200 transition-colors">Seja Premium</span>

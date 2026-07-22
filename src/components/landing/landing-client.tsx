@@ -230,8 +230,11 @@ export function LandingClient() {
               </div>
               <p className="text-xs text-slate-500 mt-1">{t.plans.premium.note}</p>
               <p className="text-sm text-slate-400 mt-2 mb-6">{t.plans.premium.desc}</p>
+              {/* "Assinar Premium" é CTA de compra: sai de cena no app nativo
+                  (política de Pagamentos do Google). A landing é alcançável pelo
+                  app quando o usuário está deslogado. */}
               <Link href="/pricing" onClick={cta("plans_premium")}
-                className="flex items-center justify-center gap-2 w-full text-center py-3 px-6 rounded-xl font-bold text-white bg-cta-blue shadow-primary-md hover:opacity-90 transition-all mb-7">
+                className="hide-in-app flex items-center justify-center gap-2 w-full text-center py-3 px-6 rounded-xl font-bold text-white bg-cta-blue shadow-primary-md hover:opacity-90 transition-all mb-7">
                 <Zap className="h-4 w-4" /> {t.plans.premium.cta}
               </Link>
               <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide mb-3">{t.plans.premium.featuresIntro}</p>

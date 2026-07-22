@@ -14,6 +14,12 @@ import { isNativeApp } from "@/lib/native";
 export function NativeBootstrap() {
   useEffect(() => {
     if (!isNativeApp()) return;
+
+    // Rede de segurança do script inline do <head>: se a ponte do Capacitor foi
+    // injetada depois dele, a classe é aplicada agora. Sem ela, as ofertas de
+    // assinatura ficariam visíveis dentro do app (política de Pagamentos do Google).
+    document.documentElement.classList.add("is-native-app");
+
     const cleanups: Array<() => void> = [];
 
     (async () => {
