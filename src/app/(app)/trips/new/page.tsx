@@ -81,9 +81,10 @@ function DestinationBuilder({
   const [dragIdx, setDragIdx] = useState<number | null>(null);
   const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
 
-  function add() {
-    const val = input.trim();
+  function add(valor?: string) {
+    const val = (valor ?? input).trim();
     if (!val) return;
+    if (destinations.includes(val)) { setInput(""); setInputValidated(false); return; }
     onChange([...destinations, val]);
     setInput("");
     setInputValidated(false);
@@ -152,9 +153,17 @@ function DestinationBuilder({
       {/* Input row */}
       <div className="flex gap-2">
         <div className="flex-1">
+          {/* Ao escolher uma sugestão validada, o destino entra na lista sozinho.
+              Antes era preciso tocar em "Adicionar": quem escolhia a sugestão e
+              ia direto em "Criar viagem" levava o erro "Adicione pelo menos um
+              destino" com o texto ainda visível no campo — parecia bug. */}
           <LocationInput
             value={input}
-            onChange={(val, validated) => { setInput(val); setInputValidated(validated); }}
+            onChange={(val, validated) => {
+              if (validated && val.trim()) { add(val); return; }
+              setInput(val);
+              setInputValidated(validated);
+            }}
             placeholder="Ex: Paris, França"
           />
           {input.trim() && !inputValidated && (
@@ -165,7 +174,7 @@ function DestinationBuilder({
         </div>
         <Button
           type="button"
-          onClick={add}
+          onClick={() => add()}
           disabled={!input.trim()}
           className="shrink-0 gap-1.5 self-start"
         >

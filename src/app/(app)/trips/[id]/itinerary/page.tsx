@@ -738,6 +738,20 @@ export default function ItineraryPage() {
     setOpen(true);
   }
 
+  /**
+   * Abre o formulário de nova atividade já com a data preenchida.
+   * O app conhece a data da viagem (`tripStartDate`), mas o formulário nascia
+   * com o campo vazio e obrigatório — dois toques a mais em TODA atividade.
+   * Regra: viagem que ainda não começou usa a data de início; caso contrário, hoje.
+   */
+  function openNew() {
+    const hoje = new Date().toISOString().slice(0, 10);
+    const padrao = tripStartDate && tripStartDate > hoje ? tripStartDate : hoje;
+    setEditingId(null);
+    setForm({ ...EMPTY_FORM, date: padrao });
+    setOpen(true);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (form.startTime && form.endTime && form.endTime < form.startTime) {
@@ -837,7 +851,7 @@ export default function ItineraryPage() {
             </Button>
           )}
 
-          <Button onClick={() => setOpen(true)} className="gap-2" size="sm">
+          <Button onClick={openNew} className="gap-2" size="sm">
             <Plus className="h-4 w-4" />
             {t.itinerary.addActivity}
           </Button>
@@ -860,7 +874,7 @@ export default function ItineraryPage() {
           <div className="text-5xl mb-4">📅</div>
           <p className="font-semibold text-gray-500">{t.itinerary.noActivities}</p>
           <p className="text-sm mt-1">{t.itinerary.noActivitiesDesc}</p>
-          <Button onClick={() => setOpen(true)} className="mt-6 gap-2" size="sm">
+          <Button onClick={openNew} className="mt-6 gap-2" size="sm">
             <Plus className="h-4 w-4" /> {t.itinerary.addActivity}
           </Button>
         </div>
@@ -992,7 +1006,7 @@ export default function ItineraryPage() {
               </div>
               <div className="space-y-2">
                 <Label>{t.itinerary.formDate}</Label>
-                <Input name="date" type="date" value={form.date} min={new Date().toISOString().slice(0, 10)} onChange={handleChange} required />
+                <Input name="date" type="date" value={form.date} onChange={handleChange} required />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
