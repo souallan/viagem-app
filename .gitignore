@@ -43,3 +43,9 @@ prisma/dev.db-journal
 
 # Dumps de backup do banco (dados de clientes — nunca versionar)
 /backups/
+
+# Chaves de assinatura Android — NUNCA versionar.
+# Vazar o keystore permite que terceiros publiquem atualizacoes falsas do app.
+*.jks
+*.keystore
+upload-keystore*.txt
