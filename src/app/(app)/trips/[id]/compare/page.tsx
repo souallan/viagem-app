@@ -127,9 +127,59 @@ function SegmentCard({
         </div>
       </div>
 
-      {/* Table */}
+      {/* ── Celular: um cartão por meio de transporte ──
+          A tabela abaixo soma ~700px de colunas. Em 360px, preencher 25 campos
+          exigia rolar horizontalmente a cada campo — inviável no toque. */}
       {open && (
-        <div className="overflow-x-auto">
+        <div className="sm:hidden divide-y divide-gray-100">
+          {MODES.map((mode) => {
+            const q = segment.quotes[mode.key];
+            const Icon = mode.icon;
+            const isCheapest = cheapest?.key === mode.key;
+            const priceNum = parsePriceNum(q.price);
+            const brlEquiv = showConversion && priceNum !== null && brlRate !== null ? priceNum * brlRate : null;
+            const campo = "h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-base focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400/20";
+            return (
+              <div key={mode.key} className={cn("p-4 space-y-2", isCheapest && "bg-green-50/60")}>
+                <div className="flex items-center justify-between">
+                  <div className={cn("inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-semibold border", mode.bg, mode.color, mode.border)}>
+                    <Icon className="h-3.5 w-3.5" />
+                    {mode.label[lang] ?? mode.label.pt}
+                  </div>
+                  {isCheapest && (
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-green-700">
+                      <TrendingDown className="h-3.5 w-3.5" /> Mais barato
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-gray-500 w-10 shrink-0">{symbol}</span>
+                  <input type="number" min="0" step="0.01" inputMode="decimal" value={q.price}
+                    onChange={e => setQuote(mode.key, "price", e.target.value)} placeholder="0,00" className={campo} />
+                </div>
+                {brlEquiv !== null && (
+                  <p className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1 pl-12">
+                    <ArrowLeftRight className="h-2.5 w-2.5" />
+                    R$ {brlEquiv.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </p>
+                )}
+
+                <input value={q.duration} onChange={e => setQuote(mode.key, "duration", e.target.value)}
+                  placeholder="Duração (ex: 2h30)" className={campo} />
+                <input value={q.company} onChange={e => setQuote(mode.key, "company", e.target.value)}
+                  placeholder="Empresa / Cia" className={campo} />
+                <input value={q.notes} onChange={e => setQuote(mode.key, "notes", e.target.value)}
+                  placeholder="Observações" className={campo} />
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Table — desktop */}
+      {open && (
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100">

@@ -107,10 +107,42 @@ const categoryColors: Record<string, string> = {
   OTHER: "bg-gray-50 text-gray-700",
 };
 
+// Palavras que indicam a categoria do gasto. Só é usada enquanto o usuário não
+// escolher a categoria na mão — a partir daí ela não sobrescreve mais nada.
+//
+// Os padrões são SEM ACENTO de propósito: o título é normalizado antes da
+// comparação. Isso resolve dois problemas de uma vez — o usuário que digita
+// "cafe"/"onibus" é reconhecido, e o `\b` volta a funcionar. (Em JS, `\b` se
+// baseia em [A-Za-z0-9_], então letras acentuadas NÃO são caractere de palavra:
+// "Café" e "Metrô" nunca casavam com um `\b` no fim do padrão.)
+const PISTAS_CATEGORIA: Array<[string, RegExp]> = [
+  ["FOOD",          /\b(almoco|jantar|cafe|lanche|restaurante|padaria|bar|pizza|mercado|supermercado|comida|sorvete|brunch|sushi|churrasco)\b/],
+  ["TRANSPORT",     /\b(uber|taxi|metro|onibus|trem|passagem|voo|combustivel|gasolina|pedagio|estacionamento|bilhete|aluguel de carro)\b/],
+  ["ACCOMMODATION", /\b(hotel|hostel|pousada|airbnb|diaria|hospedagem|resort|quarto)\b/],
+  ["ACTIVITY",      /\b(ingresso|passeio|tour|museu|parque|show|entrada|excursao|mergulho|trilha)\b/],
+  ["SHOPPING",      /\b(loja|compra|souvenir|lembranca|shopping|roupa|presente)\b/],
+  ["HEALTH",        /\b(farmacia|remedio|medico|hospital|seguro|consulta|vacina)\b/],
+];
+
+function normalizar(texto: string): string {
+  return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+}
+
+function inferirCategoria(titulo: string): string | null {
+  const alvo = normalizar(titulo);
+  for (const [categoria, padrao] of PISTAS_CATEGORIA) {
+    if (padrao.test(alvo)) return categoria;
+  }
+  return null;
+}
+
 export default function BudgetPage() {
   const { t } = useLanguage();
   const { id } = useParams<{ id: string }>();
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  // Categoria "grudenta": o próximo gasto abre na última usada nesta viagem.
+  const [ultimaCategoria, setUltimaCategoria] = useState("OTHER");
+  const [categoriaTocada, setCategoriaTocada] = useState(false);
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [newParticipant, setNewParticipant] = useState("");
@@ -234,7 +266,20 @@ export default function BudgetPage() {
   const initial = (name: string) => name.trim().charAt(0).toUpperCase() || "?";
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-    setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+
+    // Escolher a categoria na mão desliga a inferência: a partir daí o que o
+    // usuário decidiu manda, mesmo que ele edite o título depois.
+    if (name === "category") setCategoriaTocada(true);
+
+    setForm((p) => {
+      const próximo = { ...p, [name]: value };
+      if (name === "title" && !categoriaTocada && !editingId) {
+        const inferida = inferirCategoria(value);
+        if (inferida) próximo.category = inferida;
+      }
+      return próximo;
+    });
   }
 
   function openEdit(expense: Expense) {
@@ -256,9 +301,14 @@ export default function BudgetPage() {
   function openNew() {
     setEditingId(null);
     setForm({
-      title: "", category: "OTHER", amount: "", currency: tripCurrency, date: new Date().toISOString().slice(0, 10),
+      // Repete a última categoria usada nesta viagem em vez de cair sempre em
+      // "Outros": quem está registrando gastos costuma lançar vários do mesmo
+      // tipo em sequência, então o padrão fixo cobrava um toque extra em quase
+      // todo lançamento. `inferirCategoria` ainda ajusta pelo texto ao digitar.
+      title: "", category: ultimaCategoria, amount: "", currency: tripCurrency, date: new Date().toISOString().slice(0, 10),
       notes: "", paidBy: "", paidById: "", sharedBy: participants.map((p) => p.id),
     });
+    setCategoriaTocada(false);
     setOpen(true);
   }
 
@@ -280,9 +330,10 @@ export default function BudgetPage() {
     });
     setLoading(false);
     if (res.ok) {
+      setUltimaCategoria(form.category); // o próximo gasto já abre nesta
       setOpen(false);
       setEditingId(null);
-      setForm({ title: "", category: "OTHER", amount: "", currency: tripCurrency, date: "", notes: "", paidBy: "", paidById: "", sharedBy: participants.map((p) => p.id) });
+      setForm({ title: "", category: form.category, amount: "", currency: tripCurrency, date: "", notes: "", paidBy: "", paidById: "", sharedBy: participants.map((p) => p.id) });
       load();
     }
   }

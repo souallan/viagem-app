@@ -200,8 +200,17 @@ function AccommodationCalendar({
         )}
       </div>
 
-      {/* ── Day-of-week headers ── */}
-      <div className="overflow-x-auto">
+      {/* ── Day-of-week headers ──
+          O calendário tem 560px de largura mínima: em 360px o usuário vê 3,5 das
+          7 colunas. A máscara à direita (fade) é a pista visual de que há mais
+          conteúdo para o lado — sem ela não havia nenhuma indicação. */}
+      <div
+        className="overflow-x-auto"
+        style={{
+          maskImage: "linear-gradient(to right, #000 92%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to right, #000 92%, transparent 100%)",
+        }}
+      >
       <div className="min-w-[560px]">
       <div className="grid grid-cols-7 border-b border-primary-100/80 bg-white/50">
         {Array.from({ length: 7 }, (_, i) =>

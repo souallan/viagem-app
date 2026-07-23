@@ -156,9 +156,17 @@ export default function DashboardPage() {
   );
 
   if (loading) {
+    // Esqueleto no MESMO formato do conteúdo, em vez de um spinner solto: a
+    // rota já mostra o skeleton de `loading.tsx` durante a navegação, então um
+    // spinner logo depois fazia a tela piscar entre dois estados diferentes.
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-coral-500 border-t-transparent" />
+      <div className="space-y-6" aria-busy="true" aria-live="polite">
+        <div className="skeleton rounded-2xl h-[180px]" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="skeleton rounded-2xl h-44" />
+          ))}
+        </div>
       </div>
     );
   }
