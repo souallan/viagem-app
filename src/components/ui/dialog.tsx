@@ -114,8 +114,10 @@ function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingEl
 
 // p-4 no celular: com p-6 fixo, uma tela de 360px deixava só 280px úteis dentro
 // do modal — os campos em duas colunas não cabiam.
+// `scroll-pb-24`: ao rolar um campo para a vista (quando o teclado abre), reserva
+// espaço abaixo dele, senão o último campo encosta na borda do teclado.
 function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("p-4 sm:p-6", className)} {...props} />;
+  return <div className={cn("p-4 sm:p-6 scroll-pb-24", className)} {...props} />;
 }
 
 // No celular os botões empilham e ocupam a linha inteira (`col-reverse` mantém a

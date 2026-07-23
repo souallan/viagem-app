@@ -39,7 +39,25 @@ export function NativeBootstrap() {
         let tecladoAberto = false;
         const kShow = await Keyboard.addListener("keyboardWillShow", () => { tecladoAberto = true; });
         const kHide = await Keyboard.addListener("keyboardWillHide", () => { tecladoAberto = false; });
-        cleanups.push(() => { void kShow.remove(); void kHide.remove(); });
+
+        // Traz o campo focado para a área visível quando o teclado abre.
+        // `resize: native` encolhe a WebView, mas NÃO rola até o campo: quem
+        // estava digitando perto do rodapé (ex.: orçamento em "Nova viagem")
+        // ficava com o próprio campo escondido atrás do teclado.
+        // `block: "center"` deixa o campo no meio do espaço que sobrou, o que
+        // funciona tanto para campo alto quanto para o rodapé de um modal.
+        const kDidShow = await Keyboard.addListener("keyboardDidShow", () => {
+          const el = document.activeElement as HTMLElement | null;
+          if (el && typeof el.scrollIntoView === "function") {
+            el.scrollIntoView({ block: "center", behavior: "smooth" });
+          }
+        });
+
+        cleanups.push(() => {
+          void kShow.remove();
+          void kHide.remove();
+          void kDidShow.remove();
+        });
 
         await StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
         // setBackgroundColor é Android-only (iOS ignora)
