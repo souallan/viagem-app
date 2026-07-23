@@ -10,7 +10,6 @@ import { trackEvent } from "@/lib/analytics";
 const FREE_FEATURES = [
   "1 viagem ativa",
   "Até 20 atividades por viagem",
-  "1 roteiro na comunidade",
   "Orçamento e controle de gastos",
   "Lista de malas inteligente",
   "Documentos e alertas de validade",

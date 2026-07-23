@@ -54,7 +54,7 @@ export const landingI18n = {
         name: "Grátis", price: "R$ 0", period: "/sempre",
         desc: "Para começar a organizar suas viagens.",
         cta: "Começar grátis",
-        features: ["1 viagem ativa", "Até 20 atividades por viagem", "Orçamento e controle de gastos", "Malas, documentos e diário", "1 roteiro na comunidade", "Exportar roteiro em PDF"],
+        features: ["1 viagem ativa", "Até 20 atividades por viagem", "Orçamento e controle de gastos", "Malas, documentos e diário", "Exportar roteiro em PDF"],
       },
       premium: {
         name: "Premium", price: "R$ 13,25", period: "/mês",
@@ -160,7 +160,7 @@ export const landingI18n = {
         name: "Free", price: "$ 0", period: "/forever",
         desc: "To start organizing your trips.",
         cta: "Start for free",
-        features: ["1 active trip", "Up to 20 activities per trip", "Budget and expense tracking", "Packing, documents and diary", "1 community route", "Export itinerary to PDF"],
+        features: ["1 active trip", "Up to 20 activities per trip", "Budget and expense tracking", "Packing, documents and diary", "Export itinerary to PDF"],
       },
       premium: {
         name: "Premium", price: "$ 13.25", period: "/mo",
@@ -266,7 +266,7 @@ export const landingI18n = {
         name: "Gratis", price: "$ 0", period: "/siempre",
         desc: "Para empezar a organizar tus viajes.",
         cta: "Empezar gratis",
-        features: ["1 viaje activo", "Hasta 20 actividades por viaje", "Presupuesto y control de gastos", "Equipaje, documentos y diario", "1 ruta en la comunidad", "Exportar itinerario en PDF"],
+        features: ["1 viaje activo", "Hasta 20 actividades por viaje", "Presupuesto y control de gastos", "Equipaje, documentos y diario", "Exportar itinerario en PDF"],
       },
       premium: {
         name: "Premium", price: "$ 13,25", period: "/mes",

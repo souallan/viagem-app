@@ -40,10 +40,10 @@ export async function POST(req: NextRequest) {
   if (limit !== Infinity) {
     const count = await prisma.communityRoute.count({ where: { userId: session.user.id } });
     if (count >= limit) {
-      return NextResponse.json(
-        planLimitError(`O plano gratuito permite publicar ${limit} roteiro na comunidade. Faça upgrade para o Premium para publicar quantos quiser.`),
-        { status: 403 }
-      );
+      const msg = limit === 0
+        ? "Publicar roteiros na comunidade é um recurso Premium. Ver os roteiros continua liberado no plano gratuito."
+        : `O plano gratuito permite publicar ${limit} roteiro na comunidade. Assine o Premium para publicar quantos quiser.`;
+      return NextResponse.json(planLimitError(msg), { status: 403 });
     }
   }
 

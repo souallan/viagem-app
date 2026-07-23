@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft, Plus, Trash2, Image as ImageIcon, X,
   MapPin, Clock, Wallet, Tag, Star, CalendarDays,
-  CheckCircle2, AlertCircle,
+  CheckCircle2, AlertCircle, Crown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -96,6 +96,19 @@ export default function ContributeRoutePage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [coverMode, setCoverMode] = useState<"preset" | "url">("preset");
+  // Publicar roteiro na comunidade é recurso Premium. null = ainda carregando.
+  const [isPremium, setIsPremium] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    fetch("/api/user/plan")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!d) { setIsPremium(false); return; }
+        const ativo = !d.planExpiresAt || new Date(d.planExpiresAt) > new Date();
+        setIsPremium(d.plan === "PREMIUM" && ativo);
+      })
+      .catch(() => setIsPremium(false));
+  }, []);
 
   // basic info
   const [title, setTitle] = useState("");
@@ -228,6 +241,28 @@ export default function ContributeRoutePage() {
           <p className="text-sm text-gray-500 mt-0.5">Compartilhe sua experiência com a comunidade de viajantes</p>
         </div>
       </div>
+
+      {/* Publicar na comunidade é Premium: bloqueia o formulário para o grátis,
+          antes de preencher tudo. O servidor também recusa (defesa em camadas). */}
+      {isPremium === false && (
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-center">
+          <div className="mx-auto w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center mb-3">
+            <Crown className="h-6 w-6 text-amber-600" />
+          </div>
+          <h2 className="font-bold text-gray-900">Publicar roteiros é um recurso Premium</h2>
+          <p className="text-sm text-gray-600 mt-1 max-w-md mx-auto">
+            No plano gratuito você pode ver e usar todos os roteiros da comunidade. Para
+            publicar os seus e inspirar outros viajantes, assine o Premium.
+          </p>
+          <Link href="/routes" className="inline-block mt-4 text-sm font-semibold text-amber-700 hover:text-amber-800">
+            ← Voltar aos roteiros
+          </Link>
+        </div>
+      )}
+
+      {/* Formulário só para Premium (ou enquanto carrega o plano) */}
+      {isPremium !== false && (
+      <>{/* wrapper do conteúdo original */}
 
       {/* Progress */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
@@ -516,6 +551,8 @@ export default function ContributeRoutePage() {
           </p>
         )}
       </form>
+      </>
+      )}
     </div>
   );
 }
