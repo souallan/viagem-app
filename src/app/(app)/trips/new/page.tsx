@@ -210,7 +210,7 @@ function DestinationBuilder({
                     type="button"
                     onClick={() => move(i, -1)}
                     disabled={i === 0}
-                    className="h-6 w-8 flex items-center justify-center rounded text-gray-400 disabled:opacity-25 active:bg-gray-100"
+                    className="h-6 w-8 flex items-center justify-center rounded text-gray-500 disabled:opacity-25 active:bg-gray-100"
                     aria-label={`Mover ${dest} para cima`}
                   >
                     <ChevronUp className="h-4 w-4" />
@@ -219,7 +219,7 @@ function DestinationBuilder({
                     type="button"
                     onClick={() => move(i, 1)}
                     disabled={i === destinations.length - 1}
-                    className="h-6 w-8 flex items-center justify-center rounded text-gray-400 disabled:opacity-25 active:bg-gray-100"
+                    className="h-6 w-8 flex items-center justify-center rounded text-gray-500 disabled:opacity-25 active:bg-gray-100"
                     aria-label={`Mover ${dest} para baixo`}
                   >
                     <ChevronDown className="h-4 w-4" />
@@ -258,7 +258,7 @@ function DestinationBuilder({
               <button
                 type="button"
                 onClick={() => remove(i)}
-                className="h-11 w-11 -m-2 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors shrink-0"
+                className="h-11 w-11 -m-2 flex items-center justify-center text-gray-500 hover:text-red-500 transition-colors shrink-0"
                 aria-label={`Remover ${dest}`}
               >
                 <X className="h-4 w-4" />
@@ -285,7 +285,7 @@ function DestinationBuilder({
               <span className="text-sm" aria-hidden="true">{guessFlag(dest)}</span>
               <span className="text-xs font-medium text-gray-700">{dest.split(",")[0]}</span>
               {i < destinations.length - 1 && (
-                <ArrowRight className="h-3 w-3 text-gray-400" aria-hidden="true" />
+                <ArrowRight className="h-3 w-3 text-gray-500" aria-hidden="true" />
               )}
             </span>
           ))}
@@ -295,7 +295,7 @@ function DestinationBuilder({
       {/* Popular suggestions */}
       {showPopular && (
         <div>
-          <p className="text-xs text-gray-400 mb-2 flex items-center gap-1">
+          <p className="text-xs text-gray-500 mb-2 flex items-center gap-1">
             <MapPin className="h-3 w-3" aria-hidden="true" />
             Destinos populares
           </p>
@@ -316,7 +316,7 @@ function DestinationBuilder({
       )}
 
       {destinations.length > 0 && destinations.length < 8 && (
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-gray-500">
           Pode adicionar mais destinos para criar um roteiro multi-cidade.
         </p>
       )}
@@ -524,7 +524,7 @@ function NewTripForm() {
             style={{ width: `${templateProgress}%` }}
           />
         </div>
-        <p className="text-xs text-gray-400">{templateProgress}% concluído</p>
+        <p className="text-xs text-gray-500">{templateProgress}% concluído</p>
       </div>
     );
   }
@@ -686,7 +686,7 @@ function NewTripForm() {
             {/* Foto de capa */}
             <div className="space-y-2">
               <Label className="flex items-center gap-1.5">
-                <ImageIcon className="h-3.5 w-3.5 text-gray-400" /> Foto de capa <span className="text-gray-400 font-normal">(opcional)</span>
+                <ImageIcon className="h-3.5 w-3.5 text-gray-500" /> Foto de capa <span className="text-gray-500 font-normal">(opcional)</span>
               </Label>
               {form.coverImage && (
                 <div className="relative rounded-xl overflow-hidden border border-gray-200 h-28">
@@ -869,7 +869,7 @@ export default function NewTripPage() {
   return (
     <Suspense
       fallback={
-        <div className="max-w-2xl mx-auto py-16 text-center text-gray-400">
+        <div className="max-w-2xl mx-auto py-16 text-center text-gray-500">
           Carregando...
         </div>
       }

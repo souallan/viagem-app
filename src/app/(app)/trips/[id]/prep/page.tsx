@@ -136,7 +136,7 @@ export default function PrepPage() {
     grouped[item.category].push(item);
   });
 
-  if (loading) return <div className="py-20 text-center text-gray-400">Carregando...</div>;
+  if (loading) return <div className="py-20 text-center text-gray-500">Carregando...</div>;
 
   return (
     <div className="space-y-6">
@@ -145,7 +145,7 @@ export default function PrepPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-lg font-bold text-gray-900">Preparativos da viagem</h2>
-          <p className="text-sm text-gray-400">Organize tudo antes de partir</p>
+          <p className="text-sm text-gray-500">Organize tudo antes de partir</p>
         </div>
         <div className="flex gap-2">
           {total > 0 && (
@@ -170,7 +170,7 @@ export default function PrepPage() {
           <div className="flex items-center justify-between mb-3">
             <div>
               <p className="text-sm font-bold text-gray-900">{done} de {total} tarefas concluídas</p>
-              <p className="text-xs text-gray-400">{pct === 100 ? "🎉 Tudo pronto para a viagem!" : `Faltam ${total - done} tarefa${total - done !== 1 ? "s" : ""}`}</p>
+              <p className="text-xs text-gray-500">{pct === 100 ? "🎉 Tudo pronto para a viagem!" : `Faltam ${total - done} tarefa${total - done !== 1 ? "s" : ""}`}</p>
             </div>
             <span className={cn("text-2xl font-black", pct === 100 ? "text-green-600" : pct >= 60 ? "text-amber-600" : "text-primary-600")}>
               {pct}%
@@ -212,7 +212,7 @@ export default function PrepPage() {
 
       {/* Empty state */}
       {total === 0 && !showTemplates && (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-gray-500">
           <div className="text-5xl mb-4">✅</div>
           <p className="font-semibold text-gray-500">Nenhuma tarefa ainda</p>
           <p className="text-sm mt-1">Comece com os lembretes essenciais — nós calculamos os prazos pela sua data de ida.</p>
@@ -241,9 +241,9 @@ export default function PrepPage() {
               <span className={cn("inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border", cfg.bg, cfg.color, cfg.border)}>
                 {cfg.emoji} {cfg.label}
               </span>
-              <span className="text-xs text-gray-400 font-medium">{catDone}/{catItems.length}</span>
+              <span className="text-xs text-gray-500 font-medium">{catDone}/{catItems.length}</span>
               <div className="flex-1" />
-              {isCollapsed ? <ChevronDown className="h-4 w-4 text-gray-400" /> : <ChevronUp className="h-4 w-4 text-gray-400" />}
+              {isCollapsed ? <ChevronDown className="h-4 w-4 text-gray-500" /> : <ChevronUp className="h-4 w-4 text-gray-500" />}
             </button>
 
             {!isCollapsed && (
@@ -253,21 +253,21 @@ export default function PrepPage() {
                     <button onClick={() => handleToggle(item)} className="mt-0.5 shrink-0">
                       {item.isDone
                         ? <CheckCircle2 className="h-5 w-5 text-green-500" />
-                        : <Circle className="h-5 w-5 text-gray-300 group-hover:text-gray-400" />
+                        : <Circle className="h-5 w-5 text-gray-300 group-hover:text-gray-500" />
                       }
                     </button>
                     <div className="flex-1 min-w-0">
-                      <p className={cn("text-sm font-medium text-gray-900", item.isDone && "line-through text-gray-400")}>
+                      <p className={cn("text-sm font-medium text-gray-900", item.isDone && "line-through text-gray-500")}>
                         {item.title}
                       </p>
                       <div className="flex items-center flex-wrap gap-2 mt-0.5">
                         {item.dueDate && (
-                          <span className="text-[11px] text-gray-400">
+                          <span className="text-[11px] text-gray-500">
                             até {new Date(item.dueDate + "T12:00:00").toLocaleDateString("pt-BR", { day: "numeric", month: "short" })}
                           </span>
                         )}
                         {item.notes && (
-                          <span className="text-[11px] text-gray-400 truncate max-w-[200px]">{item.notes}</span>
+                          <span className="text-[11px] text-gray-500 truncate max-w-[200px]">{item.notes}</span>
                         )}
                       </div>
                     </div>

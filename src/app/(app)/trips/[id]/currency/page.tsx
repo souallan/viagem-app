@@ -146,7 +146,7 @@ export default function CurrencyPage() {
           <button
             onClick={fetchRates}
             disabled={ratesLoading}
-            className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-primary-600 transition-colors"
+            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-primary-600 transition-colors"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${ratesLoading ? "animate-spin" : ""}`} aria-hidden="true" />
             {lastUpdated ? `Atualizado ${lastUpdated}` : "Atualizar"}
@@ -154,7 +154,7 @@ export default function CurrencyPage() {
         </div>
 
         {ratesLoading && (
-          <p className="text-sm text-gray-400 animate-pulse py-4">Carregando taxas de câmbio...</p>
+          <p className="text-sm text-gray-500 animate-pulse py-4">Carregando taxas de câmbio...</p>
         )}
         {ratesError && (
           <div className="text-center py-6">
@@ -219,7 +219,7 @@ export default function CurrencyPage() {
                   ? `${CURRENCIES.find((c) => c.code === to)?.flag ?? ""} ${converted.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${to}`
                   : "—"}
               </p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-gray-500 mt-1">
                 1 {from} ={" "}
                 {from !== to ? convert(1, from, to).toLocaleString("pt-BR", { maximumFractionDigits: 4 }) : "1"} {to}
                 {" · "}Fonte: open.er-api.com
@@ -368,7 +368,7 @@ export default function CurrencyPage() {
                 <div key={exp.id} className="flex items-center gap-3 text-sm py-2 border-b border-gray-100">
                   <div className="flex-1 min-w-0">
                     <span className="font-medium text-gray-800 truncate block">{exp.description}</span>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-gray-500">
                       pago por {people.find((p) => p.id === exp.paidBy)?.name ?? "—"}
                     </span>
                   </div>
@@ -432,14 +432,14 @@ export default function CurrencyPage() {
                 );
               })}
             </div>
-            <p className="text-xs text-gray-400 mt-3 text-center">
+            <p className="text-xs text-gray-500 mt-3 text-center">
               Valores convertidos para BRL · Gastos divididos igualmente
             </p>
           </div>
         )}
 
         {expenses.length === 0 && (
-          <div className="text-center py-8 text-gray-400">
+          <div className="text-center py-8 text-gray-500">
             <Calculator className="h-10 w-10 mx-auto mb-3 text-gray-200" aria-hidden="true" />
             <p className="text-sm font-medium">Nenhum gasto registrado ainda</p>
             <p className="text-xs mt-1">Adicione os gastos do grupo para calcular quem deve a quem.</p>

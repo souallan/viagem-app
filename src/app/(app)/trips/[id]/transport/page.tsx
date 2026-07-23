@@ -155,17 +155,17 @@ function TransportCard({ item, onDelete, onEdit }: { item: Transport; onDelete: 
         <div className="flex items-stretch gap-2 sm:gap-4">
           {/* Origem */}
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">{t.transport.fromLabel}</p>
+            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">{t.transport.fromLabel}</p>
             <p className="text-lg sm:text-xl font-black text-gray-900 leading-tight truncate">
               {cityLabel(item.from)}
             </p>
-            <p className="text-xs text-gray-400 mt-0.5 truncate">{item.from}</p>
+            <p className="text-xs text-gray-500 mt-0.5 truncate">{item.from}</p>
             <div className="flex items-center gap-1 mt-2">
               <Clock className="h-3 w-3 text-primary-400 shrink-0" />
               <span className="text-sm font-bold text-primary-700">
                 {format(parseISO(item.departureTime), "HH:mm")}
               </span>
-              <span className="text-xs text-gray-400 ml-0.5">
+              <span className="text-xs text-gray-500 ml-0.5">
                 {format(parseISO(item.departureTime), "dd/MM/yy")}
               </span>
             </div>
@@ -174,12 +174,12 @@ function TransportCard({ item, onDelete, onEdit }: { item: Transport; onDelete: 
           {/* Connector */}
           <div className="flex flex-col items-center justify-center gap-1 shrink-0 px-1">
             {duration && (
-              <span className="text-[10px] text-gray-400 font-semibold whitespace-nowrap">{duration}</span>
+              <span className="text-[10px] text-gray-500 font-semibold whitespace-nowrap">{duration}</span>
             )}
             <div className="flex items-center gap-1">
               <div className="w-2 h-2 rounded-full border-2 border-gray-300 bg-white" />
               <div className="w-8 sm:w-16 h-px bg-gradient-to-r from-gray-300 to-gray-400" />
-              <ArrowRight className="h-4 w-4 text-gray-400" />
+              <ArrowRight className="h-4 w-4 text-gray-500" />
               <div className="w-2 h-2 rounded-full bg-gray-400" />
             </div>
             <span className="text-[10px] text-gray-300 font-medium">{item.type}</span>
@@ -187,18 +187,18 @@ function TransportCard({ item, onDelete, onEdit }: { item: Transport; onDelete: 
 
           {/* Destino */}
           <div className="flex-1 min-w-0 text-right">
-            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">{t.transport.toLabel}</p>
+            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-1">{t.transport.toLabel}</p>
             <p className="text-lg sm:text-xl font-black text-gray-900 leading-tight truncate">
               {cityLabel(item.to)}
             </p>
-            <p className="text-xs text-gray-400 mt-0.5 truncate">{item.to}</p>
+            <p className="text-xs text-gray-500 mt-0.5 truncate">{item.to}</p>
             {item.arrivalTime && (
               <div className="flex items-center gap-1 mt-2 justify-end">
                 <Clock className="h-3 w-3 text-teal-400 shrink-0" />
                 <span className="text-sm font-bold text-teal-700">
                   {format(parseISO(item.arrivalTime), "HH:mm")}
                 </span>
-                <span className="text-xs text-gray-400 ml-0.5">
+                <span className="text-xs text-gray-500 ml-0.5">
                   {format(parseISO(item.arrivalTime), "dd/MM/yy")}
                 </span>
               </div>
@@ -225,7 +225,7 @@ function TransportCard({ item, onDelete, onEdit }: { item: Transport; onDelete: 
               </span>
             )}
             {item.notes && (
-              <span className="text-xs text-gray-400 truncate max-w-[240px]">{item.notes}</span>
+              <span className="text-xs text-gray-500 truncate max-w-[240px]">{item.notes}</span>
             )}
           </div>
         )}
@@ -387,7 +387,7 @@ export default function TransportPage() {
         <div>
           <h2 className="text-lg font-bold text-gray-900">{t.transport.header}</h2>
           {items.length > 0 && (
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="text-sm text-gray-500 mt-0.5">
               {items.length} {items.length === 1 ? t.transport.segment : t.transport.segmentPlural} · {t.transport.headerDesc}
             </p>
           )}
@@ -427,10 +427,10 @@ export default function TransportPage() {
 
       {/* Empty state */}
       {items.length === 0 ? (
-        <div className="text-center py-16 text-gray-400 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+        <div className="text-center py-16 text-gray-500 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
           <div className="text-5xl mb-3">🗺️</div>
           <p className="font-semibold text-gray-500">{t.transport.emptyTitle}</p>
-          <p className="text-sm mt-1 text-gray-400">{t.transport.emptyDesc}</p>
+          <p className="text-sm mt-1 text-gray-500">{t.transport.emptyDesc}</p>
           <Button onClick={openDialog} className="mt-5 gap-2" size="sm" variant="outline">
             <Plus className="h-4 w-4" /> {t.transport.addFirst}
           </Button>
@@ -455,11 +455,11 @@ export default function TransportPage() {
                     <p className="text-sm font-bold text-gray-900 capitalize">
                       {new Intl.DateTimeFormat(lang === "pt" ? "pt-BR" : lang === "es" ? "es-ES" : "en-US", { weekday: "long" }).format(dayDate)}
                     </p>
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-500">
                       {new Intl.DateTimeFormat(lang === "pt" ? "pt-BR" : lang === "es" ? "es-ES" : "en-US", { dateStyle: "long" }).format(dayDate)}
                     </p>
                   </div>
-                  <span className="text-xs text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full font-medium shrink-0">
+                  <span className="text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full font-medium shrink-0">
                     {dayItems.length} {dayItems.length === 1 ? t.transport.segment : t.transport.segmentPlural}
                   </span>
                 </div>
@@ -580,7 +580,7 @@ export default function TransportPage() {
             </div>
 
             {/* Date/time */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label className="text-xs">{modeTranslations?.departureLabel ?? t.transport.departure} *</Label>
                 <Input
@@ -603,7 +603,7 @@ export default function TransportPage() {
             </div>
 
             {/* Carrier + cost */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label className="text-xs">{modeTranslations?.carrierLabel ?? ""}</Label>
                 <Input
@@ -630,7 +630,7 @@ export default function TransportPage() {
 
             {showDetails && (
               <div className="space-y-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
                     <Label className="text-xs">{modeTranslations?.bookingLabel ?? ""}</Label>
                     <Input

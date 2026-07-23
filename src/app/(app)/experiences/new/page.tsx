@@ -260,7 +260,7 @@ function NewExperienceForm() {
             className="min-h-[300px] leading-relaxed"
             required
           />
-          <p className="text-xs text-gray-400">{form.content.length} caracteres</p>
+          <p className="text-xs text-gray-500">{form.content.length} caracteres</p>
         </section>
 
         {/* Mood, Rating, Tags */}

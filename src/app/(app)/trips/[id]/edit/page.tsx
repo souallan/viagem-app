@@ -152,7 +152,7 @@ export default function EditTripPage() {
                 </button>
               </>
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 gap-2">
+              <div className="w-full h-full flex flex-col items-center justify-center text-gray-500 gap-2">
                 <ImageIcon className="h-10 w-10 text-gray-200" aria-hidden="true" />
                 <p className="text-sm">Nenhuma foto selecionada</p>
               </div>
@@ -225,7 +225,7 @@ export default function EditTripPage() {
               <Label className="text-xs">Cole a URL de uma imagem</Label>
               <div className="flex gap-2">
                 <div className="relative flex-1">
-                  <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-400" aria-hidden="true" />
+                  <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500" aria-hidden="true" />
                   <Input
                     value={urlInput}
                     onChange={(e) => setUrlInput(e.target.value)}
@@ -238,7 +238,7 @@ export default function EditTripPage() {
                   Aplicar
                 </Button>
               </div>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-500">
                 Dica: use <a href="https://unsplash.com" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">unsplash.com</a> para fotos gratuitas. Clique em qualquer foto → botão "Share" → "Copy image URL".
               </p>
             </div>
@@ -267,7 +267,7 @@ export default function EditTripPage() {
                 onChange={handleChange}
                 placeholder="Ex: Paris, França → Roma, Itália"
               />
-              <p className="text-xs text-gray-400">Separe múltiplos destinos com " → " (seta).</p>
+              <p className="text-xs text-gray-500">Separe múltiplos destinos com " → " (seta).</p>
             </div>
 
             <div className="space-y-2">

@@ -217,10 +217,10 @@ function ExperienceCard({ exp, onDelete }: { exp: Experience; onDelete: (id: str
 
       {/* Body */}
       <Link href={`/experiences/${exp.id}`} className="flex flex-col flex-1 p-4">
-        <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
+        <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-2">
           <MapPin className="h-3 w-3 text-primary-400 shrink-0" />
           <span className="font-semibold text-gray-600 truncate">{exp.destination}</span>
-          <span className="ml-auto shrink-0 text-[10px] text-gray-400 tabular-nums">{exp.tripDate}</span>
+          <span className="ml-auto shrink-0 text-[10px] text-gray-500 tabular-nums">{exp.tripDate}</span>
         </div>
 
         <h3 className="font-bold text-gray-900 text-sm leading-snug line-clamp-2 mb-2 group-hover:text-primary-600 transition-colors">
@@ -239,7 +239,7 @@ function ExperienceCard({ exp, onDelete }: { exp: Experience; onDelete: (id: str
               </span>
             ))}
             {tags.length > 3 && (
-              <span className="text-[10px] text-gray-400 leading-none self-center">+{tags.length - 3}</span>
+              <span className="text-[10px] text-gray-500 leading-none self-center">+{tags.length - 3}</span>
             )}
           </div>
         )}
@@ -352,7 +352,7 @@ export default function ExperiencesPage() {
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           {/* Search */}
           <div className="relative flex-1 max-w-xs">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -363,7 +363,7 @@ export default function ExperiencesPage() {
 
           {/* Mood filter */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-px" style={{ scrollbarWidth: "none" }}>
-            <SlidersHorizontal className="h-3.5 w-3.5 text-gray-400 shrink-0" />
+            <SlidersHorizontal className="h-3.5 w-3.5 text-gray-500 shrink-0" />
             {MOOD_FILTERS.map((f) => (
               <button
                 key={f.value}
@@ -412,7 +412,7 @@ export default function ExperiencesPage() {
 
       {/* ── No results ── */}
       {!loading && experiences.length > 0 && filtered.length === 0 && (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-gray-500">
           <Search className="h-10 w-10 mx-auto mb-3 opacity-30" />
           <p className="font-semibold text-gray-600">Nenhum resultado encontrado</p>
           <p className="text-sm mt-1">Tente outros termos ou remova os filtros.</p>

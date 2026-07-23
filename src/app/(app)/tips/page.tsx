@@ -95,7 +95,7 @@ function TipCard({ tip, isNew }: { tip: Tip; isNew: boolean }) {
             <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${tip.categoryColor}`}>
               {tip.category}
             </span>
-            <span className="flex items-center gap-1 text-xs text-gray-400">
+            <span className="flex items-center gap-1 text-xs text-gray-500">
               <Clock className="h-3 w-3" aria-hidden="true" />
               {tip.readTime} min
             </span>
@@ -169,7 +169,7 @@ function ExternalTipCard({ tip, isNew }: { tip: ExternalTip; isNew: boolean }) {
         <p className="text-sm text-gray-500 mb-3 line-clamp-3 flex-1">{tip.excerpt}</p>
 
         <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-50">
-          <span className="text-xs text-gray-400 flex items-center gap-1">
+          <span className="text-xs text-gray-500 flex items-center gap-1">
             <Globe className="h-3 w-3" aria-hidden="true" />
             {tip.sourceName}
           </span>
@@ -217,7 +217,7 @@ function CommunityTipCard({ tip }: { tip: CommunityTip }) {
             </div>
             <div>
               <p className="text-xs font-semibold text-gray-700">{authorName}</p>
-              <p className="text-[10px] text-gray-400">{tip.tripDate}</p>
+              <p className="text-[10px] text-gray-500">{tip.tripDate}</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5 ml-auto flex-wrap justify-end">
@@ -274,7 +274,7 @@ function CommunityTipCard({ tip }: { tip: CommunityTip }) {
           </Link>
           <button
             onClick={() => setExpanded((v) => !v)}
-            className="flex items-center gap-1 text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors"
+            className="flex items-center gap-1 text-sm font-medium text-gray-500 hover:text-gray-600 transition-colors"
           >
             {expanded
               ? <><ChevronUp className="h-4 w-4" /> Ocultar</>
@@ -418,7 +418,7 @@ export default function TipsPage() {
 
       {/* Search */}
       <div className="relative max-w-md">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -426,7 +426,7 @@ export default function TipsPage() {
           className="w-full h-10 rounded-xl border border-gray-200 bg-white pl-10 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-400/15 transition-all"
         />
         {search && (
-          <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+          <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600">
             ×
           </button>
         )}
@@ -434,7 +434,7 @@ export default function TipsPage() {
 
       {/* Language filter */}
       <div className="flex items-center gap-2 flex-wrap">
-        <Globe className="h-4 w-4 text-gray-400 shrink-0" aria-hidden="true" />
+        <Globe className="h-4 w-4 text-gray-500 shrink-0" aria-hidden="true" />
         {(["all", "pt", "en", "es"] as const).map((l) => (
           <button
             key={l}
@@ -451,7 +451,7 @@ export default function TipsPage() {
             {l === "all" ? "Todos idiomas" : `${LANG_FLAGS[l]} ${LANG_LABELS[l]}`}
           </button>
         ))}
-        <span className="ml-auto self-center text-xs text-gray-400">
+        <span className="ml-auto self-center text-xs text-gray-500">
           {filtered.length} artigo{filtered.length !== 1 ? "s" : ""}
           {loadingExternal && (
             <span className="inline-flex items-center gap-1 ml-2 text-gray-300">

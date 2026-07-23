@@ -247,7 +247,7 @@ export default function ContributeRoutePage() {
           {completionItems.map((item) => (
             <span key={item.label} className={cn(
               "inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border font-medium",
-              item.done ? "bg-green-50 text-green-700 border-green-200" : "bg-gray-50 text-gray-400 border-gray-200"
+              item.done ? "bg-green-50 text-green-700 border-green-200" : "bg-gray-50 text-gray-500 border-gray-200"
             )}>
               {item.done ? <CheckCircle2 className="h-3 w-3" /> : <div className="h-3 w-3 rounded-full border border-gray-300" />}
               {item.label}
@@ -344,16 +344,16 @@ export default function ContributeRoutePage() {
         <Section icon={Star} title="Descrição e destaques">
           <div className="space-y-5">
             <div className="space-y-1.5">
-              <Label>Descrição do roteiro * <span className="text-gray-400 font-normal">(mín. 50 caracteres)</span></Label>
+              <Label>Descrição do roteiro * <span className="text-gray-500 font-normal">(mín. 50 caracteres)</span></Label>
               <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4}
                 placeholder="Descreva o que torna esse roteiro especial: pontos altos, estilo de viagem, público ideal..." required />
-              <p className={cn("text-xs", description.length >= 50 ? "text-green-600" : "text-gray-400")}>
+              <p className={cn("text-xs", description.length >= 50 ? "text-green-600" : "text-gray-500")}>
                 {description.length} caracteres {description.length < 50 && `(${50 - description.length} para o mínimo)`}
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label>Destaques do roteiro * <span className="text-gray-400 font-normal">(mín. 2)</span></Label>
+              <Label>Destaques do roteiro * <span className="text-gray-500 font-normal">(mín. 2)</span></Label>
               <div className="space-y-2">
                 {highlights.map((h, i) => (
                   <div key={i} className="flex gap-2">
@@ -453,7 +453,7 @@ export default function ContributeRoutePage() {
                           </div>
                         </div>
                         <div className="flex justify-end">
-                          <button type="button" onClick={() => removeActivity(act._key)} className="flex items-center gap-1 text-xs text-gray-400 hover:text-red-500 transition-colors">
+                          <button type="button" onClick={() => removeActivity(act._key)} className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-500 transition-colors">
                             <Trash2 className="h-3.5 w-3.5" /> Remover atividade
                           </button>
                         </div>
@@ -511,7 +511,7 @@ export default function ContributeRoutePage() {
         </div>
 
         {completionPct < 100 && (
-          <p className="text-xs text-center text-gray-400">
+          <p className="text-xs text-center text-gray-500">
             Complete todos os requisitos acima para publicar o roteiro
           </p>
         )}

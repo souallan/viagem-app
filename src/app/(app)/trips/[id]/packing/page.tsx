@@ -394,7 +394,7 @@ export default function PackingPage() {
 
     if (allSuggestions.length === 0) {
       return (
-        <div className="text-center py-8 text-gray-400">
+        <div className="text-center py-8 text-gray-500">
           <Thermometer className="h-10 w-10 mx-auto mb-3 opacity-40" />
           <p className="font-medium text-sm">{t.packing.noSuggestions}</p>
           <p className="text-xs mt-1">{t.packing.noSuggestionsDesc}</p>
@@ -438,7 +438,7 @@ export default function PackingPage() {
                       className="h-4 w-4 rounded accent-primary-600"
                     />
                     <span className="flex-1 text-sm text-gray-700">{item.name}</span>
-                    <span className="text-xs text-gray-400">{item.category}</span>
+                    <span className="text-xs text-gray-500">{item.category}</span>
                   </label>
                 ))}
               </div>
@@ -472,7 +472,7 @@ export default function PackingPage() {
             </p>
           )}
           {tripDays && (
-            <p className="text-xs text-gray-400 mt-0.5">{tripDays} {t.packing.tripDays}</p>
+            <p className="text-xs text-gray-500 mt-0.5">{tripDays} {t.packing.tripDays}</p>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -565,7 +565,7 @@ export default function PackingPage() {
               const addedCount = BASE_TEMPLATES.flatMap((c) => c.items).filter((i) => existingNames.has(i.toLowerCase())).length;
               const totalCount = BASE_TEMPLATES.flatMap((c) => c.items).length;
               return (
-                <span className="ml-2 text-xs text-gray-400">
+                <span className="ml-2 text-xs text-gray-500">
                   {addedCount}/{totalCount} {t.packing.addedLabel}
                 </span>
               );
@@ -574,12 +574,12 @@ export default function PackingPage() {
           <span className="text-xs text-primary-600 font-medium shrink-0 mr-1">
             {showEssentials ? t.packing.hide : t.common.add}
           </span>
-          {showEssentials ? <ChevronUp className="h-4 w-4 text-gray-400 shrink-0" /> : <ChevronDown className="h-4 w-4 text-gray-400 shrink-0" />}
+          {showEssentials ? <ChevronUp className="h-4 w-4 text-gray-500 shrink-0" /> : <ChevronDown className="h-4 w-4 text-gray-500 shrink-0" />}
         </button>
 
         {showEssentials && (
           <div className="p-4 space-y-5 border-t border-gray-100 bg-white">
-            <p className="text-xs text-gray-400 flex items-center gap-1.5">
+            <p className="text-xs text-gray-500 flex items-center gap-1.5">
               <span className="inline-block w-3 h-3 rounded-full bg-green-200 border border-green-400" />
               {t.packing.alreadyInList}
             </p>
@@ -600,7 +600,7 @@ export default function PackingPage() {
             return (
               <div key={category}>
                 <div className="flex items-center justify-between mb-1.5">
-                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{category}</h3>
+                  <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{category}</h3>
                   <div className="flex items-center gap-3">
                     {getCategoryAmazon(category) && (
                       <a
@@ -614,7 +614,7 @@ export default function PackingPage() {
                         Amazon
                       </a>
                     )}
-                    <span className="text-xs text-gray-400">{catPacked}/{catTotal} · {catPct}%</span>
+                    <span className="text-xs text-gray-500">{catPacked}/{catTotal} · {catPct}%</span>
                   </div>
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-1 mb-2">
@@ -640,10 +640,10 @@ export default function PackingPage() {
                         onChange={() => handleToggle(item)}
                         className="h-4 w-4 rounded accent-green-600 cursor-pointer"
                       />
-                      <span className={cn("flex-1 text-sm", item.isPacked && "line-through text-gray-400")}>
+                      <span className={cn("flex-1 text-sm", item.isPacked && "line-through text-gray-500")}>
                         {item.name}
                         {item.quantity > 1 && (
-                          <span className="ml-1.5 text-xs text-gray-400">×{item.quantity}</span>
+                          <span className="ml-1.5 text-xs text-gray-500">×{item.quantity}</span>
                         )}
                       </span>
                       {!item.isPacked && (() => {
@@ -756,7 +756,7 @@ function EssentialSection({
     <div>
       <div className="flex items-center gap-2 mb-2">
         <span className="text-base leading-none">{cat.icon}</span>
-        <span className={cn("text-xs font-bold uppercase tracking-widest", allAdded ? "text-green-600" : "text-gray-400")}>
+        <span className={cn("text-xs font-bold uppercase tracking-widest", allAdded ? "text-green-600" : "text-gray-500")}>
           {cat.label}
         </span>
         {addedCount > 0 && (

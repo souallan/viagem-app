@@ -103,7 +103,7 @@ export default function JournalPage() {
     });
   }
 
-  if (loading) return <div className="py-20 text-center text-gray-400">Carregando...</div>;
+  if (loading) return <div className="py-20 text-center text-gray-500">Carregando...</div>;
 
   return (
     <div className="space-y-6">
@@ -112,7 +112,7 @@ export default function JournalPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-lg font-bold text-gray-900">Diário de bordo</h2>
-          <p className="text-sm text-gray-400">Registre memórias e experiências da viagem</p>
+          <p className="text-sm text-gray-500">Registre memórias e experiências da viagem</p>
         </div>
         <Button size="sm" onClick={openNew} className="gap-1.5">
           <Plus className="h-3.5 w-3.5" /> Nova entrada
@@ -121,7 +121,7 @@ export default function JournalPage() {
 
       {/* Empty state */}
       {entries.length === 0 && (
-        <div className="text-center py-20 text-gray-400">
+        <div className="text-center py-20 text-gray-500">
           <div className="text-5xl mb-4">📓</div>
           <p className="font-semibold text-gray-500">Nenhuma entrada ainda</p>
           <p className="text-sm mt-1">Comece a registrar suas memórias de viagem</p>

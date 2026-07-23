@@ -315,7 +315,7 @@ function AccommodationCalendar({
                 >
                   <span className="w-2 h-2 rounded-full shrink-0" style={{ background: `linear-gradient(135deg, ${c1}, ${c2})` }} />
                   <span className="text-[10px] font-bold text-gray-800">{item.name}</span>
-                  <span className="text-[9px] text-gray-400">
+                  <span className="text-[9px] text-gray-500">
                     {item.checkIn.slice(5, 10).replace("-", "/")} → {item.checkOut.slice(5, 10).replace("-", "/")}
                   </span>
                   <span className="text-[9px] font-bold px-1 py-0.5 rounded-full text-white leading-none" style={{ background: `linear-gradient(90deg, ${c1}, ${c2})` }}>
@@ -408,19 +408,19 @@ function AccommodationDetail({
         <div className="space-y-2.5">
           {item.address && (
             <div className="flex items-start gap-2.5 text-sm text-gray-700">
-              <MapPin className="h-4 w-4 text-gray-400 shrink-0 mt-0.5" />
+              <MapPin className="h-4 w-4 text-gray-500 shrink-0 mt-0.5" />
               <span>{item.address}</span>
             </div>
           )}
           {item.phone && (
             <div className="flex items-center gap-2.5 text-sm text-gray-700">
-              <Phone className="h-4 w-4 text-gray-400 shrink-0" />
+              <Phone className="h-4 w-4 text-gray-500 shrink-0" />
               <span>{item.phone}</span>
             </div>
           )}
           {item.website && (
             <div className="flex items-center gap-2.5 text-sm">
-              <Globe className="h-4 w-4 text-gray-400 shrink-0" />
+              <Globe className="h-4 w-4 text-gray-500 shrink-0" />
               <a href={item.website} target="_blank" rel="noopener noreferrer"
                 className="text-primary-600 hover:underline truncate">
                 {item.website}
@@ -429,7 +429,7 @@ function AccommodationDetail({
           )}
           {item.confirmationNumber && (
             <div className="flex items-center gap-2 text-sm text-gray-700 font-mono bg-gray-50 border border-gray-100 rounded-lg px-3 py-2">
-              <span className="text-gray-400 font-sans text-xs font-medium">{t.accommodation.confirmation}</span>
+              <span className="text-gray-500 font-sans text-xs font-medium">{t.accommodation.confirmation}</span>
               <span className="font-bold">{item.confirmationNumber}</span>
             </div>
           )}
@@ -620,7 +620,7 @@ export default function AccommodationPage() {
           <div>
             <h2 className="text-lg font-bold text-gray-900">{t.accommodation.headerTitle}</h2>
             {items.length > 0 && (
-              <p className="text-sm text-gray-400 mt-0.5">
+              <p className="text-sm text-gray-500 mt-0.5">
                 {items.length} {items.length === 1 ? t.accommodation.accommodationSingular : t.accommodation.accommodationPlural} · {sorted.reduce((s, a) => s + nightsCount(a.checkIn, a.checkOut), 0)} {t.accommodation.nightPlural}
               </p>
             )}
@@ -636,7 +636,7 @@ export default function AccommodationPage() {
 
       {/* ── Empty state ── */}
       {items.length === 0 && (
-        <div className="text-center py-16 text-gray-400 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+        <div className="text-center py-16 text-gray-500 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
           <div className="text-5xl mb-3">🏨</div>
           <p className="font-semibold text-gray-500">{t.accommodation.emptyTitle}</p>
           <p className="text-sm mt-1">{t.accommodation.emptyDesc}</p>
@@ -735,7 +735,7 @@ export default function AccommodationPage() {
                   <div className="flex flex-wrap gap-2">
                     {item.address && (
                       <span className="flex items-center gap-1 text-xs text-gray-500 bg-gray-50 border border-gray-100 px-2.5 py-1 rounded-lg">
-                        <MapPin className="h-3 w-3 text-gray-400 shrink-0" />
+                        <MapPin className="h-3 w-3 text-gray-500 shrink-0" />
                         <span className="truncate max-w-[200px]">{item.address}</span>
                       </span>
                     )}
@@ -762,7 +762,7 @@ export default function AccommodationPage() {
                   </div>
 
                   {item.notes && (
-                    <p className="text-xs text-gray-400 italic mt-3 pt-3 border-t border-gray-100">{item.notes}</p>
+                    <p className="text-xs text-gray-500 italic mt-3 pt-3 border-t border-gray-100">{item.notes}</p>
                   )}
                 </div>
               </div>
@@ -779,8 +779,8 @@ export default function AccommodationPage() {
         </DialogHeader>
         <DialogBody>
           <form id="accom-form" onSubmit={handleSubmit} noValidate className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2 col-span-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-2 sm:col-span-2">
                 <Label>{t.accommodation.formName}</Label>
                 <Input name="name" value={form.name} onChange={handleChange} required placeholder={t.accommodation.formNamePh} />
               </div>
@@ -821,7 +821,7 @@ export default function AccommodationPage() {
                 placeholder={t.accommodation.formAddressPh}
               />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label>{t.accommodation.formConfirmation}</Label>
                 <Input name="confirmationNumber" value={form.confirmationNumber} onChange={handleChange} />

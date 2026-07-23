@@ -102,12 +102,12 @@ function DayHeader({ dayNumber, dateStr, activities }: { dayNumber: number; date
         <p className="text-base font-bold text-gray-900 capitalize leading-tight">
           {format(date, "EEEE", { locale: dateLocale })}
         </p>
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-gray-500">
           {format(date, lang === "en" ? "MMMM d, yyyy" : "d 'de' MMMM 'de' yyyy", { locale: dateLocale })}
         </p>
       </div>
       <div className="flex items-center gap-3 shrink-0">
-        <span className="text-xs text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full font-medium">
+        <span className="text-xs text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full font-medium">
           {activities.length} {activities.length === 1 ? t.itinerary.activityCount : t.itinerary.activityCountPlural}
         </span>
         {totalCost > 0 && (
@@ -139,7 +139,7 @@ function ActivityItem({
   return (
     <div className="flex gap-3 group">
       <div className="flex flex-col items-center w-14 shrink-0">
-        <span className="text-xs font-bold text-gray-400 pt-3.5 leading-none text-right w-full pr-1">
+        <span className="text-xs font-bold text-gray-500 pt-3.5 leading-none text-right w-full pr-1">
           {activity.startTime ?? "–"}
         </span>
         <div className="flex flex-col items-center flex-1 mt-1">
@@ -164,7 +164,7 @@ function ActivityItem({
                 </span>
               )}
               {(activity.startTime || activity.endTime) && (
-                <span className="flex items-center gap-1 text-xs text-gray-400">
+                <span className="flex items-center gap-1 text-xs text-gray-500">
                   <Clock className="h-3 w-3" aria-hidden="true" />
                   {activity.startTime ?? ""}
                   {activity.endTime ? ` – ${activity.endTime}` : ""}
@@ -188,18 +188,18 @@ function ActivityItem({
           <h4 className="font-bold text-gray-900 leading-snug">{activity.title}</h4>
           {activity.location && (
             <p className="text-sm text-gray-600 mt-1.5 flex items-center gap-1.5 font-medium">
-              <MapPin className="h-3.5 w-3.5 text-gray-400 shrink-0" />
+              <MapPin className="h-3.5 w-3.5 text-gray-500 shrink-0" />
               {activity.location}
             </p>
           )}
           {activity.address && activity.address !== activity.location && (
-            <p className="text-xs text-gray-400 mt-0.5 pl-5">{activity.address}</p>
+            <p className="text-xs text-gray-500 mt-0.5 pl-5">{activity.address}</p>
           )}
           {activity.description && (
             <p className="text-sm text-gray-500 mt-2 leading-relaxed">{activity.description}</p>
           )}
           {activity.notes && (
-            <p className="text-xs text-gray-400 italic mt-2 pt-2 border-t border-gray-50">{activity.notes}</p>
+            <p className="text-xs text-gray-500 italic mt-2 pt-2 border-t border-gray-50">{activity.notes}</p>
           )}
         </div>
       </div>
@@ -230,7 +230,7 @@ function GapIndicator({ minutes }: { minutes: number }) {
       <div className="w-14 flex justify-center shrink-0">
         <div className="w-px h-5 bg-gray-200" />
       </div>
-      <span className="text-[11px] font-medium text-gray-400 bg-gray-50 border border-dashed border-gray-200 px-2.5 py-0.5 rounded-full">
+      <span className="text-[11px] font-medium text-gray-500 bg-gray-50 border border-dashed border-gray-200 px-2.5 py-0.5 rounded-full">
         ↕ {label}
       </span>
     </div>
@@ -257,7 +257,7 @@ function PeriodActivityCard({ activity, onDelete, onEdit }: { activity: Activity
         <h4 className="font-semibold text-gray-900 text-sm leading-snug">{activity.title}</h4>
         <div className="flex items-center flex-wrap gap-x-3 gap-y-0.5 mt-1">
           {activity.startTime && (
-            <span className="text-xs text-gray-400 flex items-center gap-1">
+            <span className="text-xs text-gray-500 flex items-center gap-1">
               <Clock className="h-3 w-3" />
               {activity.startTime}{activity.endTime ? ` – ${activity.endTime}` : ""}
             </span>
@@ -277,7 +277,7 @@ function PeriodActivityCard({ activity, onDelete, onEdit }: { activity: Activity
           )}
         </div>
         {activity.description && (
-          <p className="text-xs text-gray-400 mt-1.5 line-clamp-2">{activity.description}</p>
+          <p className="text-xs text-gray-500 mt-1.5 line-clamp-2">{activity.description}</p>
         )}
       </div>
 
@@ -315,7 +315,7 @@ function PeriodColumn({
         <div className="px-3 py-2.5 flex items-center gap-2 bg-gray-50/50">
           <Icon className={cn("h-4 w-4", cfg.textColor)} />
           <span className={cn("text-sm font-bold", cfg.textColor)}>{periodLabel}</span>
-          {cfg.timeRange && <span className="text-xs text-gray-400 ml-auto">{cfg.timeRange}</span>}
+          {cfg.timeRange && <span className="text-xs text-gray-500 ml-auto">{cfg.timeRange}</span>}
         </div>
         <div className="flex-1 flex items-center justify-center py-6 px-3">
           <p className="text-xs text-gray-300 text-center">{t.periods.noActivities}</p>
@@ -544,7 +544,7 @@ function GeneratorDialog({
 
           {/* Date picker */}
           <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-200">
-            <CalendarDays className="h-4 w-4 text-gray-400 shrink-0" />
+            <CalendarDays className="h-4 w-4 text-gray-500 shrink-0" />
             <div className="flex-1">
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Adicionar ao dia</p>
               <input
@@ -577,7 +577,7 @@ function GeneratorDialog({
                   {selected.size > 0 && (
                     <>
                       <span className="text-gray-300">·</span>
-                      <button onClick={clearAll} className="text-xs text-gray-400 hover:text-gray-600">Limpar</button>
+                      <button onClick={clearAll} className="text-xs text-gray-500 hover:text-gray-600">Limpar</button>
                     </>
                   )}
                 </div>
@@ -590,7 +590,7 @@ function GeneratorDialog({
                   const { label, icon } = PERIOD_LABEL[period];
                   return (
                     <div key={period}>
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                      <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
                         <span>{icon}</span> {label}
                       </p>
                       <div className="space-y-2">
@@ -621,7 +621,7 @@ function GeneratorDialog({
                                 <div className="flex items-center gap-2 flex-wrap">
                                   <span className="text-sm font-semibold text-gray-900">{s.title}</span>
                                   {s.startTime && (
-                                    <span className="text-[10px] text-gray-400 flex items-center gap-0.5">
+                                    <span className="text-[10px] text-gray-500 flex items-center gap-0.5">
                                       <Clock className="h-2.5 w-2.5" />{s.startTime}
                                     </span>
                                   )}
@@ -647,7 +647,7 @@ function GeneratorDialog({
           )}
 
           {!fetchLoading && suggestions.length === 0 && (
-            <div className="text-center py-10 text-gray-400">
+            <div className="text-center py-10 text-gray-500">
               <Sparkles className="h-8 w-8 mx-auto mb-2 opacity-30" />
               <p className="text-sm">Nenhuma sugestão encontrada</p>
             </div>
@@ -803,7 +803,7 @@ export default function ItineraryPage() {
         <div>
           <h2 className="text-lg font-bold text-gray-900">{t.itinerary.headerTitle}</h2>
           {activities.length > 0 && (
-            <p className="text-sm text-gray-400 mt-0.5">
+            <p className="text-sm text-gray-500 mt-0.5">
               {activities.length} {activities.length === 1 ? t.itinerary.activityCount : t.itinerary.activityCountPlural}
               {sortedDates.length > 1 ? ` · ${sortedDates.length} ${t.overview.days}` : ""}
               {totalCost > 0 ? ` · R$ ${totalCost.toFixed(2)} ${t.itinerary.estimated}` : ""}
@@ -870,7 +870,7 @@ export default function ItineraryPage() {
 
       {/* Empty state */}
       {sortedDates.length === 0 && (
-        <div className="text-center py-20 text-gray-400">
+        <div className="text-center py-20 text-gray-500">
           <div className="text-5xl mb-4">📅</div>
           <p className="font-semibold text-gray-500">{t.itinerary.noActivities}</p>
           <p className="text-sm mt-1">{t.itinerary.noActivitiesDesc}</p>
@@ -994,7 +994,7 @@ export default function ItineraryPage() {
               <Label>{t.itinerary.formTitle}</Label>
               <Input name="title" value={form.title} onChange={handleChange} required placeholder={t.itinerary.formTitlePh} />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label>{t.itinerary.formType}</Label>
                 <Select name="type" value={form.type} onChange={handleChange}>
@@ -1009,7 +1009,7 @@ export default function ItineraryPage() {
                 <Input name="date" type="date" value={form.date} onChange={handleChange} required />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label>{t.itinerary.formStartTime}</Label>
                 <Input name="startTime" type="time" value={form.startTime} onChange={handleChange} />

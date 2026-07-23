@@ -11,7 +11,7 @@ import type { MapPlace } from "@/components/trips/map-view";
 const MapView = dynamic(() => import("@/components/trips/map-view"), {
   ssr: false,
   loading: () => (
-    <div className="h-[520px] rounded-2xl bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
+    <div className="h-[520px] rounded-2xl bg-gray-100 flex items-center justify-center text-gray-500 text-sm">
       Carregando mapa…
     </div>
   ),
@@ -197,7 +197,7 @@ export default function MapPage() {
 
   if (loading || !trip) {
     return (
-      <div className="text-center py-16 text-gray-400">
+      <div className="text-center py-16 text-gray-500">
         <div className="text-5xl mb-3">🗺️</div>
         <p>{t.common.loading}</p>
       </div>
@@ -244,7 +244,7 @@ export default function MapPage() {
       <div className="rounded-2xl border border-gray-100 bg-white shadow-sm p-3">
         {/* Busca por texto */}
         <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -253,7 +253,7 @@ export default function MapPage() {
           />
         </div>
 
-        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2.5 px-1">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2.5 px-1">
           {t.map.showOnMap}
         </p>
         <div className="flex flex-wrap gap-2">
@@ -284,7 +284,7 @@ export default function MapPage() {
         </div>
 
         {/* Description of the active filter */}
-        <p className="text-xs text-gray-400 mt-2.5 px-1">
+        <p className="text-xs text-gray-500 mt-2.5 px-1">
           {filter === "all"           && t.map.filterDescAll}
           {filter === "destinations"  && t.map.filterDescDestinations}
           {filter === "accommodations"&& t.map.filterDescAccommodations}
@@ -309,7 +309,7 @@ export default function MapPage() {
             </div>
             <div>
               <h3 className="text-sm font-bold text-gray-900">Transporte público local</h3>
-              <p className="text-xs text-gray-400">Como se locomover em cada destino</p>
+              <p className="text-xs text-gray-500">Como se locomover em cada destino</p>
             </div>
           </div>
           <div className="space-y-2">
@@ -326,14 +326,14 @@ export default function MapPage() {
               );
             })}
           </div>
-          <p className="text-[10px] text-gray-400 mt-2.5">Citymapper e Moovit abrem o app (se a cidade for suportada). Para um local específico, use o botão “🚌 Transporte” no marcador do mapa.</p>
+          <p className="text-[10px] text-gray-500 mt-2.5">Citymapper e Moovit abrem o app (se a cidade for suportada). Para um local específico, use o botão “🚌 Transporte” no marcador do mapa.</p>
         </div>
       )}
 
       {/* ── Location list for current filter ── */}
       {(filteredDestinations.length > 0 || filteredPlaces.length > 0) && (
         <div className="space-y-2">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t.map.shownLocations}</p>
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">{t.map.shownLocations}</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {filteredDestinations.map((dest, i) => (
               <div key={`dest-${i}`} className="flex items-center gap-2.5 text-sm bg-blue-50 border border-blue-100 rounded-xl px-3 py-2.5">

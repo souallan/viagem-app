@@ -285,16 +285,16 @@ export default function ProfilePage() {
             {user.bio && <p className="text-xs text-gray-500 mt-1 leading-relaxed">{user.bio}</p>}
             <div className="flex items-center gap-3 mt-1.5 flex-wrap">
               {user.country && (
-                <span className="flex items-center gap-1 text-xs text-gray-400">
+                <span className="flex items-center gap-1 text-xs text-gray-500">
                   <Globe className="h-3 w-3" />{user.country}
                 </span>
               )}
               {user.currency && (
-                <span className="flex items-center gap-1 text-xs text-gray-400">
+                <span className="flex items-center gap-1 text-xs text-gray-500">
                   <DollarSign className="h-3 w-3" />{user.currency}
                 </span>
               )}
-              <span className="text-xs text-gray-400">{tp.memberSince} {joined}</span>
+              <span className="text-xs text-gray-500">{tp.memberSince} {joined}</span>
               {user.isPremium ? (
                 <button
                   onClick={openPortal}
@@ -332,7 +332,7 @@ export default function ProfilePage() {
                 <Icon className={cn("h-4 w-4", color)} />
               </div>
               <span className="text-2xl font-black text-gray-900">{value}</span>
-              <span className="text-xs text-gray-400 font-medium">{label}</span>
+              <span className="text-xs text-gray-500 font-medium">{label}</span>
             </div>
           ))}
         </div>
@@ -355,11 +355,11 @@ export default function ProfilePage() {
                   className="flex items-center gap-3 rounded-xl border border-gray-100 px-3 py-2.5 hover:border-primary-200 hover:bg-gray-50 transition-colors"
                 >
                   <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center shrink-0", settled ? "bg-gray-100" : g.net > 0 ? "bg-emerald-50" : "bg-rose-50")}>
-                    <Plane className={cn("h-4 w-4", settled ? "text-gray-400" : g.net > 0 ? "text-emerald-600" : "text-rose-500")} />
+                    <Plane className={cn("h-4 w-4", settled ? "text-gray-500" : g.net > 0 ? "text-emerald-600" : "text-rose-500")} />
                   </div>
                   <span className="flex-1 min-w-0 truncate font-semibold text-gray-900">{g.title}</span>
                   {settled ? (
-                    <span className="text-xs font-semibold text-gray-400 flex items-center gap-1"><Check className="h-3.5 w-3.5" /> quitado</span>
+                    <span className="text-xs font-semibold text-gray-500 flex items-center gap-1"><Check className="h-3.5 w-3.5" /> quitado</span>
                   ) : (
                     <div className="text-right">
                       <span className={cn("block text-[10px] font-bold uppercase tracking-wide", g.net > 0 ? "text-emerald-500" : "text-rose-400")}>
@@ -374,7 +374,7 @@ export default function ProfilePage() {
               );
             })}
           </div>
-          <p className="text-[10px] text-gray-400 mt-3">Saldo das viagens em grupo onde você é participante. Toque para acertar as contas.</p>
+          <p className="text-[10px] text-gray-500 mt-3">Saldo das viagens em grupo onde você é participante. Toque para acertar as contas.</p>
         </div>
       )}
 
@@ -405,14 +405,14 @@ export default function ProfilePage() {
               {profileForm.image && (
                 <div className="mt-2 flex items-center gap-3">
                   <Avatar name={profileForm.name} image={profileForm.image} size="sm" />
-                  <span className="text-xs text-gray-400">{tp.preview}</span>
+                  <span className="text-xs text-gray-500">{tp.preview}</span>
                 </div>
               )}
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label className="flex items-center gap-1.5"><Globe className="h-3.5 w-3.5 text-gray-400" />{tp.fieldCountry}</Label>
+                <Label className="flex items-center gap-1.5"><Globe className="h-3.5 w-3.5 text-gray-500" />{tp.fieldCountry}</Label>
                 <select
                   value={profileForm.country}
                   onChange={(e) => setProfileForm((p) => ({ ...p, country: e.target.value }))}
@@ -423,7 +423,7 @@ export default function ProfilePage() {
                 </select>
               </div>
               <div className="space-y-1.5">
-                <Label className="flex items-center gap-1.5"><DollarSign className="h-3.5 w-3.5 text-gray-400" />{tp.fieldCurrency}</Label>
+                <Label className="flex items-center gap-1.5"><DollarSign className="h-3.5 w-3.5 text-gray-500" />{tp.fieldCurrency}</Label>
                 <select
                   value={profileForm.currency}
                   onChange={(e) => setProfileForm((p) => ({ ...p, currency: e.target.value }))}
@@ -435,7 +435,7 @@ export default function ProfilePage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="flex items-center gap-1.5"><FileText className="h-3.5 w-3.5 text-gray-400" />{tp.fieldBio} <span className="text-gray-400 font-normal">({tp.bioHint})</span></Label>
+              <Label className="flex items-center gap-1.5"><FileText className="h-3.5 w-3.5 text-gray-500" />{tp.fieldBio} <span className="text-gray-500 font-normal">({tp.bioHint})</span></Label>
               <textarea
                 value={profileForm.bio}
                 onChange={(e) => setProfileForm((p) => ({ ...p, bio: e.target.value }))}
@@ -444,7 +444,7 @@ export default function ProfilePage() {
                 rows={3}
                 className="w-full px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-200 resize-none"
               />
-              <p className="text-xs text-gray-400 text-right">{profileForm.bio.length}/300</p>
+              <p className="text-xs text-gray-500 text-right">{profileForm.bio.length}/300</p>
             </div>
 
             {profileMsg && (
@@ -715,11 +715,11 @@ export default function ProfilePage() {
 
           <div className="flex items-center gap-3 pt-1">
             <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gray-50 border border-gray-100">
-              <Users className="h-4 w-4 text-gray-400" />
+              <Users className="h-4 w-4 text-gray-500" />
               <span className="text-sm font-bold text-gray-800">{referral.referredCount}</span>
               <span className="text-sm text-gray-500">{referral.referredCount === 1 ? tp.friendSingular : tp.friendPlural}</span>
             </div>
-            <div className="text-xs text-gray-400">{tp.codeLabel}: <span className="font-bold font-mono text-gray-600">{referral.code}</span></div>
+            <div className="text-xs text-gray-500">{tp.codeLabel}: <span className="font-bold font-mono text-gray-600">{referral.code}</span></div>
           </div>
         </div>
       )}
@@ -730,7 +730,7 @@ export default function ProfilePage() {
           <ShieldAlert className="h-4 w-4 text-violet-500" />
           {tp.privacyTitle}
         </h2>
-        <p className="text-xs text-gray-400 -mt-2">
+        <p className="text-xs text-gray-500 -mt-2">
           {tp.privacyDesc}{" "}
           <Link href="/privacy" className="text-primary-600 hover:underline">{tp.privacyLink}</Link>
         </p>

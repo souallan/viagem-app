@@ -163,7 +163,7 @@ function EsimSection() {
               <ExternalLink className="h-3.5 w-3.5 text-gray-300 group-hover:text-gray-500 shrink-0 transition-colors" />
             </a>
           ))}
-          <p className="col-span-full text-[10px] text-gray-400 text-right">
+          <p className="col-span-full text-[10px] text-gray-500 text-right">
             {partnerDisclosure}
           </p>
         </div>
@@ -215,7 +215,7 @@ function InsuranceSection({ hasInsurance }: { hasInsurance: boolean }) {
       {open && (
         <div className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
           {affiliates.insurance.map((p) => <InsurancePartnerCard key={p.id} p={p} />)}
-          <p className="col-span-full text-[10px] text-gray-400 text-right">
+          <p className="col-span-full text-[10px] text-gray-500 text-right">
             {t.documents.partnerDisclosure}
           </p>
         </div>
@@ -375,7 +375,7 @@ export default function DocumentsPage() {
 
       {/* Empty state */}
       {docs.length === 0 && (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-gray-500">
           <div className="w-20 h-20 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto mb-5">
             <Shield className="h-9 w-9 text-blue-300" />
           </div>
@@ -396,7 +396,7 @@ export default function DocumentsPage() {
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xl">{style.icon}</span>
               <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wide">{label}</h3>
-              <span className="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">{typeDocs.length}</span>
+              <span className="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-full">{typeDocs.length}</span>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {typeDocs.map((doc) => {
@@ -507,7 +507,7 @@ export default function DocumentsPage() {
               <Label>{t.documents.formName}</Label>
               <Input name="title" value={form.title} onChange={handleChange} required placeholder={t.documents.formNamePh} />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label>{t.documents.formExpiry}</Label>
                 <Input name="expiresAt" type="date" value={form.expiresAt} onChange={handleChange} />

@@ -218,7 +218,7 @@ export default function EditExperiencePage() {
         <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
           <h2 className="font-bold text-gray-800 text-sm uppercase tracking-wide">Seu Relato *</h2>
           <Textarea value={form.content} onChange={(e) => set("content", e.target.value)} className="min-h-[300px] leading-relaxed" required />
-          <p className="text-xs text-gray-400">{form.content.length} caracteres</p>
+          <p className="text-xs text-gray-500">{form.content.length} caracteres</p>
         </section>
 
         <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-6">

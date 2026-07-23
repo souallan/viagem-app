@@ -285,7 +285,7 @@ export default function SummaryPage() {
         <div className="flex items-center justify-between no-print">
           <div>
             <h2 className="text-lg font-bold text-gray-900">Resumo da Viagem</h2>
-            <p className="text-sm text-gray-400 mt-0.5">Todas as informações em um só lugar</p>
+            <p className="text-sm text-gray-500 mt-0.5">Todas as informações em um só lugar</p>
           </div>
           <Button
             onClick={() => window.print()}
@@ -436,7 +436,7 @@ export default function SummaryPage() {
                                   <span className="text-xl shrink-0">{ACCOM_EMOJI[a.type]}</span>
                                   <div className="flex-1 min-w-0">
                                     <p className="font-bold text-sm text-gray-800 truncate">{a.name}</p>
-                                    {a.address && <p className="text-xs text-gray-400 truncate">{a.address}</p>}
+                                    {a.address && <p className="text-xs text-gray-500 truncate">{a.address}</p>}
                                   </div>
                                   <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white shrink-0" style={{ background: `linear-gradient(90deg, ${c1}, ${c2})` }}>
                                     saída
@@ -461,10 +461,10 @@ export default function SummaryPage() {
                                   <span className="text-xl shrink-0">{ACCOM_EMOJI[a.type]}</span>
                                   <div className="flex-1 min-w-0">
                                     <p className="font-bold text-sm text-gray-800 truncate">{a.name}</p>
-                                    {a.address && <p className="text-xs text-gray-400 truncate">{a.address}</p>}
+                                    {a.address && <p className="text-xs text-gray-500 truncate">{a.address}</p>}
                                     <p className="text-xs text-gray-500 mt-0.5">
                                       {fmtDate(a.checkIn)} → {fmtDate(a.checkOut)} · {nights} noite{nights !== 1 ? "s" : ""}
-                                      {a.confirmationNumber && <span className="ml-2 font-mono text-gray-400">#{a.confirmationNumber}</span>}
+                                      {a.confirmationNumber && <span className="ml-2 font-mono text-gray-500">#{a.confirmationNumber}</span>}
                                     </p>
                                   </div>
                                   {a.cost != null && (
@@ -493,7 +493,7 @@ export default function SummaryPage() {
                                     <ChevronRight className="h-3.5 w-3.5 text-purple-400 shrink-0" />
                                     <span>{t.to}</span>
                                   </div>
-                                  <p className="text-xs text-gray-400 mt-0.5">
+                                  <p className="text-xs text-gray-500 mt-0.5">
                                     {t.departureTime.slice(11, 16) !== "00:00" && (
                                       <span className="mr-2">⏰ {t.departureTime.slice(11, 16)}</span>
                                     )}
@@ -525,7 +525,7 @@ export default function SummaryPage() {
                                 <div key={act.id} className="flex gap-3">
                                   {/* Time column */}
                                   <div className="flex flex-col items-center w-12 shrink-0 pt-3">
-                                    <span className="text-[10px] font-bold text-gray-400 leading-none">
+                                    <span className="text-[10px] font-bold text-gray-500 leading-none">
                                       {act.startTime ?? "–"}
                                     </span>
                                     <div className="w-px flex-1 bg-gray-100 mt-1" />
@@ -539,7 +539,7 @@ export default function SummaryPage() {
                                           {cfg.label}
                                         </span>
                                         {act.startTime && (
-                                          <span className="flex items-center gap-0.5 text-[10px] text-gray-400">
+                                          <span className="flex items-center gap-0.5 text-[10px] text-gray-500">
                                             <PeriodIcon className="h-2.5 w-2.5" />
                                             {getPeriodLabel(act.startTime)}
                                           </span>
@@ -560,12 +560,12 @@ export default function SummaryPage() {
                                     <p className="font-bold text-sm text-gray-800 leading-snug">{act.title}</p>
                                     {act.location && (
                                       <p className="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
-                                        <MapPin className="h-3 w-3 text-gray-400 shrink-0" />
+                                        <MapPin className="h-3 w-3 text-gray-500 shrink-0" />
                                         {act.location}
                                       </p>
                                     )}
                                     {act.description && (
-                                      <p className="text-xs text-gray-400 mt-1 leading-relaxed line-clamp-2">{act.description}</p>
+                                      <p className="text-xs text-gray-500 mt-1 leading-relaxed line-clamp-2">{act.description}</p>
                                     )}
                                   </div>
                                 </div>
@@ -595,7 +595,7 @@ export default function SummaryPage() {
                   </div>
                   <div>
                     <h3 className="font-black text-gray-900 text-sm">Orçamento</h3>
-                    <p className="text-xs text-gray-400">{fmtMoney(totalExpenses, trip.currency)} gastos</p>
+                    <p className="text-xs text-gray-500">{fmtMoney(totalExpenses, trip.currency)} gastos</p>
                   </div>
                 </div>
                 {trip.budget && trip.budget > 0 && (
@@ -617,7 +617,7 @@ export default function SummaryPage() {
                         }}
                       />
                     </div>
-                    <p className="text-[10px] text-gray-400 mt-1">
+                    <p className="text-[10px] text-gray-500 mt-1">
                       Orçamento: {fmtMoney(trip.budget, trip.currency)}
                       {totalExpenses > trip.budget && (
                         <span className="text-red-500 ml-1 flex items-center gap-0.5 inline-flex">
@@ -647,7 +647,7 @@ export default function SummaryPage() {
                           />
                         </div>
                       </div>
-                      <span className="text-[10px] text-gray-400 shrink-0 w-8 text-right">{Math.round(pct)}%</span>
+                      <span className="text-[10px] text-gray-500 shrink-0 w-8 text-right">{Math.round(pct)}%</span>
                     </div>
                   );
                 })}
@@ -665,7 +665,7 @@ export default function SummaryPage() {
                   </div>
                   <div>
                     <h3 className="font-black text-gray-900 text-sm">Documentos</h3>
-                    <p className="text-xs text-gray-400">{documents.length} documento{documents.length !== 1 ? "s" : ""}</p>
+                    <p className="text-xs text-gray-500">{documents.length} documento{documents.length !== 1 ? "s" : ""}</p>
                   </div>
                 </div>
               </div>
@@ -690,7 +690,7 @@ export default function SummaryPage() {
                         {doc.expiresAt && (
                           <p className={cn(
                             "text-xs mt-0.5 flex items-center gap-1",
-                            isExpired ? "text-red-600" : isExpiring ? "text-amber-600" : "text-gray-400"
+                            isExpired ? "text-red-600" : isExpiring ? "text-amber-600" : "text-gray-500"
                           )}>
                             {isExpired ? <AlertTriangle className="h-3 w-3 shrink-0" /> : <CheckCircle2 className="h-3 w-3 shrink-0" />}
                             Validade: {fmtDate(doc.expiresAt)}
@@ -714,7 +714,7 @@ export default function SummaryPage() {
               </div>
               <div>
                 <h3 className="font-black text-gray-900 text-sm">Resumo do roteiro</h3>
-                <p className="text-xs text-gray-400">{destinations.join(" → ")}</p>
+                <p className="text-xs text-gray-500">{destinations.join(" → ")}</p>
               </div>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -727,7 +727,7 @@ export default function SummaryPage() {
                 <div key={label} className="rounded-2xl border border-gray-100 bg-gray-50 p-3 text-center">
                   <Icon className="h-5 w-5 mx-auto mb-1" style={{ color }} />
                   <p className="text-base font-black text-gray-800 leading-none">{value}</p>
-                  <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide mt-0.5">{label}</p>
+                  <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wide mt-0.5">{label}</p>
                 </div>
               ))}
             </div>
@@ -735,7 +735,7 @@ export default function SummaryPage() {
         )}
 
         {/* Print footer */}
-        <div className="hidden print:block text-center text-xs text-gray-400 pt-4 border-t border-gray-100">
+        <div className="hidden print:block text-center text-xs text-gray-500 pt-4 border-t border-gray-100">
           Gerado pelo RoteiroApp ·{new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}
         </div>
 

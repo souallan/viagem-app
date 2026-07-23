@@ -204,7 +204,7 @@ export default function DashboardPage() {
       {/* ── Search ── */}
       {trips.length >= 4 && (
         <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -212,7 +212,7 @@ export default function DashboardPage() {
             className="w-full h-10 rounded-xl border border-gray-200 bg-white pl-10 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-400/15 transition-all"
           />
           {search && (
-            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-lg leading-none">×</button>
+            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600 text-lg leading-none">×</button>
           )}
         </div>
       )}
@@ -269,7 +269,7 @@ export default function DashboardPage() {
 
           {/* Como funciona em 3 passos */}
           <div className="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Como funciona</p>
+            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Como funciona</p>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
                 { n: 1, icon: MapPin,     title: "Crie a viagem",   desc: "Destino, datas e uma foto de capa." },

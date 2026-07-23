@@ -103,7 +103,7 @@ function SegmentCard({
         <div className="flex-1 flex items-center gap-2 flex-wrap min-w-0">
           <input value={segment.from} onChange={e => setHeader("from", e.target.value)} placeholder="Origem"
             className="h-8 w-36 rounded-lg border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400/20" />
-          <span className="text-gray-400 font-bold">→</span>
+          <span className="text-gray-500 font-bold">→</span>
           <input value={segment.to} onChange={e => setHeader("to", e.target.value)} placeholder="Destino"
             className="h-8 w-36 rounded-lg border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400/20" />
           {/* w-40 e não `w-38`: 38 não existe na escala do Tailwind, então a
@@ -118,7 +118,7 @@ function SegmentCard({
           )}
         </div>
         <div className="flex items-center gap-1 shrink-0">
-          <button onClick={() => setOpen(v => !v)} className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
+          <button onClick={() => setOpen(v => !v)} className="p-1.5 rounded-lg text-gray-500 hover:text-gray-600 hover:bg-gray-100 transition-colors">
             {open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </button>
           <button onClick={onRemove} className="p-1.5 rounded-lg text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors">
@@ -136,7 +136,7 @@ function SegmentCard({
                 <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide w-28">Meio</th>
                 <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide w-48">
                   Valor ({symbol})
-                  {showConversion && <span className="ml-1 text-[10px] text-gray-400 font-normal">+ conversão BRL</span>}
+                  {showConversion && <span className="ml-1 text-[10px] text-gray-500 font-normal">+ conversão BRL</span>}
                 </th>
                 <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide w-32">Duração</th>
                 <th className="text-left px-4 py-2.5 text-xs font-semibold text-gray-500 uppercase tracking-wide w-40">Empresa / Cia</th>
@@ -383,7 +383,7 @@ export default function ComparePage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={clearAll} className="text-xs text-gray-400 hover:text-red-500 transition-colors px-3 py-1.5 rounded-lg border border-gray-200 hover:border-red-200">
+          <button onClick={clearAll} className="text-xs text-gray-500 hover:text-red-500 transition-colors px-3 py-1.5 rounded-lg border border-gray-200 hover:border-red-200">
             Limpar tudo
           </button>
           <Button onClick={addSegment} size="sm" className="gap-2">
@@ -412,7 +412,7 @@ export default function ComparePage() {
           {currency !== "BRL" && (
             <div className="flex items-center gap-2 ml-auto">
               {rateLoading && (
-                <span className="text-xs text-gray-400 flex items-center gap-1">
+                <span className="text-xs text-gray-500 flex items-center gap-1">
                   <RefreshCw className="h-3 w-3 animate-spin" /> Obtendo cotação...
                 </span>
               )}
@@ -446,7 +446,7 @@ export default function ComparePage() {
             </div>
           );
         })}
-        <span className="text-xs text-gray-400 self-center ml-1">— clique nos campos para editar</span>
+        <span className="text-xs text-gray-500 self-center ml-1">— clique nos campos para editar</span>
       </div>
 
       {/* Segments */}
@@ -464,13 +464,13 @@ export default function ComparePage() {
         ))}
       </div>
 
-      <button onClick={addSegment} className="w-full py-3 rounded-2xl border-2 border-dashed border-gray-200 text-sm text-gray-400 hover:border-primary-300 hover:text-primary-500 transition-colors flex items-center justify-center gap-2">
+      <button onClick={addSegment} className="w-full py-3 rounded-2xl border-2 border-dashed border-gray-200 text-sm text-gray-500 hover:border-primary-300 hover:text-primary-500 transition-colors flex items-center justify-center gap-2">
         <Plus className="h-4 w-4" /> Adicionar outro trecho
       </button>
 
       {segments.length > 0 && <SummaryTable segments={segments} currency={currency} brlRate={brlRate} />}
 
-      <p className="text-xs text-gray-400 text-center">
+      <p className="text-xs text-gray-500 text-center">
         Dados salvos no navegador · Cotações via{" "}
         <a href="https://www.frankfurter.app" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-600">Frankfurter</a>
         {" "}(European Central Bank)

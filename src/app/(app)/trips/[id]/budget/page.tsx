@@ -88,7 +88,7 @@ function CurrencyPartners({ hasForeignExpenses }: { hasForeignExpenses: boolean 
       {open && (
         <div className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
           {affiliates.currency.map((p) => <PartnerCard key={p.id} p={p} />)}
-          <p className="col-span-full text-[10px] text-gray-400 text-right">
+          <p className="col-span-full text-[10px] text-gray-500 text-right">
             {t.budget.partnerDisclosure}
           </p>
         </div>
@@ -381,7 +381,7 @@ export default function BudgetPage() {
           </div>
           <div>
             <h3 className="text-sm font-bold text-gray-900">Grupo &amp; divisão de contas</h3>
-            <p className="text-xs text-gray-400">Adicione quem está viajando junto para dividir as despesas.</p>
+            <p className="text-xs text-gray-500">Adicione quem está viajando junto para dividir as despesas.</p>
           </div>
         </div>
 
@@ -389,7 +389,7 @@ export default function BudgetPage() {
           {participants.map((p) => (
             <span key={p.id} className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-full bg-gray-100 text-gray-700">
               {p.name}
-              <button onClick={() => removeParticipant(p.id)} className="text-gray-400 hover:text-red-500" aria-label="Remover">
+              <button onClick={() => removeParticipant(p.id)} className="text-gray-500 hover:text-red-500" aria-label="Remover">
                 <X className="h-3 w-3" />
               </button>
             </span>
@@ -419,12 +419,12 @@ export default function BudgetPage() {
 
         {participants.length > 1 && splitExpenses.length > 0 && (
           <div className="pt-3 border-t border-gray-100 space-y-4">
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Acertar contas</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-500">Acertar contas</p>
 
             {/* Barra de resumo */}
             <div className="grid grid-cols-3 rounded-2xl overflow-hidden border border-gray-100 text-center">
               <div className="p-3">
-                <p className="text-[10px] font-bold uppercase tracking-wide text-gray-400">A acertar</p>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-gray-500">A acertar</p>
                 <p className="text-base font-black text-gray-900 mt-0.5">{formatCurrency(totalToSettle, tripCurrency)}</p>
               </div>
               <div className="p-3 border-x border-gray-100 bg-rose-50/50">
@@ -449,7 +449,7 @@ export default function BudgetPage() {
                     </div>
                     <span className="font-semibold text-gray-900 flex-1 min-w-0 truncate">{p.name}</span>
                     {settled ? (
-                      <span className="text-xs font-semibold text-gray-400 flex items-center gap-1"><Check className="h-3.5 w-3.5" /> quitado</span>
+                      <span className="text-xs font-semibold text-gray-500 flex items-center gap-1"><Check className="h-3.5 w-3.5" /> quitado</span>
                     ) : (
                       <div className="text-right">
                         <span className={`block text-[10px] font-bold uppercase tracking-wide ${net > 0 ? "text-emerald-500" : "text-rose-400"}`}>
@@ -467,7 +467,7 @@ export default function BudgetPage() {
 
             {/* Como acertar (quem paga quem, já com descontos) */}
             <div>
-              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Como acertar</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Como acertar</p>
               {settlements.length === 0 ? (
                 <p className="text-sm font-semibold text-emerald-600 flex items-center gap-1.5"><Check className="h-4 w-4" /> Tudo quitado</p>
               ) : (
@@ -476,7 +476,7 @@ export default function BudgetPage() {
                     <div key={i} className="flex items-center gap-2 rounded-xl bg-gray-50 border border-gray-100 px-3 py-2.5">
                       <div className="w-7 h-7 rounded-full bg-rose-500 text-white text-xs font-black flex items-center justify-center shrink-0">{initial(nameOf(s.from))}</div>
                       <span className="text-sm font-semibold text-gray-800 truncate max-w-[5.5rem] sm:max-w-none">{nameOf(s.from)}</span>
-                      <ArrowRight className="h-4 w-4 text-gray-400 shrink-0" />
+                      <ArrowRight className="h-4 w-4 text-gray-500 shrink-0" />
                       <div className="w-7 h-7 rounded-full bg-emerald-500 text-white text-xs font-black flex items-center justify-center shrink-0">{initial(nameOf(s.to))}</div>
                       <span className="text-sm font-semibold text-gray-800 truncate max-w-[5.5rem] sm:max-w-none">{nameOf(s.to)}</span>
                       <span className="ml-auto text-sm font-black text-primary-600 shrink-0">{formatCurrency(s.amount, tripCurrency)}</span>
@@ -492,7 +492,7 @@ export default function BudgetPage() {
                 </div>
               )}
             </div>
-            <p className="text-[10px] text-gray-400">Descontos já aplicados — o mínimo de pagamentos para todos ficarem quites. Considera despesas com pagador definido, na moeda da viagem.</p>
+            <p className="text-[10px] text-gray-500">Descontos já aplicados — o mínimo de pagamentos para todos ficarem quites. Considera despesas com pagador definido, na moeda da viagem.</p>
           </div>
         )}
       </div>
@@ -502,7 +502,7 @@ export default function BudgetPage() {
 
       {/* Lista de despesas */}
       {realExpenses.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-gray-500">
           <div className="text-5xl mb-3">💰</div>
           <p className="font-medium">{t.budget.noExpenses}</p>
           <p className="text-sm mt-1">{t.budget.expenseName}</p>
@@ -554,7 +554,7 @@ export default function BudgetPage() {
               <Label>{t.budget.expenseName} *</Label>
               <Input name="title" value={form.title} onChange={handleChange} required placeholder={t.budget.expenseNamePlaceholder} />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label>{t.budget.category}</Label>
                 <Select name="category" value={form.category} onChange={handleChange}>

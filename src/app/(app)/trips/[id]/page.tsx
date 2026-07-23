@@ -238,7 +238,7 @@ export default async function TripOverviewPage({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {checks.map((c) => c.ok ? (
-                <div key={c.label} className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/70 border border-gray-100 text-sm text-gray-400">
+                <div key={c.label} className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/70 border border-gray-100 text-sm text-gray-500">
                   <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
                   <span className="line-through">{c.label}</span>
                 </div>
@@ -333,7 +333,7 @@ export default async function TripOverviewPage({
               </div>
               <div>
                 <p className="text-sm font-bold text-gray-900">Orçamento usado</p>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-gray-500">
                   {formatCurrency(totalSpent, trip.currency)} de {formatCurrency(trip.budget!, trip.currency)}
                 </p>
               </div>
@@ -367,7 +367,7 @@ export default async function TripOverviewPage({
           </div>
           <div>
             <h3 className="text-sm font-bold text-gray-900">Recursos de pesquisa</h3>
-            <p className="text-xs text-gray-400">Links úteis para {trip.destination.split(" → ")[0]}</p>
+            <p className="text-xs text-gray-500">Links úteis para {trip.destination.split(" → ")[0]}</p>
           </div>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -384,7 +384,7 @@ export default async function TripOverviewPage({
               </div>
               <div className="min-w-0">
                 <p className="text-xs font-bold text-gray-900 truncate">{r.name}</p>
-                <p className="text-xs text-gray-400 truncate">{r.desc}</p>
+                <p className="text-xs text-gray-500 truncate">{r.desc}</p>
               </div>
               <ExternalLink className="h-3 w-3 text-gray-300 group-hover:text-gray-500 ml-auto shrink-0" />
             </a>
@@ -438,9 +438,9 @@ function BigStatCard({
           <div className={`w-11 h-11 rounded-xl ${bg} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
             <Icon className={`h-5 w-5 ${iconColor}`} />
           </div>
-          <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">{label}</p>
+          <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">{label}</p>
           <p className="text-xl sm:text-2xl font-black text-gray-900 leading-tight">{value}</p>
-          <p className="text-xs text-gray-400 mt-0.5 truncate">{unit}</p>
+          <p className="text-xs text-gray-500 mt-0.5 truncate">{unit}</p>
         </div>
       </div>
     </Link>

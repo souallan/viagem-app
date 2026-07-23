@@ -146,7 +146,7 @@ function TemplateCard({ template }: { template: RouteTemplate }) {
             </li>
           ))}
           {template.highlights.length > 3 && !expanded && (
-            <li className="text-xs text-gray-400 pl-5">+{template.highlights.length - 3} pontos de interesse</li>
+            <li className="text-xs text-gray-500 pl-5">+{template.highlights.length - 3} pontos de interesse</li>
           )}
         </ul>
 
@@ -163,7 +163,7 @@ function TemplateCard({ template }: { template: RouteTemplate }) {
                   </span>
                   <span className="text-xs text-gray-700 flex-1 truncate">{act.title}</span>
                   {act.startTime && (
-                    <span className="text-[10px] text-gray-400 shrink-0">{act.startTime}</span>
+                    <span className="text-[10px] text-gray-500 shrink-0">{act.startTime}</span>
                   )}
                 </div>
               ))}
@@ -174,7 +174,7 @@ function TemplateCard({ template }: { template: RouteTemplate }) {
         <div className="mt-auto space-y-2.5">
           <button
             onClick={() => setExpanded((v) => !v)}
-            className="w-full flex items-center justify-center gap-1.5 text-xs text-gray-400 hover:text-primary-600 transition-colors py-1"
+            className="w-full flex items-center justify-center gap-1.5 text-xs text-gray-500 hover:text-primary-600 transition-colors py-1"
           >
             {expanded
               ? <><ChevronUp className="h-3.5 w-3.5" /> Ocultar atividades</>
@@ -303,7 +303,7 @@ function CommunityCard({ route }: { route: CommunityRoute }) {
           </div>
           <span className="text-xs text-gray-500 font-medium">{route.authorName}</span>
           <span className="text-gray-300">·</span>
-          <span className="text-xs text-gray-400">{createdAt}</span>
+          <span className="text-xs text-gray-500">{createdAt}</span>
         </div>
 
         <h3 className="font-black text-gray-900 text-base mb-1.5 leading-tight">{route.title}</h3>
@@ -328,7 +328,7 @@ function CommunityCard({ route }: { route: CommunityRoute }) {
               </li>
             ))}
             {highlights.length > 3 && !expanded && (
-              <li className="text-xs text-gray-400 pl-5">+{highlights.length - 3} destaques</li>
+              <li className="text-xs text-gray-500 pl-5">+{highlights.length - 3} destaques</li>
             )}
           </ul>
         )}
@@ -346,7 +346,7 @@ function CommunityCard({ route }: { route: CommunityRoute }) {
                   </span>
                   <span className="text-xs text-gray-700 flex-1 truncate">{act.title}</span>
                   {act.startTime && (
-                    <span className="text-[10px] text-gray-400 shrink-0">{act.startTime}</span>
+                    <span className="text-[10px] text-gray-500 shrink-0">{act.startTime}</span>
                   )}
                 </div>
               ))}
@@ -358,7 +358,7 @@ function CommunityCard({ route }: { route: CommunityRoute }) {
           {route.activities.length > 0 && (
             <button
               onClick={() => setExpanded((v) => !v)}
-              className="w-full flex items-center justify-center gap-1.5 text-xs text-gray-400 hover:text-violet-600 transition-colors py-1"
+              className="w-full flex items-center justify-center gap-1.5 text-xs text-gray-500 hover:text-violet-600 transition-colors py-1"
             >
               {expanded
                 ? <><ChevronUp className="h-3.5 w-3.5" /> Ocultar atividades</>
@@ -369,7 +369,7 @@ function CommunityCard({ route }: { route: CommunityRoute }) {
           {/* Comments toggle */}
           <button
             onClick={toggleComments}
-            className="w-full flex items-center justify-center gap-1.5 text-xs text-gray-400 hover:text-violet-600 transition-colors py-1 border-t border-gray-50 pt-2"
+            className="w-full flex items-center justify-center gap-1.5 text-xs text-gray-500 hover:text-violet-600 transition-colors py-1 border-t border-gray-50 pt-2"
           >
             <MessageCircle className="h-3.5 w-3.5" />
             {showComments ? "Fechar comentários" : `${commentCount > 0 ? commentCount : ""} Comentários`.trim()}
@@ -380,7 +380,7 @@ function CommunityCard({ route }: { route: CommunityRoute }) {
             <div className="border border-gray-100 rounded-xl overflow-hidden">
               <div className="max-h-40 overflow-y-auto divide-y divide-gray-50">
                 {comments.length === 0 && (
-                  <p className="text-xs text-gray-400 text-center py-4">Nenhum comentário ainda. Seja o primeiro!</p>
+                  <p className="text-xs text-gray-500 text-center py-4">Nenhum comentário ainda. Seja o primeiro!</p>
                 )}
                 {comments.map((c) => (
                   <div key={c.id} className="px-3 py-2.5">
@@ -389,7 +389,7 @@ function CommunityCard({ route }: { route: CommunityRoute }) {
                         <User className="h-2.5 w-2.5 text-violet-600" />
                       </div>
                       <span className="text-xs font-semibold text-gray-700">{c.userName}</span>
-                      <span className="text-[10px] text-gray-400 ml-auto">
+                      <span className="text-[10px] text-gray-500 ml-auto">
                         {new Date(c.createdAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}
                       </span>
                     </div>
@@ -678,7 +678,7 @@ export default function RoutesPage() {
             <Users className="h-9 w-9 text-violet-400" />
           </div>
           <h3 className="text-lg font-bold text-gray-700 mb-2">Nenhum roteiro da comunidade ainda</h3>
-          <p className="text-gray-400 text-sm mb-6 max-w-sm mx-auto">
+          <p className="text-gray-500 text-sm mb-6 max-w-sm mx-auto">
             Seja o primeiro a compartilhar sua experiência de viagem com a comunidade!
           </p>
           <Link
@@ -710,7 +710,7 @@ export default function RoutesPage() {
         <div className="text-center py-20">
           <div className="text-6xl mb-4">🔍</div>
           <h3 className="text-lg font-bold text-gray-700 mb-2">{t.routes.noResults}</h3>
-          <p className="text-gray-400 text-sm">{t.routes.noResultsDesc}</p>
+          <p className="text-gray-500 text-sm">{t.routes.noResultsDesc}</p>
           <button
             onClick={() => { setSearch(""); setContinent("Todos"); }}
             className="mt-5 text-sm text-primary-600 hover:underline font-semibold"
