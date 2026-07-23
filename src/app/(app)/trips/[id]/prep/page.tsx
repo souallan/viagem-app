@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { AffiliateBlock } from "@/components/marketing/affiliate-block";
 import { Dialog, DialogHeader, DialogTitle, DialogBody, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
@@ -284,6 +285,9 @@ export default function PrepPage() {
           </div>
         );
       })}
+
+      {/* Preparativos combinam com chip internacional e seguro de viagem */}
+      <AffiliateBlock groups={["esim", "insurance"]} title="Não esqueça do essencial da viagem" />
 
       {/* Dialog */}
       <Dialog open={open} onClose={() => setOpen(false)}>

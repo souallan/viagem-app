@@ -5,6 +5,7 @@ import { ArrowLeftRight, Users, Plus, Trash2, Calculator, RefreshCw } from "luci
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AffiliateBlock } from "@/components/marketing/affiliate-block";
 
 const CURRENCIES = [
   { code: "BRL", name: "Real brasileiro", flag: "🇧🇷" },
@@ -446,6 +447,9 @@ export default function CurrencyPage() {
           </div>
         )}
       </div>
+
+      {/* Parceiros de câmbio/conta internacional — contexto da tela de moedas */}
+      <AffiliateBlock groups={["currency"]} title="Pague menos câmbio no exterior" />
     </div>
   );
 }

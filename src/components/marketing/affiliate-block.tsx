@@ -46,14 +46,23 @@ export function AffiliateBlock({
 
   return (
     <section className="not-prose my-8 rounded-2xl border border-gray-100 bg-gray-50/60 p-4 sm:p-5">
-      <p className="text-sm font-bold text-gray-900 mb-3">{title}</p>
+      {/* Rótulo "Publicidade" visível e próximo do bloco: o CONAR exige que
+          publicidade seja identificável à primeira vista, não só via rel=sponsored.
+          A auditoria jurídica (Lívia) e a de marketing (Nova) pediram isto. */}
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <p className="text-sm font-bold text-gray-900">{title}</p>
+        <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full">
+          Publicidade
+        </span>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         {partners.map((p) => (
           <AffiliateCard key={p.id} p={p} destination={destination} />
         ))}
       </div>
-      <p className="text-[10px] text-gray-400 mt-3">
-        Links de parceiros — ao reservar por eles, podemos receber uma comissão sem custo extra para você.
+      <p className="text-[11px] text-gray-500 mt-3">
+        Links patrocinados de parceiros — ao reservar por eles, podemos receber uma comissão, sem
+        custo extra para você.
       </p>
     </section>
   );
