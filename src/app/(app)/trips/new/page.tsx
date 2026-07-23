@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft, Loader2, Plus, X, MapPin, ArrowRight,
-  Route, GripVertical, Image as ImageIcon, Check,
+  Route, GripVertical, Image as ImageIcon, Check, ChevronUp, ChevronDown,
 } from "lucide-react";
 import { COVER_GROUPS } from "@/lib/cover-photos";
 import { Button } from "@/components/ui/button";
@@ -121,6 +121,20 @@ function DestinationBuilder({
     setDragOverIdx(null);
   }
 
+  /**
+   * Move um destino uma posição para cima/baixo.
+   * O arrastar (HTML5 drag-and-drop) NÃO dispara em toque, então no celular era
+   * impossível reordenar — e a ordem define o destino principal, usado na
+   * previsão do tempo. Estes botões funcionam nos dois mundos.
+   */
+  function move(from: number, delta: number) {
+    const to = from + delta;
+    if (to < 0 || to >= destinations.length) return;
+    const next = [...destinations];
+    [next[from], next[to]] = [next[to], next[from]];
+    onChange(next);
+  }
+
   const showPopular = destinations.length === 0;
 
   return (
@@ -180,8 +194,30 @@ function DestinationBuilder({
                   : "bg-white border-gray-200 hover:border-gray-300"
               )}
             >
-              {/* Drag handle */}
-              <GripVertical className="h-4 w-4 text-gray-300 shrink-0" aria-hidden="true" />
+              {/* Reordenar: setas no toque, alça de arrastar no desktop */}
+              {destinations.length > 1 && (
+                <div className="flex flex-col shrink-0 -my-1 sm:hidden">
+                  <button
+                    type="button"
+                    onClick={() => move(i, -1)}
+                    disabled={i === 0}
+                    className="h-6 w-8 flex items-center justify-center rounded text-gray-400 disabled:opacity-25 active:bg-gray-100"
+                    aria-label={`Mover ${dest} para cima`}
+                  >
+                    <ChevronUp className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => move(i, 1)}
+                    disabled={i === destinations.length - 1}
+                    className="h-6 w-8 flex items-center justify-center rounded text-gray-400 disabled:opacity-25 active:bg-gray-100"
+                    aria-label={`Mover ${dest} para baixo`}
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+              <GripVertical className="hidden sm:block h-4 w-4 text-gray-300 shrink-0" aria-hidden="true" />
 
               {/* Step number */}
               <div className={cn(
@@ -208,10 +244,12 @@ function DestinationBuilder({
               )}
 
               {/* Remove */}
+              {/* -m-2 amplia o alvo de toque para 44px sem alterar o layout
+                  (antes eram 16px, metade do mínimo recomendado) */}
               <button
                 type="button"
                 onClick={() => remove(i)}
-                className="text-gray-300 hover:text-red-500 transition-colors shrink-0 ml-1"
+                className="h-11 w-11 -m-2 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors shrink-0"
                 aria-label={`Remover ${dest}`}
               >
                 <X className="h-4 w-4" />
@@ -220,9 +258,11 @@ function DestinationBuilder({
           ))}
 
           {destinations.length > 1 && (
-            <p className="text-xs text-gray-400 flex items-center gap-1.5 pl-1">
-              <GripVertical className="h-3 w-3" aria-hidden="true" />
-              Arraste para reordenar · O primeiro destino é usado para previsão do tempo
+            <p className="text-xs text-gray-500 flex items-center gap-1.5 pl-1">
+              <GripVertical className="h-3 w-3 shrink-0" aria-hidden="true" />
+              <span className="sm:hidden">Use as setas para reordenar</span>
+              <span className="hidden sm:inline">Arraste para reordenar</span>
+              {" · O primeiro destino é usado para previsão do tempo"}
             </p>
           )}
         </div>

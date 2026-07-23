@@ -107,8 +107,11 @@ export default async function TripLayout({
         </div>
       </div>
 
-      {/* ── Tab navigation (sticky ao rolar) ── */}
-      <div className="sticky top-14 md:top-0 z-20 bg-background/95 backdrop-blur-sm mb-6 py-1 print:hidden">
+      {/* ── Tab navigation (sticky ao rolar) ──
+          O header móvel é `min-h-[3.5rem] pt-safe`, ou seja 56px MAIS o inset do
+          notch. Com `top-14` fixo as abas grudavam alto demais e deslizavam por
+          baixo do header em qualquer aparelho com notch/ilha dinâmica. */}
+      <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] md:top-0 z-20 bg-background/95 backdrop-blur-sm mb-6 py-1 print:hidden">
         <TripTabs tripId={id} />
         <div className="h-px bg-gray-200 mt-1" />
       </div>

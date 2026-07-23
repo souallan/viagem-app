@@ -106,8 +106,10 @@ function SegmentCard({
           <span className="text-gray-400 font-bold">→</span>
           <input value={segment.to} onChange={e => setHeader("to", e.target.value)} placeholder="Destino"
             className="h-8 w-36 rounded-lg border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400/20" />
+          {/* w-40 e não `w-38`: 38 não existe na escala do Tailwind, então a
+              classe era ignorada e o campo de data ficava sem largura definida. */}
           <input type="date" value={segment.date} onChange={e => setHeader("date", e.target.value)}
-            className="h-8 w-38 rounded-lg border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400/20" />
+            className="h-8 w-40 rounded-lg border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:border-primary-400 focus:ring-1 focus:ring-primary-400/20" />
           {cheapest && (
             <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 ml-1">
               <TrendingDown className="h-3 w-3" />

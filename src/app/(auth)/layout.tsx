@@ -3,8 +3,11 @@ import Link from "next/link";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
+    // `min-h-screen-safe` (100dvh) + áreas seguras: com viewportFit=cover, o
+    // formulário de cadastro é mais alto que a tela e o topo do card passava por
+    // baixo da status bar.
     <div
-      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
+      className="min-h-screen-safe flex items-center justify-center p-4 pt-safe pb-safe relative overflow-hidden"
       style={{ background: "linear-gradient(160deg, #0A1018 0%, #0E1828 60%, #091420 100%)" }}
     >
       {/* Grid background */}
@@ -41,7 +44,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </div>
             <span className="text-2xl font-bold gradient-text tracking-tight">RoteiroApp</span>
           </Link>
-          <p className="text-slate-500 text-xs mt-2 font-medium tracking-wide uppercase">Travel Planner</p>
+          <p className="text-slate-400 text-xs mt-2 font-medium tracking-wide uppercase">Travel Planner</p>
         </div>
 
         {/* Card */}
@@ -56,13 +59,14 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           {children}
         </div>
 
-        {/* Privacy link */}
-        <p className="text-center text-[11px] text-slate-600 mt-5">
-          <Link href="/privacy" className="hover:text-slate-400 transition-colors underline underline-offset-2">
+        {/* Privacy link — text-slate-400 (não 600): são links obrigatórios de
+            LGPD e em slate-600 o contraste era ~2,6:1, abaixo do mínimo AA. */}
+        <p className="text-center text-xs text-slate-400 mt-5">
+          <Link href="/privacy" className="hover:text-slate-200 transition-colors underline underline-offset-2">
             Política de Privacidade
           </Link>
           {" · "}
-          <Link href="/privacy#5" className="hover:text-slate-400 transition-colors underline underline-offset-2">
+          <Link href="/privacy#5" className="hover:text-slate-200 transition-colors underline underline-offset-2">
             Cookies
           </Link>
           {" · "}LGPD compliant
