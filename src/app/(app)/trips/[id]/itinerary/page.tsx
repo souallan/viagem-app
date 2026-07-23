@@ -811,7 +811,11 @@ export default function ItineraryPage() {
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* `flex-wrap`: são quatro controles (Timeline, Por período, Sugerir
+            roteiro, Adicionar) e eles não cabem lado a lado em 411px — o
+            "Adicionar" ficava cortado na borda direita, parcialmente
+            inacessível. Agora quebram em duas linhas no celular. */}
+        <div className="flex flex-wrap items-center gap-2">
           {activities.length > 0 && (
             <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-xl">
               <button

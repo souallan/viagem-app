@@ -475,7 +475,9 @@ export default function PackingPage() {
             <p className="text-xs text-gray-500 mt-0.5">{tripDays} {t.packing.tripDays}</p>
           )}
         </div>
-        <div className="flex items-center gap-2">
+        {/* `flex-wrap` pelo mesmo motivo do roteiro: os botões não cabem lado a
+            lado no celular e o último ficava cortado na borda. */}
+        <div className="flex flex-wrap items-center gap-2">
           {(smartSuggestions.length > 0 || tripDays) && (
             <Button
               variant="outline"
