@@ -62,7 +62,7 @@ export const landingI18n = {
         desc: "Para quem viaja de verdade.",
         cta: "Assinar Premium",
         featuresIntro: "Tudo do grátis, mais:",
-        features: ["Viagens e atividades ilimitadas", "Roteiros da comunidade ilimitados", "Publicar relatos de viagem", "Suporte prioritário", "Selo de apoiador no perfil"],
+        features: ["Viagens e atividades ilimitadas", "Roteiros da comunidade ilimitados", "Publicar relatos de viagem", "Acesso offline", "Suporte prioritário", "Selo de apoiador no perfil"],
       },
     },
     app: {
@@ -168,7 +168,7 @@ export const landingI18n = {
         desc: "For those who really travel.",
         cta: "Get Premium",
         featuresIntro: "Everything in Free, plus:",
-        features: ["Unlimited trips and activities", "Unlimited community routes", "Publish travel stories", "Priority support", "Supporter badge on profile"],
+        features: ["Unlimited trips and activities", "Unlimited community routes", "Publish travel stories", "Offline access", "Priority support", "Supporter badge on profile"],
       },
     },
     app: {
@@ -274,7 +274,7 @@ export const landingI18n = {
         desc: "Para quienes viajan de verdad.",
         cta: "Obtener Premium",
         featuresIntro: "Todo lo gratis, y además:",
-        features: ["Viajes y actividades ilimitados", "Rutas de la comunidad ilimitadas", "Publicar relatos de viaje", "Soporte prioritario", "Insignia de apoyo en el perfil"],
+        features: ["Viajes y actividades ilimitados", "Rutas de la comunidad ilimitadas", "Publicar relatos de viaje", "Acceso sin conexión", "Soporte prioritario", "Insignia de apoyo en el perfil"],
       },
     },
     app: {

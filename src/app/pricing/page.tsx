@@ -24,6 +24,7 @@ const PREMIUM_FEATURES = [
   "Atividades ilimitadas por viagem",
   "Roteiros da comunidade ilimitados",
   "Publicar relatos de viagem (ilimitados)",
+  "Acesso offline (viagens, documentos, reservas)",
   "Suporte prioritário por email",
   "Acesso antecipado a novidades",
   "Badge de apoiador no perfil",
