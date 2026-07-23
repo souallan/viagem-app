@@ -22,11 +22,12 @@ export function PushRegistration() {
       try {
         const { PushNotifications } = await import("@capacitor/push-notifications");
 
-        let perm = await PushNotifications.checkPermissions();
-        if (perm.receive === "prompt" || perm.receive === "prompt-with-rationale") {
-          perm = await PushNotifications.requestPermissions();
-        }
-        // Recusado: não insistir. O usuário pode liberar depois nos ajustes do sistema.
+        // NÃO pede permissão aqui. Este componente monta assim que a pessoa entra
+        // na área logada, e um diálogo do sistema sem explicação é negado na
+        // maioria das vezes — no Android, negar é difícil de reverter depois.
+        // Quem pergunta é o PushPermissionPrompt, com contexto e só depois que o
+        // usuário já tem uma viagem. Aqui apenas registramos quem já autorizou.
+        const perm = await PushNotifications.checkPermissions();
         if (perm.receive !== "granted" || cancelled) return;
 
         const registration = await PushNotifications.addListener(

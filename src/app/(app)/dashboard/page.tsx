@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Plus, Globe, Plane, Calendar, TrendingUp, MapPin, ArrowRight, FileWarning, Search, Route, Sparkles, ListChecks } from "lucide-react";
 import { TripCard } from "@/components/trips/trip-card";
 import { useLanguage } from "@/contexts/language-context";
+import { PushPermissionPrompt } from "@/components/native/push-permission-prompt";
 
 interface Trip {
   id: string;
@@ -157,6 +158,10 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 pb-10">
+
+      {/* Convite para ativar avisos — só no app nativo e só depois que a pessoa
+          já tem viagem, quando o benefício é concreto. */}
+      <PushPermissionPrompt temViagem={hasTrips} />
 
       {/* ── Hero Banner ── */}
       <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-8 min-h-[180px] flex items-center gap-6">

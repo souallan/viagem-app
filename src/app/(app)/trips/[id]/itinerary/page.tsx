@@ -868,15 +868,38 @@ export default function ItineraryPage() {
         <HolidayAlerts destinations={tripDestinations} activityDates={sortedDates} />
       )}
 
-      {/* Empty state */}
+      {/* Empty state — oferece os DOIS caminhos com o mesmo peso.
+          Antes era só emoji + "adicionar atividade": o gerador de roteiro, que é
+          o maior atalho do produto (monta o dia a dia inteiro de uma vez), ficava
+          escondido num botão secundário lá no topo. Quem chega aqui com a tela
+          vazia é exatamente quem mais se beneficia dele. */}
       {sortedDates.length === 0 && (
-        <div className="text-center py-20 text-gray-500">
+        <div className="text-center py-16 px-4">
           <div className="text-5xl mb-4">📅</div>
-          <p className="font-semibold text-gray-500">{t.itinerary.noActivities}</p>
-          <p className="text-sm mt-1">{t.itinerary.noActivitiesDesc}</p>
-          <Button onClick={openNew} className="mt-6 gap-2" size="sm">
-            <Plus className="h-4 w-4" /> {t.itinerary.addActivity}
-          </Button>
+          <p className="font-semibold text-gray-700">{t.itinerary.noActivities}</p>
+          <p className="text-sm mt-1 text-gray-500">{t.itinerary.noActivitiesDesc}</p>
+
+          <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+            {tripDestinations.length > 0 && (
+              <Button
+                onClick={() => setGeneratorOpen(true)}
+                className="gap-2 w-full sm:w-auto bg-violet-600 hover:bg-violet-700"
+              >
+                <Wand2 className="h-4 w-4" />
+                Montar roteiro para mim
+              </Button>
+            )}
+            <Button onClick={openNew} variant="outline" className="gap-2 w-full sm:w-auto">
+              <Plus className="h-4 w-4" /> {t.itinerary.addActivity}
+            </Button>
+          </div>
+
+          {tripDestinations.length > 0 && (
+            <p className="text-xs text-gray-500 mt-4">
+              Sugerimos passeios dia a dia para {tripDestinations[0].split(",")[0]} — você ajusta
+              depois.
+            </p>
+          )}
         </div>
       )}
 
