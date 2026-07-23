@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { FileText, ArrowLeft, Plane } from "lucide-react";
+import { FileText, Plane } from "lucide-react";
+import { LegalBackLink } from "@/components/layout/legal-back-link";
 
 const LAST_UPDATED = "11 de julho de 2026";
 
@@ -28,17 +29,14 @@ export default function TermsPage() {
             </div>
             <span className="font-bold text-gray-900">RoteiroApp</span>
           </Link>
-          <Link href="/login" className="text-sm text-blue-600 hover:underline font-medium">
+          <Link href="/login" className="hide-in-app text-sm text-blue-600 hover:underline font-medium">
             Entrar na conta
           </Link>
         </div>
 
         {/* Header */}
         <div className="mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-800 mb-6 transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            Voltar
-          </Link>
+          <LegalBackLink />
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center">
               <FileText className="h-5 w-5 text-blue-600" />
