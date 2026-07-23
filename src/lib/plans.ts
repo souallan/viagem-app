@@ -2,7 +2,7 @@ export type Plan = "FREE" | "PREMIUM";
 
 export const PLAN_LIMITS = {
   FREE: {
-    trips: 3,
+    trips: 1,
     activitiesPerTrip: 20,
     communityRoutes: 1,
     // 0 = criar relato é recurso Premium. Quem já tem relatos continua VENDO e

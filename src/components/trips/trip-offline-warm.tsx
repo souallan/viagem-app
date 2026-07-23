@@ -13,19 +13,20 @@ const ROTAS_API = [
   "expenses",
 ];
 
-// Sub-páginas da viagem. Cada uma é um segmento de rota próprio no App Router,
-// com seu próprio bundle JS — navegar offline para uma que nunca foi aberta
-// falhava ao carregar o chunk e mostrava "Algo deu errado" (visto no teste real
-// justamente na tela de Documentos, a mais crítica no aeroporto).
+// Sub-páginas ÚTEIS durante a viagem, que valem a pena ter offline. Não é o app
+// inteiro de propósito: são as telas que a pessoa consulta na rua/aeroporto sem
+// sinal. Cada uma é um segmento de rota próprio (bundle JS + RSC), então navegar
+// offline para uma que nunca foi aberta falhava com "Algo deu errado" (visto no
+// teste real na tela de Documentos). Ficam de fora as telas de planejamento que
+// só fazem sentido com internet (comparar preços, editar).
 const SUBPAGINAS = [
-  "itinerary",
-  "accommodation",
-  "transport",
-  "documents",
-  "budget",
-  "map",
-  "packing",
-  "summary",
+  "itinerary",     // roteiro do dia
+  "accommodation", // reservas de hotel
+  "transport",     // voos / transporte
+  "documents",     // passaporte, visto, vouchers
+  "budget",        // gastos
+  "map",           // mapa dos destinos
+  "packing",       // lista de mala
 ];
 
 /**

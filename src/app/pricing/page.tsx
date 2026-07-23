@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 
 const FREE_FEATURES = [
-  "Até 3 viagens ativas",
+  "1 viagem ativa",
   "Até 20 atividades por viagem",
   "1 roteiro na comunidade",
   "Orçamento e controle de gastos",

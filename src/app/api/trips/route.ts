@@ -40,10 +40,10 @@ export async function POST(request: Request) {
     if (limit !== Infinity) {
       const count = await prisma.trip.count({ where: { userId: session.user.id } });
       if (count >= limit) {
-        return NextResponse.json(
-          { error: `Plano gratuito permite até ${limit} viagens. Faça upgrade para o Premium!`, code: "PLAN_LIMIT" },
-          { status: 403 }
-        );
+        const msg = limit === 1
+          ? "O plano gratuito inclui 1 viagem. Assine o Premium para criar quantas quiser."
+          : `O plano gratuito permite até ${limit} viagens. Assine o Premium para criar quantas quiser.`;
+        return NextResponse.json({ error: msg, code: "PLAN_LIMIT" }, { status: 403 });
       }
     }
 
