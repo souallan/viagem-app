@@ -702,11 +702,11 @@ function NewTripForm() {
                   </button>
                 </div>
               )}
-              <div className="space-y-3 max-h-64 overflow-y-auto pr-1 rounded-xl border border-gray-100 p-2">
+              <div className="space-y-3 max-h-none sm:max-h-64 sm:overflow-y-auto pr-1 rounded-xl border border-gray-100 p-2">
                 {COVER_GROUPS.map((group) => (
                   <div key={group.region}>
                     <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1.5 sticky top-0 bg-white/95 py-1 z-10">{group.region}</p>
-                    <div className="grid grid-cols-4 gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                       {group.photos.map(({ url, label }) => (
                         <button
                           key={url}
@@ -809,21 +809,10 @@ function NewTripForm() {
               </div>
             </div>
 
-            {/* Status */}
-            <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
-              <Select
-                id="status"
-                name="status"
-                value={form.status}
-                onChange={handleChange}
-              >
-                <option value="PLANNING">📋 Planejando</option>
-                <option value="CONFIRMED">✅ Confirmada</option>
-                <option value="IN_PROGRESS">✈️ Em andamento</option>
-                <option value="COMPLETED">🏁 Concluída</option>
-              </Select>
-            </div>
+            {/* Status foi REMOVIDO daqui: ninguém cria uma viagem já "Concluída".
+                O padrão continua "Planejando" (no estado do formulário) e a
+                alteração vive em /trips/[id]/edit, que é onde faz sentido. Um
+                campo a menos num formulário que já é longo no celular. */}
 
             {error && (
               planLimit ? (

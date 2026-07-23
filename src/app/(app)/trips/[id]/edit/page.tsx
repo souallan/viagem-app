@@ -189,7 +189,7 @@ export default function EditTripPage() {
               {COVER_GROUPS.map((group) => (
                 <div key={group.region}>
                   <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-2 sticky top-0 bg-white/95 py-1 z-10">{group.region}</p>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                     {group.photos.map(({ url, label }) => (
                       <button
                         key={url}
