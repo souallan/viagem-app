@@ -23,3 +23,17 @@ export function getNativePlatform(): "ios" | "android" | "web" {
   const p = cap()?.getPlatform?.();
   return p === "ios" || p === "android" ? p : "web";
 }
+
+/**
+ * Push só pode ser usado quando o Firebase existe no projeto nativo.
+ *
+ * `PushNotifications.register()` sem o `google-services.json` lança
+ * `IllegalStateException: Default FirebaseApp is not initialized` — uma exceção
+ * NATIVA FATAL, que try/catch em JavaScript não captura: o app inteiro fecha.
+ * Por isso a checagem é uma variável de build, e não uma tentativa protegida.
+ *
+ * Ligar depois de configurar o Firebase: NEXT_PUBLIC_PUSH_ENABLED=true.
+ */
+export function isPushAvailable(): boolean {
+  return isNativeApp() && process.env.NEXT_PUBLIC_PUSH_ENABLED === "true";
+}

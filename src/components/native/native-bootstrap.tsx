@@ -26,13 +26,20 @@ export function NativeBootstrap() {
 
     (async () => {
       try {
-        const [{ StatusBar, Style }, { SplashScreen }, { App }, { Network }] =
+        const [{ StatusBar, Style }, { SplashScreen }, { App }, { Network }, { Keyboard }] =
           await Promise.all([
             import("@capacitor/status-bar"),
             import("@capacitor/splash-screen"),
             import("@capacitor/app"),
             import("@capacitor/network"),
+            import("@capacitor/keyboard"),
           ]);
+
+        // Estado do teclado: o voltar precisa saber disso (ver handler abaixo).
+        let tecladoAberto = false;
+        const kShow = await Keyboard.addListener("keyboardWillShow", () => { tecladoAberto = true; });
+        const kHide = await Keyboard.addListener("keyboardWillHide", () => { tecladoAberto = false; });
+        cleanups.push(() => { void kShow.remove(); void kHide.remove(); });
 
         await StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
         // setBackgroundColor é Android-only (iOS ignora)
@@ -44,14 +51,23 @@ export function NativeBootstrap() {
         // sem histórico, FECHAVA O APP. Agora respeita a hierarquia esperada.
         let ultimoBack = 0;
         const backSub = await App.addListener("backButton", ({ canGoBack }) => {
-          // 1) Fecha o que estiver aberto por cima (modal, confirmação, drawer)
+          // 1) Teclado aberto: voltar só fecha o teclado — é o que o Android faz.
+          //    Sem isto, quem apertava voltar para esconder o teclado (ex.: após
+          //    digitar o código de verificação) via o aviso de saída e, ao tocar
+          //    de novo achando que o teclado não fechou, FECHAVA O APP.
+          if (tecladoAberto) {
+            void Keyboard.hide().catch(() => {});
+            tecladoAberto = false;
+            return;
+          }
+          // 2) Fecha o que estiver aberto por cima (modal, confirmação)
           if (dismissTop()) return;
-          // 2) Volta no histórico
+          // 3) Volta no histórico
           if (canGoBack) {
             window.history.back();
             return;
           }
-          // 3) Na raiz: duplo toque para sair. Fechar no primeiro toque, sem
+          // 4) Na raiz: duplo toque para sair. Fechar no primeiro toque, sem
           //    aviso, é percebido como travamento — convenção do Android.
           const agora = Date.now();
           if (agora - ultimoBack < 2000) {

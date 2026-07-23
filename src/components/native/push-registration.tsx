@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { isNativeApp, getNativePlatform } from "@/lib/native";
+import { isPushAvailable, getNativePlatform } from "@/lib/native";
 
 /**
  * Registra o aparelho para receber push (FCM) e trata o toque na notificação.
@@ -13,7 +13,9 @@ export function PushRegistration() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isNativeApp()) return;
+    // Sem Firebase no projeto nativo, `register()` derruba o app (exceção
+    // nativa fatal, não capturável em JS). Ver isPushAvailable().
+    if (!isPushAvailable()) return;
 
     const cleanups: Array<() => void> = [];
     let cancelled = false;

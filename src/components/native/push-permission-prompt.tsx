@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Bell, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { isNativeApp } from "@/lib/native";
+import { isPushAvailable } from "@/lib/native";
 
 const CHAVE = "push-prompt-respondido";
 
@@ -25,7 +25,9 @@ export function PushPermissionPrompt({ temViagem }: { temViagem: boolean }) {
   const [visivel, setVisivel] = useState(false);
 
   useEffect(() => {
-    if (!isNativeApp() || !temViagem) return;
+    // Não oferecer o que ainda não funciona: sem Firebase, aceitar o convite
+    // chamaria `register()` e derrubaria o app (exceção nativa fatal).
+    if (!isPushAvailable() || !temViagem) return;
     if (localStorage.getItem(CHAVE)) return;
 
     let cancelado = false;
