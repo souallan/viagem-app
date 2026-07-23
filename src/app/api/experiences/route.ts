@@ -32,8 +32,14 @@ export async function POST(req: NextRequest) {
   if (limit !== Infinity) {
     const count = await prisma.experience.count({ where: { userId: session.user.id } });
     if (count >= limit) {
+      // limit === 0 significa "recurso exclusivo do Premium"; dizer "permite até
+      // 0 relatos" soaria como erro do sistema.
       return NextResponse.json(
-        planLimitError(`O plano gratuito permite até ${limit} experiências. Faça upgrade para o Premium para publicar quantas quiser.`),
+        planLimitError(
+          limit === 0
+            ? "Publicar relatos de viagem é um recurso Premium. Seus relatos já criados continuam disponíveis."
+            : `O plano gratuito permite até ${limit} relatos. Assine o Premium para publicar quantos quiser.`
+        ),
         { status: 403 }
       );
     }

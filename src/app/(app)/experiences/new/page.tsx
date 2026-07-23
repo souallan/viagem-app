@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { LocationInput } from "@/components/ui/location-input";
+import { UpgradeNotice } from "@/components/plan/upgrade-notice";
 import { cn } from "@/lib/utils";
 
 const MOODS = [
@@ -66,6 +67,7 @@ function NewExperienceForm() {
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [planLimit, setPlanLimit] = useState(false);
   const [coverMode, setCoverMode] = useState<"preset" | "url">("preset");
 
   const [form, setForm] = useState({
@@ -99,12 +101,15 @@ function NewExperienceForm() {
       body: JSON.stringify({ ...form, rating: form.rating || null }),
     });
 
+    const data = await res.json().catch(() => ({}));
     setSaving(false);
     if (res.ok) {
-      const data = await res.json();
       router.push(`/experiences/${data.id}`);
     } else {
-      setError("Erro ao salvar. Tente novamente.");
+      // Usa a mensagem do servidor: com "Erro ao salvar" genérico, o bloqueio de
+      // plano parecia falha do sistema em vez de recurso Premium.
+      setPlanLimit(data.code === "PLAN_LIMIT");
+      setError(data.error ?? "Erro ao salvar. Tente novamente.");
     }
   }
 
@@ -314,7 +319,9 @@ function NewExperienceForm() {
         </section>
 
         {error && (
-          <p className="text-sm text-red-600 bg-red-50 border border-red-100 px-4 py-3 rounded-xl">{error}</p>
+          planLimit
+            ? <UpgradeNotice message={error} />
+            : <p className="text-sm text-red-600 bg-red-50 border border-red-100 px-4 py-3 rounded-xl">{error}</p>
         )}
 
         <div className="flex items-center justify-end gap-3">
