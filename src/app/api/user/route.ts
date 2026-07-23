@@ -13,7 +13,9 @@ export async function GET() {
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, name: true, email: true, image: true, createdAt: true, country: true, currency: true, bio: true, plan: true, planExpiresAt: true },
+    // `role` é usado pelo perfil para mostrar o atalho do painel admin no
+    // celular (a barra lateral, onde ele ficava, é só desktop).
+    select: { id: true, name: true, email: true, image: true, createdAt: true, country: true, currency: true, bio: true, plan: true, planExpiresAt: true, role: true },
   });
   if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
 

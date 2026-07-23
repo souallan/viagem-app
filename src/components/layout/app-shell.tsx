@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Menu } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 import { Sidebar } from "./sidebar";
 import { BottomNav } from "./bottom-nav";
 import { NotificationBell } from "./notification-bell";
 import Link from "next/link";
 import { Plane } from "lucide-react";
-import { useLanguage } from "@/contexts/language-context";
+
+// Destinos da barra de baixo: são as telas "raiz", onde não existe voltar.
+const ROOT_ROUTES = ["/dashboard", "/routes", "/tips", "/experiences", "/profile"];
 
 export function AppShell({
   isAdmin,
@@ -16,51 +18,20 @@ export function AppShell({
   isAdmin: boolean;
   children: React.ReactNode;
 }) {
-  const [open, setOpen] = useState(false);
-  const { t } = useLanguage();
-
-  // Close sidebar when route changes (listen to popstate + custom navigation)
-  useEffect(() => {
-    const close = () => setOpen(false);
-    window.addEventListener("popstate", close);
-    return () => window.removeEventListener("popstate", close);
-  }, []);
-
-  // Prevent body scroll when sidebar is open on mobile
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
-  }, [open]);
+  const pathname = usePathname();
+  const router = useRouter();
+  const isRoot = ROOT_ROUTES.includes(pathname);
 
   return (
     <div className="flex min-h-screen bg-background">
 
-      {/* ── Desktop sidebar (always visible md+) ──
-          O `fixed` mora aqui, e não no Sidebar: dentro do drawer mobile um filho
-          fixed zerava a largura do wrapper e quebrava o translate de fechar. */}
+      {/* ── Barra lateral — SÓ desktop ──
+          O drawer mobile foi removido: ele repetia exatamente as mesmas 5 rotas
+          da barra de baixo (mesma ordem, mesmos rótulos), o que é padrão de site
+          responsivo, não de app. Idioma e painel admin, que só existiam nele,
+          foram para o /profile; logout e privacidade já estavam lá. */}
       <div className="hidden md:block fixed inset-y-0 left-0 z-30 print:hidden">
         <Sidebar isAdmin={isAdmin} />
-      </div>
-
-      {/* ── Mobile: overlay + drawer ── */}
-      {open && (
-        <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden print:hidden"
-          onClick={() => setOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-
-      <div
-        className={`fixed inset-y-0 left-0 z-50 md:hidden print:hidden transition-transform duration-300 ease-in-out ${
-          open ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <Sidebar isAdmin={isAdmin} onClose={() => setOpen(false)} />
       </div>
 
       {/* ── Main content ── */}
@@ -70,23 +41,28 @@ export function AppShell({
         <header className="md:hidden print:hidden sticky top-0 z-30 flex items-center gap-3 px-4 min-h-[3.5rem] pt-safe border-b border-white/5"
           style={{ background: "linear-gradient(180deg, #0E1520 0%, #111827 100%)" }}
         >
-          <button
-            onClick={() => setOpen(true)}
-            className="w-9 h-9 flex items-center justify-center rounded-lg text-slate-400 hover:text-white hover:bg-white/8 transition-colors"
-            aria-label={t.sidebar.openMenu}
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div
-              className="w-7 h-7 rounded-md flex items-center justify-center shrink-0"
-              style={{ background: "linear-gradient(135deg, #1A5FCC 0%, #2570E8 100%)" }}
+          {/* Nas telas de profundidade, o espaço antes ocupado pelo hambúrguer
+              vira a seta de voltar — um app mostra o caminho de volta, não a
+              marca repetida em toda tela. */}
+          {isRoot ? (
+            <Link href="/dashboard" className="flex items-center gap-2">
+              <div
+                className="w-7 h-7 rounded-md flex items-center justify-center shrink-0"
+                style={{ background: "linear-gradient(135deg, #1A5FCC 0%, #2570E8 100%)" }}
+              >
+                <Plane className="h-3.5 w-3.5 text-white" />
+              </div>
+              <span className="text-sm font-bold text-white">RoteiroApp</span>
+            </Link>
+          ) : (
+            <button
+              onClick={() => router.back()}
+              className="h-11 w-11 -ml-2 flex items-center justify-center rounded-lg text-slate-300 hover:text-white hover:bg-white/8 transition-colors"
+              aria-label="Voltar"
             >
-              <Plane className="h-3.5 w-3.5 text-white" />
-            </div>
-            <span className="text-sm font-bold text-white">RoteiroApp</span>
-          </Link>
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          )}
 
           <div className="ml-auto">
             <NotificationBell />

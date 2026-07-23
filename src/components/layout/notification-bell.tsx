@@ -54,8 +54,12 @@ export function NotificationBell() {
         )}
       </button>
 
+      {/* `fixed`, não `absolute`: no desktop este sino vive dentro da barra
+          lateral, que tem 256px e `overflow-y-auto` — um painel de 320px
+          absoluto era recortado nos dois eixos. A largura também respeita telas
+          estreitas (antes estourava abaixo de 352px). */}
       {open && (
-        <div className="absolute right-0 top-11 z-50 w-80 rounded-2xl border border-white/10 shadow-2xl overflow-hidden"
+        <div className="fixed right-2 top-[calc(3.5rem+env(safe-area-inset-top,0px))] md:left-[16.5rem] md:right-auto md:top-16 z-50 w-[min(20rem,calc(100vw-1rem))] rounded-2xl border border-white/10 shadow-2xl overflow-hidden"
           style={{ background: "#111827" }}>
           <div className="px-4 py-3 border-b border-white/6 flex items-center justify-between">
             <p className="text-sm font-bold text-white">Notificações</p>

@@ -26,6 +26,7 @@ interface UserProfile {
   bio: string | null;
   createdAt: string;
   plan?: string;
+  role?: string;
   isPremium?: boolean;
   planExpiresAt?: string | null;
   stats: {
@@ -36,6 +37,12 @@ interface UserProfile {
 }
 
 const CURRENCY_CODES = ["BRL","USD","EUR","GBP","ARS","CLP","COP","MXN","JPY","CNY","AUD","CAD"] as const;
+
+const PROFILE_LANGS = [
+  { code: "pt" as const, name: "Português", flag: "🇧🇷" },
+  { code: "es" as const, name: "Español",   flag: "🇪🇸" },
+  { code: "en" as const, name: "English",   flag: "🇬🇧" },
+];
 
 function Avatar({ name, image, size = "lg" }: { name: string | null; image: string | null; size?: "sm" | "lg" }) {
   const initials = (name ?? "U").split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
@@ -59,7 +66,7 @@ function Avatar({ name, image, size = "lg" }: { name: string | null; image: stri
 }
 
 export default function ProfilePage() {
-  const { t } = useLanguage();
+  const { t, lang, setLang } = useLanguage();
   const tp = t.profile;
   const CURRENCIES = CURRENCY_CODES.map((code) => ({
     code,
@@ -471,6 +478,45 @@ export default function ProfilePage() {
           </form>
         </div>
       )}
+
+      {/* ── Preferências ──
+          Idioma e o atalho do painel admin moravam só na barra lateral, que é
+          desktop. Com o drawer removido do celular (ele duplicava 100% a barra
+          de baixo), estas opções ficariam inacessíveis no app sem este card. */}
+      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
+        <h2 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <Globe className="h-4 w-4 text-gray-500" />
+          Idioma
+        </h2>
+        <div className="flex gap-2">
+          {PROFILE_LANGS.map((l) => (
+            <button
+              key={l.code}
+              onClick={() => setLang(l.code)}
+              className={cn(
+                "flex-1 flex items-center justify-center gap-2 min-h-[44px] rounded-xl text-sm font-semibold border transition-all",
+                lang === l.code
+                  ? "bg-primary-50 text-primary-700 border-primary-200"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+              )}
+              aria-pressed={lang === l.code}
+            >
+              <span aria-hidden="true">{l.flag}</span>
+              {l.name}
+            </button>
+          ))}
+        </div>
+
+        {user.role === "ADMIN" && (
+          <Link
+            href="/backoffice"
+            className="mt-4 flex items-center gap-2.5 min-h-[44px] px-3 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 transition-colors text-sm font-semibold"
+          >
+            <ShieldAlert className="h-4 w-4" />
+            Painel administrativo
+          </Link>
+        )}
+      </div>
 
       {/* ── Assinatura ──
           Cancelar precisa ser tão fácil quanto assinar (CDC art. 51). Antes, o
