@@ -4,7 +4,7 @@ import { confirmDialog } from "@/lib/confirm";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Trash2, Image as ImageIcon, Link as LinkIcon, Check, X } from "lucide-react";
+import { ArrowLeft, Trash2, Image as ImageIcon, Link as LinkIcon, Check, X, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,6 +36,12 @@ export default function EditTripPage() {
     coverImage: "" as string | null,
   });
 
+  // Congelamento no plano grátis: destino e datas, uma vez definidos, travam
+  // (Premium destrava). `lock` guarda quais campos JÁ vinham preenchidos — só
+  // esses ficam bloqueados; um campo ainda vazio pode ser preenchido uma vez.
+  const [isPremium, setIsPremium] = useState(true); // assume Premium até saber (não trava indevidamente)
+  const [lock, setLock] = useState({ destination: false, dates: false });
+
   useEffect(() => {
     fetch(`/api/trips/${id}`)
       .then((r) => r.json())
@@ -52,8 +58,26 @@ export default function EditTripPage() {
           coverImage: trip.coverImage ?? null,
         });
         if (trip.coverImage) setUrlInput(trip.coverImage);
+        setLock({
+          destination: !!(trip.destination && trip.destination.trim()),
+          dates: !!(trip.startDate || trip.endDate),
+        });
       });
   }, [id]);
+
+  useEffect(() => {
+    fetch("/api/user/plan")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!d) return;
+        const ativo = !d.planExpiresAt || new Date(d.planExpiresAt) > new Date();
+        setIsPremium(d.plan === "PREMIUM" && ativo);
+      })
+      .catch(() => {});
+  }, []);
+
+  const destinoTravado = !isPremium && lock.destination;
+  const datasTravadas = !isPremium && lock.dates;
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -259,15 +283,28 @@ export default function EditTripPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="destination">Destino(s)</Label>
+              <Label htmlFor="destination" className="flex items-center gap-1.5">
+                Destino(s)
+                {destinoTravado && <Lock className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" />}
+              </Label>
               <Input
                 id="destination"
                 name="destination"
                 value={form.destination}
                 onChange={handleChange}
                 placeholder="Ex: Paris, França → Roma, Itália"
+                readOnly={destinoTravado}
+                aria-readonly={destinoTravado}
+                className={destinoTravado ? "bg-gray-50 text-gray-500 cursor-not-allowed" : undefined}
               />
-              <p className="text-xs text-gray-500">Separe múltiplos destinos com " → " (seta).</p>
+              {destinoTravado ? (
+                <p className="text-xs text-amber-600">
+                  No plano gratuito, o destino não pode ser alterado depois de definido. Assine o
+                  Premium para editar e criar novas viagens.
+                </p>
+              ) : (
+                <p className="text-xs text-gray-500">Separe múltiplos destinos com " → " (seta).</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -283,13 +320,19 @@ export default function EditTripPage() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="startDate">Data de ida</Label>
+                <Label htmlFor="startDate" className="flex items-center gap-1.5">
+                  Data de ida
+                  {datasTravadas && <Lock className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" />}
+                </Label>
                 <Input
                   id="startDate"
                   name="startDate"
                   type="date"
                   value={form.startDate}
+                  readOnly={datasTravadas}
+                  className={datasTravadas ? "bg-gray-50 text-gray-500 cursor-not-allowed" : undefined}
                   onChange={(e) => {
+                    if (datasTravadas) return;
                     const newStart = e.target.value;
                     setForm((prev) => ({
                       ...prev,
@@ -300,17 +343,28 @@ export default function EditTripPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="endDate">Data de volta</Label>
+                <Label htmlFor="endDate" className="flex items-center gap-1.5">
+                  Data de volta
+                  {datasTravadas && <Lock className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" />}
+                </Label>
                 <Input
                   id="endDate"
                   name="endDate"
                   type="date"
                   value={form.endDate}
                   min={form.startDate || undefined}
-                  onChange={handleChange}
+                  readOnly={datasTravadas}
+                  className={datasTravadas ? "bg-gray-50 text-gray-500 cursor-not-allowed" : undefined}
+                  onChange={datasTravadas ? undefined : handleChange}
                 />
               </div>
             </div>
+            {datasTravadas && (
+              <p className="text-xs text-amber-600 -mt-2">
+                No plano gratuito, as datas não podem ser alteradas depois de definidas. Assine o
+                Premium para editar.
+              </p>
+            )}
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">

@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getActivePlan } from "@/lib/plans";
+
+/** Duas datas representam o mesmo dia? (compara o dia, ignora hora/fuso) */
+function mesmoDia(a: Date | null, b: Date | null): boolean {
+  if (!a && !b) return true;
+  if (!a || !b) return false;
+  return a.toISOString().slice(0, 10) === b.toISOString().slice(0, 10);
+}
 
 async function getTrip(id: string, userId: string) {
   return prisma.trip.findFirst({
@@ -57,14 +65,37 @@ export async function PUT(
     const body = await request.json();
     const { title, destination, description, startDate, endDate, currency, budget, status, coverImage } = body;
 
+    let novoDestino = destination;
+    let novoInicio = startDate ? new Date(startDate) : null;
+    let novoFim = endDate ? new Date(endDate) : null;
+
+    // ── Congelamento no plano GRÁTIS ──
+    // Destino e datas, uma vez preenchidos, não podem ser alterados no gratuito:
+    // é o que impede reaproveitar a mesma viagem (única no grátis) para planejar
+    // outra. O Premium destrava. Isto é a barreira de verdade (o cliente também
+    // renderiza os campos travados, mas a regra vale no servidor).
+    // Preservamos o valor atual em vez de recusar o request inteiro, para não
+    // quebrar a edição de outros campos (título, descrição, orçamento).
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { plan: true, planExpiresAt: true },
+    });
+    const isPremium = getActivePlan(user?.plan ?? "FREE", user?.planExpiresAt) === "PREMIUM";
+
+    if (!isPremium) {
+      if (trip.destination && trip.destination.trim()) novoDestino = trip.destination;
+      if (trip.startDate) novoInicio = trip.startDate;
+      if (trip.endDate) novoFim = trip.endDate;
+    }
+
     const updated = await prisma.trip.update({
       where: { id },
       data: {
         title,
-        destination,
+        destination: novoDestino,
         description,
-        startDate: startDate ? new Date(startDate) : null,
-        endDate: endDate ? new Date(endDate) : null,
+        startDate: novoInicio,
+        endDate: novoFim,
         currency,
         budget: budget ? parseFloat(budget) : null,
         status,
@@ -72,7 +103,15 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json(updated);
+    // Informa ao cliente se alguma alteração de campo travado foi ignorada, para
+    // ele poder avisar o usuário em vez de fingir que salvou.
+    const bloqueado = !isPremium && (
+      (!!trip.destination?.trim() && destination !== trip.destination) ||
+      (!!trip.startDate && !mesmoDia(novoInicio, startDate ? new Date(startDate) : null)) ||
+      (!!trip.endDate && !mesmoDia(novoFim, endDate ? new Date(endDate) : null))
+    );
+
+    return NextResponse.json({ ...updated, lockedIgnored: bloqueado });
   } catch {
     return NextResponse.json({ error: "Erro ao atualizar" }, { status: 500 });
   }

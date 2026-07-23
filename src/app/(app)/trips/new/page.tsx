@@ -19,6 +19,7 @@ import { CurrencyInput } from "@/components/ui/currency-input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTemplateById } from "@/lib/route-templates";
 import { UpgradeNotice } from "@/components/plan/upgrade-notice";
+import { confirmDialog } from "@/lib/confirm";
 import { cn } from "@/lib/utils";
 
 const POPULAR_DESTINATIONS = [
@@ -363,6 +364,7 @@ function NewTripForm() {
   const [templateProgress, setTemplateProgress] = useState(0);
   const [error, setError] = useState("");
   const [planLimit, setPlanLimit] = useState(false);
+  const [isPremium, setIsPremium] = useState(true); // assume Premium até saber, p/ não avisar à toa
   const [communityRoute, setCommunityRoute] = useState<CommunityRouteData | null>(null);
 
   const [destinations, setDestinations] = useState<string[]>(
@@ -391,6 +393,17 @@ function NewTripForm() {
       setDestinations([template.destination]);
     }
   }, [template]);
+
+  useEffect(() => {
+    fetch("/api/user/plan")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!d) return;
+        const ativo = !d.planExpiresAt || new Date(d.planExpiresAt) > new Date();
+        setIsPremium(d.plan === "PREMIUM" && ativo);
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!communityId) return;
@@ -465,6 +478,18 @@ function NewTripForm() {
       setError("A data de volta não pode ser anterior à data de ida.");
       return;
     }
+
+    // No plano grátis, destino e datas travam depois de criados (a viagem é
+    // única). Confirma antes, já que é irreversível sem Premium.
+    if (!isPremium) {
+      const temData = !!(form.startDate || form.endDate);
+      const ok = await confirmDialog(
+        `No plano gratuito o destino${temData ? " e as datas" : ""} desta viagem ` +
+          `não poderão ser alterados depois. Deseja criar assim mesmo?`
+      );
+      if (!ok) return;
+    }
+
     setError("");
     setLoading(true);
 
