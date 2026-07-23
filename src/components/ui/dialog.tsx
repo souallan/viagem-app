@@ -15,6 +15,14 @@ interface DialogProps {
 function Dialog({ open, onClose, children, className }: DialogProps) {
   const panelRef = React.useRef<HTMLDivElement>(null);
 
+  // Guarda o onClose mais recente numa ref para que o efeito abaixo NÃO precise
+  // depender dele. As telas passam uma função inline (`onClose={() => ...}`),
+  // recriada a cada render: com ela nas dependências, cada tecla digitada
+  // refazia o efeito, que reaplica o foco no primeiro elemento — o botão X.
+  // Era por isso que o foco pulava do campo para o X a cada caractere.
+  const onCloseRef = React.useRef(onClose);
+  React.useEffect(() => { onCloseRef.current = onClose; });
+
   React.useEffect(() => {
     if (!open) return;
 
@@ -32,12 +40,14 @@ function Dialog({ open, onClose, children, className }: DialogProps) {
         ) ?? []
       ).filter((el) => el.offsetParent !== null);
 
-    // Foca o primeiro elemento (ou o painel) ao abrir.
-    const focusables = getFocusable();
-    (focusables[0] ?? panelRef.current)?.focus();
+    // Foca o PRÓPRIO painel ao abrir (prática recomendada do WAI-ARIA para
+    // diálogos). Focar o primeiro elemento focável colocava o foco no botão X —
+    // que aparecia destacado — e, num modal cheio de campos, focar o primeiro
+    // campo abriria o teclado sem o usuário pedir.
+    panelRef.current?.focus();
 
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { onClose(); return; }
+      if (e.key === "Escape") { onCloseRef.current(); return; }
       if (e.key !== "Tab") return;
       // Foco-trap: mantém o Tab dentro do modal.
       const items = getFocusable();
@@ -55,7 +65,7 @@ function Dialog({ open, onClose, children, className }: DialogProps) {
     // Registra na pilha de dispensáveis para o botão VOLTAR do Android fechar
     // este modal em vez de navegar para fora (ou fechar o app). `Escape` acima
     // resolve só no desktop — no Android essa tecla não existe.
-    const unregister = pushDismissable(onClose);
+    const unregister = pushDismissable(() => onCloseRef.current());
 
     document.addEventListener("keydown", handleKey);
     return () => {
@@ -64,7 +74,9 @@ function Dialog({ open, onClose, children, className }: DialogProps) {
       document.body.style.overflow = prevOverflow;
       previouslyFocused?.focus?.();
     };
-  }, [open, onClose]);
+    // Só `open`: o efeito deve rodar ao ABRIR/FECHAR, nunca a cada render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   if (!open) return null;
 
