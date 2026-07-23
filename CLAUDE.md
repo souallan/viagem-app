@@ -191,6 +191,7 @@ Registered routes:
 - `/experiences/[id]`
 - `/experiences/[id]/edit`
 - `/experiences/new`
+- `/explorar`
 - `/forgot-password`
 - `/login`
 - `/offline`
