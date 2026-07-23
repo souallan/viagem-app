@@ -108,6 +108,7 @@ Registered routes:
 - `/admin/backup` — GET
 - `/admin/comments` — DELETE, GET
 - `/admin/content` — DELETE, GET
+- `/admin/moderation` — GET, PATCH
 - `/admin/newsletter` — DELETE, GET
 - `/admin/posts` — DELETE, GET, PATCH, POST
 - `/admin/referrals` — GET
@@ -177,6 +178,7 @@ Registered routes:
 - `/backoffice/comments`
 - `/backoffice/content`
 - `/backoffice/login`
+- `/backoffice/moderation`
 - `/backoffice/monitoring`
 - `/backoffice/newsletter`
 - `/backoffice/posts`
