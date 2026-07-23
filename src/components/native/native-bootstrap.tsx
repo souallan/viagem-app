@@ -47,10 +47,19 @@ export function NativeBootstrap() {
         // `block: "center"` deixa o campo no meio do espaço que sobrou, o que
         // funciona tanto para campo alto quanto para o rodapé de um modal.
         const kDidShow = await Keyboard.addListener("keyboardDidShow", () => {
-          const el = document.activeElement as HTMLElement | null;
-          if (el && typeof el.scrollIntoView === "function") {
-            el.scrollIntoView({ block: "center", behavior: "smooth" });
-          }
+          const rolar = () => {
+            const el = document.activeElement as HTMLElement | null;
+            if (el && typeof el.scrollIntoView === "function") {
+              // `behavior:"auto"` (instantâneo) de propósito: a rolagem suave é
+              // cancelada pelo relayout que acontece quando o body encolhe.
+              el.scrollIntoView({ block: "center", behavior: "auto" });
+            }
+          };
+          // Duas passadas: a primeira age assim que o teclado aparece; a segunda
+          // corrige depois que o redimensionamento do body termina, senão o
+          // navegador reposiciona a página e desfaz a nossa rolagem.
+          rolar();
+          setTimeout(rolar, 300);
         });
 
         cleanups.push(() => {

@@ -26,7 +26,13 @@ const config: CapacitorConfig = {
       androidScaleType: "CENTER_CROP",
     },
     Keyboard: {
-      resize: "native",
+      // "body" e NAO "native": `native` usa o adjustResize do Android, que o
+      // sistema IGNORA quando a activity desenha em tela cheia (é o nosso caso —
+      // viewportFit=cover, conteúdo atrás da barra de status). Resultado: a
+      // WebView não encolhia e o teclado cobria o campo em foco.
+      // "body" reduz a altura do body via JS a partir da altura do teclado, o
+      // que funciona independentemente do modo de tela.
+      resize: "body",
     },
   },
 };
