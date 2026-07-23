@@ -133,6 +133,13 @@ export default function DashboardPage() {
   const past     = filtered.filter((t) => t.status === "COMPLETED" || t.status === "CANCELLED");
   const hasTrips = trips.length > 0;
 
+  // Viagem acontecendo agora. Usa `trips` e não `filtered`: o atalho não deve
+  // sumir porque o usuário digitou algo na busca.
+  const viagemAgora = useMemo(
+    () => trips.find((t) => t.status === "IN_PROGRESS") ?? null,
+    [trips]
+  );
+
   const nextTrip = useMemo(() => {
     const candidates = [...ongoing, ...upcoming].filter((t) => t.startDate);
     if (candidates.length === 0) return null;
@@ -162,6 +169,44 @@ export default function DashboardPage() {
       {/* Convite para ativar avisos — só no app nativo e só depois que a pessoa
           já tem viagem, quando o benefício é concreto. */}
       <PushPermissionPrompt temViagem={hasTrips} />
+
+      {/* ── Viagem acontecendo agora ──
+          Durante a viagem o que importa é achar rápido o roteiro do dia, o número
+          da reserva e o documento — e isso estava a 4 toques, com os documentos
+          escondidos atrás de um dropdown. Aqui vira 1 toque, no topo da tela
+          inicial. Só aparece quando há viagem em andamento. */}
+      {viagemAgora && (
+        <div className="rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 to-teal-50 p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="relative flex h-2 w-2" aria-hidden="true">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
+            <span className="text-xs font-bold text-emerald-700 uppercase tracking-wide">
+              Viagem em andamento
+            </span>
+          </div>
+          <p className="font-black text-gray-900 truncate">{viagemAgora.title}</p>
+          <p className="text-sm text-gray-600 truncate mb-3">{viagemAgora.destination}</p>
+
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { href: `/trips/${viagemAgora.id}/itinerary`,     label: "Roteiro",    Icon: ListChecks },
+              { href: `/trips/${viagemAgora.id}/accommodation`, label: "Reservas",   Icon: MapPin },
+              { href: `/trips/${viagemAgora.id}/documents`,     label: "Documentos", Icon: FileWarning },
+            ].map(({ href, label, Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className="flex flex-col items-center justify-center gap-1 min-h-[60px] rounded-xl bg-white border border-emerald-100 text-emerald-800 hover:border-emerald-300 transition-colors"
+              >
+                <Icon className="h-4 w-4" aria-hidden="true" />
+                <span className="text-xs font-semibold">{label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── Hero Banner ── */}
       <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-8 min-h-[180px] flex items-center gap-6">
