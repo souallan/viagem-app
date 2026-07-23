@@ -69,7 +69,8 @@ function Dialog({ open, onClose, children, className }: DialogProps) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    // pt-safe/pb-safe: sem isso um modal alto encostava no notch.
+    <div className="fixed inset-0 z-50 flex items-center justify-center pt-safe pb-safe">
       <div
         className="fixed inset-0 bg-black/50"
         onClick={onClose}
@@ -81,7 +82,9 @@ function Dialog({ open, onClose, children, className }: DialogProps) {
         aria-modal="true"
         tabIndex={-1}
         className={cn(
-          "relative z-50 bg-white rounded-xl shadow-xl max-w-lg w-full mx-4 max-h-[90vh] overflow-y-auto outline-none",
+          // `dvh` e não `vh`: no WebView a unidade `vh` não acompanha a abertura
+          // do teclado virtual, então o modal ficava mais alto que o espaço real.
+          "relative z-50 bg-white rounded-xl shadow-xl max-w-lg w-full mx-4 max-h-[90dvh] overflow-y-auto outline-none",
           className
         )}
       >
@@ -94,7 +97,7 @@ function Dialog({ open, onClose, children, className }: DialogProps) {
 function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("flex items-center justify-between p-6 border-b", className)}
+      className={cn("flex items-center justify-between p-4 sm:p-6 border-b", className)}
       {...props}
     />
   );
@@ -109,14 +112,22 @@ function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingEl
   );
 }
 
+// p-4 no celular: com p-6 fixo, uma tela de 360px deixava só 280px úteis dentro
+// do modal — os campos em duas colunas não cabiam.
 function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("p-6", className)} {...props} />;
+  return <div className={cn("p-4 sm:p-6", className)} {...props} />;
 }
 
+// No celular os botões empilham e ocupam a linha inteira (`col-reverse` mantém a
+// ação principal por cima). Lado a lado num modal de 280px úteis, "Cancelar" e
+// "Salvar alterações" se esmagavam — ainda mais quando havia mensagem de erro.
 function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("flex justify-end gap-3 px-6 pb-6", className)}
+      className={cn(
+        "flex flex-col-reverse gap-2 px-4 pb-4 sm:flex-row sm:justify-end sm:gap-3 sm:px-6 sm:pb-6 [&>button]:w-full sm:[&>button]:w-auto",
+        className
+      )}
       {...props}
     />
   );
@@ -127,7 +138,7 @@ function DialogClose({ onClose }: { onClose: () => void }) {
     <button
       onClick={onClose}
       aria-label="Fechar"
-      className="text-gray-400 hover:text-gray-600 transition-colors"
+      className="h-11 w-11 -mr-2 sm:h-9 sm:w-9 flex items-center justify-center rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
     >
       <X className="h-5 w-5" />
     </button>

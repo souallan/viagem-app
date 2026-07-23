@@ -194,7 +194,7 @@ export function LocationInput({
           required={required}
           autoComplete="off"
           className={cn(
-            "w-full h-10 rounded-xl border bg-white pl-9 pr-9 text-sm text-gray-900",
+            "w-full h-11 rounded-xl border bg-white pl-9 pr-9 text-base sm:text-sm text-gray-900",
             "placeholder:text-gray-400 focus:outline-none focus:ring-2 transition-all",
             validated
               ? "border-green-400 focus:border-green-400 focus:ring-green-400/15"

@@ -20,11 +20,14 @@ const buttonVariants = cva(
         link:
           "text-primary-600 underline-offset-4 hover:underline p-0 h-auto shadow-none",
       },
+      // Alturas maiores no celular e compactas no desktop: 36px (h-9) fica bem
+      // abaixo do alvo de toque mínimo de 44px, e como todo botão do app herda
+      // daqui, o problema era sistêmico.
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
+        default: "h-11 sm:h-9 px-4 py-2",
+        sm: "h-9 sm:h-8 rounded-md px-3 text-xs",
         lg: "h-11 rounded-lg px-6 text-base",
-        icon: "h-9 w-9",
+        icon: "h-11 w-11 sm:h-9 sm:w-9",
       },
     },
     defaultVariants: {

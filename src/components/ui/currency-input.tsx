@@ -101,7 +101,7 @@ export function CurrencyInput({
 
   if (hasSelector) {
     return (
-      <div className={cn("flex h-10 rounded-xl border border-gray-200 overflow-hidden focus-within:border-primary-400 focus-within:ring-2 focus-within:ring-primary-400/15 transition-all", disabled && "opacity-50", className)}>
+      <div className={cn("flex h-11 rounded-xl border border-gray-200 overflow-hidden focus-within:border-primary-400 focus-within:ring-2 focus-within:ring-primary-400/15 transition-all", disabled && "opacity-50", className)}>
         <select
           value={currency}
           onChange={e => onCurrencyChange(e.target.value)}
@@ -153,7 +153,7 @@ export function CurrencyInput({
         disabled={disabled}
         autoComplete="off"
         className={cn(
-          "w-full h-10 rounded-xl border bg-white text-sm text-gray-900 text-right pr-3",
+          "w-full h-11 rounded-xl border bg-white text-base sm:text-sm text-gray-900 text-right pr-3",
           "placeholder:text-gray-400 focus:outline-none focus:ring-2 transition-all",
           "border-gray-200 focus:border-primary-400 focus:ring-primary-400/15",
           symbol.length <= 2 ? "pl-9" : "pl-12",
