@@ -5,7 +5,7 @@
 //  - GET /api/* (dados): stale-while-revalidate → offline mostra o último dado
 //    conhecido (reservas, itinerário, documentos). /api/auth/* nunca é cacheado.
 // Funciona na web (PWA) e dentro do app nativo (WebView carrega o https origin).
-const CACHE = "roteiroapp-v4";
+const CACHE = "roteiroapp-v5";
 const API_CACHE = "roteiroapp-api-v1";
 const ASSET_CACHE = "roteiroapp-assets-v1";
 const OFFLINE = "/offline";
@@ -51,9 +51,16 @@ self.addEventListener("fetch", (e) => {
     return;
   }
 
-  // RSC/data do Next (payloads de navegação client-side) → deixa a rede;
-  // a navegação de documento já é cacheada abaixo para o fallback offline.
-  if (url.pathname.startsWith("/_next/")) return;
+  // RSC/data do Next (payloads de navegação client-side) → stale-while-revalidate.
+  // Antes ia direto pra rede e não era cacheado: num cold start OFFLINE, navegar
+  // para uma sub-aba da viagem que não estava em memória falhava ao buscar o RSC
+  // e mostrava "Algo deu errado" (visto no teste real, na tela de Documentos).
+  // Cacheando o RSC, o prefetch feito online (TripOfflineWarm) sobrevive ao
+  // reinício e a navegação offline funciona.
+  if (url.pathname.startsWith("/_next/")) {
+    e.respondWith(staleWhileRevalidate(e));
+    return;
+  }
 
   // Navegação e demais same-origin → network-first, fallback cache/offline.
   e.respondWith(
