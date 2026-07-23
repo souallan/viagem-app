@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { getPremiumCache } from "@/lib/premium-cache";
 
 // Endpoints que precisam estar disponíveis SEM INTERNET durante a viagem:
 // número de reserva do hotel, voo, roteiro do dia, documentos e o que foi pago.
@@ -49,6 +50,9 @@ export function TripOfflineWarm({ tripId }: { tripId: string }) {
 
   useEffect(() => {
     if (typeof navigator !== "undefined" && navigator.onLine === false) return;
+    // Offline é recurso Premium: só aquece o cache para quem pode usá-lo. O
+    // OfflineGate mantém esse flag atualizado quando há conexão.
+    if (getPremiumCache() !== true) return;
 
     const timer = setTimeout(() => {
       // 1) Dados da API

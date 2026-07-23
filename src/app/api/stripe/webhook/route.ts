@@ -88,6 +88,54 @@ async function applySubscription(userId: string, sub: Stripe.Subscription) {
       stripeSubscriptionId: sub.id,
     },
   });
+
+  // Recompensa de indicação: quando o INDICADO assina, quem o indicou ganha
+  // 30 dias de Premium. Só quando a assinatura fica ativa (paga) e só UMA vez
+  // (referralRewarded evita repetir a cada renovação).
+  if (active) {
+    await rewardReferrerOnce(userId).catch((e) =>
+      console.error("[stripe webhook] recompensa de indicação falhou", e)
+    );
+  }
+}
+
+const DIAS_RECOMPENSA_INDICACAO = 30;
+
+/** Credita 30 dias de Premium a quem indicou este usuário — no máximo uma vez. */
+async function rewardReferrerOnce(referredUserId: string) {
+  const referido = await prisma.user.findUnique({
+    where: { id: referredUserId },
+    select: { referredBy: true, referralRewarded: true },
+  });
+  if (!referido?.referredBy || referido.referralRewarded) return;
+
+  const referrer = await prisma.user.findUnique({
+    where: { id: referido.referredBy },
+    select: { id: true, plan: true, planExpiresAt: true, bannedAt: true },
+  });
+  // Marca como recompensado mesmo se o indicador sumiu/foi banido, para não
+  // ficar reconsultando a cada renovação.
+  if (!referrer || referrer.bannedAt) {
+    await prisma.user.update({ where: { id: referredUserId }, data: { referralRewarded: true } });
+    return;
+  }
+
+  // Soma ao prazo vigente quando ainda está em dia; senão conta a partir de hoje
+  // (mesma regra do Premium de cortesia — nunca encurta o acesso).
+  const emDia = referrer.plan === "PREMIUM" && referrer.planExpiresAt && referrer.planExpiresAt > new Date();
+  const base = emDia ? new Date(referrer.planExpiresAt!) : new Date();
+  base.setDate(base.getDate() + DIAS_RECOMPENSA_INDICACAO);
+
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { id: referrer.id },
+      data: { plan: "PREMIUM", planExpiresAt: base },
+    }),
+    prisma.user.update({
+      where: { id: referredUserId },
+      data: { referralRewarded: true },
+    }),
+  ]);
 }
 
 async function userIdFromCustomer(

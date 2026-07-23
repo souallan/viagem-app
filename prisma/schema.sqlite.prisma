@@ -21,6 +21,7 @@ model User {
   // Referral
   referralCode  String?   @unique
   referredBy    String?
+  referralRewarded Boolean @default(false)
   // Moderation
   bannedAt      DateTime?
   banReason     String?
