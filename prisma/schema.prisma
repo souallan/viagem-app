@@ -333,6 +333,7 @@ model CommunityRoute {
   id              String              @id @default(cuid())
   userId          String
   authorName      String              @default("Viajante")
+  status          String              @default("APPROVED") // PENDING | APPROVED | REJECTED
   title           String
   destination     String
   country         String              @default("")
@@ -447,6 +448,9 @@ model Experience {
   mood           String?
   tags           String?
   publishedAsTip Boolean  @default(false)
+  // Moderacao: PENDING | APPROVED | REJECTED. Novos entram PENDING; default
+  // APPROVED para nao esconder o conteudo ja existente.
+  status         String   @default("APPROVED")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

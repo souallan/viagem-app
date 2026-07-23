@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "@/lib/toast";
 import {
   ArrowLeft, Plus, Trash2, Image as ImageIcon, X,
   MapPin, Clock, Wallet, Tag, Star, CalendarDays,
@@ -210,6 +211,7 @@ export default function ContributeRoutePage() {
         const d = await res.json();
         setError(d.error ?? "Erro ao publicar roteiro.");
       } else {
+        toast("Roteiro enviado! Ele aparecerá na comunidade após a aprovação da equipe.", "success");
         router.push("/routes?tab=community");
       }
     } catch {

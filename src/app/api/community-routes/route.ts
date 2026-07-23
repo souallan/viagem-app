@@ -6,7 +6,9 @@ import { containsProfanity } from "@/lib/content-filter";
 import { planLimitFor, planLimitError } from "@/lib/plan-guard";
 
 export async function GET() {
+  // Lista pública: só roteiros APROVADOS pelo admin.
   const routes = await prisma.communityRoute.findMany({
+    where: { status: "APPROVED" },
     orderBy: { createdAt: "desc" },
     include: {
       activities: { orderBy: [{ day: "asc" }, { startTime: "asc" }] },
@@ -54,6 +56,7 @@ export async function POST(req: NextRequest) {
     data: {
       userId: session.user.id,
       authorName: stripHtml(authorName) || session.user.name || "Viajante",
+      status: "PENDING", // aguarda aprovação do admin antes de aparecer na comunidade
       title:       cleanTitle,
       destination: cleanDestination,
       country:     stripHtml(country) || "",

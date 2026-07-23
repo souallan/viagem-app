@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Users, FileText, BarChart3, Shield,
   ArrowLeft, Plane, Settings, Mail, X, ScrollText, GitBranch,
-  Megaphone, MessageSquare, Activity,
+  Megaphone, MessageSquare, Activity, ShieldCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +13,7 @@ const NAV = [
   { href: "/backoffice", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/backoffice/posts", label: "Publicações", icon: FileText },
   { href: "/backoffice/announcements", label: "Anúncios", icon: Megaphone },
+  { href: "/backoffice/moderation", label: "Moderação", icon: ShieldCheck },
   { href: "/backoffice/comments", label: "Comentários", icon: MessageSquare },
   { href: "/backoffice/users", label: "Usuários", icon: Users },
   { href: "/backoffice/audit", label: "Auditoria", icon: ScrollText },

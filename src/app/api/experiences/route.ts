@@ -5,15 +5,27 @@ import { stripHtml } from "@/lib/sanitize";
 import { logger } from "@/lib/logger";
 import { planLimitFor, planLimitError } from "@/lib/plan-guard";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const experiences = await prisma.experience.findMany({
-    where: { userId: session.user.id },
-    orderBy: { createdAt: "desc" },
-  });
+  const mine = new URL(req.url).searchParams.get("mine") === "1";
 
+  if (mine) {
+    // Meus relatos: todos os meus, inclusive os que ainda aguardam aprovação.
+    const experiences = await prisma.experience.findMany({
+      where: { userId: session.user.id },
+      orderBy: { createdAt: "desc" },
+    });
+    return NextResponse.json(experiences);
+  }
+
+  // Feed público: relatos APROVADOS de todos os usuários (o grátis também vê).
+  const experiences = await prisma.experience.findMany({
+    where: { status: "APPROVED" },
+    orderBy: { createdAt: "desc" },
+    include: { user: { select: { name: true, image: true } } },
+  });
   return NextResponse.json(experiences);
 }
 
@@ -58,9 +70,10 @@ export async function POST(req: NextRequest) {
         rating:      rating ? parseInt(rating) : null,
         mood:        mood ?? null,
         tags:        tags  ? stripHtml(tags)   : null,
+        status:      "PENDING", // aguarda aprovação do admin antes de virar público
       },
     });
-    return NextResponse.json(experience, { status: 201 });
+    return NextResponse.json({ ...experience, pendingApproval: true }, { status: 201 });
   } catch (err) {
     logger.error("Experience create error", { err: String(err) });
     return NextResponse.json({ error: "Erro ao salvar" }, { status: 500 });

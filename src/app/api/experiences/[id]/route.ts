@@ -10,7 +10,12 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id } = await params;
-  const exp = await getOwned(id, session.user.id);
+  // Relato APROVADO é público (qualquer um vê); o dono também vê o seu, mesmo
+  // pendente/rejeitado. Edição/exclusão (PUT/DELETE) seguem só do dono.
+  const exp = await prisma.experience.findFirst({
+    where: { id, OR: [{ status: "APPROVED" }, { userId: session.user.id }] },
+    include: { user: { select: { name: true, image: true } } },
+  });
   if (!exp) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(exp);
 }

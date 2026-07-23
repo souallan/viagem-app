@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { LocationInput } from "@/components/ui/location-input";
 import { UpgradeNotice } from "@/components/plan/upgrade-notice";
 import { cn } from "@/lib/utils";
+import { toast } from "@/lib/toast";
 
 const MOODS = [
   { value: "AMAZING",     emoji: "✨", label: "Incrível"    },
@@ -104,7 +105,8 @@ function NewExperienceForm() {
     const data = await res.json().catch(() => ({}));
     setSaving(false);
     if (res.ok) {
-      router.push(`/experiences/${data.id}`);
+      toast("Relato enviado! Ele aparecerá para a comunidade após a aprovação da equipe.", "success");
+      router.push("/experiences?mine=1");
     } else {
       // Usa a mensagem do servidor: com "Erro ao salvar" genérico, o bloqueio de
       // plano parecia falha do sistema em vez de recurso Premium.

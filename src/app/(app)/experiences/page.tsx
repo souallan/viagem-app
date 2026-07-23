@@ -50,7 +50,7 @@ function StarRating({ rating, size = "sm" }: { rating: number | null; size?: "sm
   );
 }
 
-function FeaturedCard({ exp, onDelete }: { exp: Experience; onDelete: (id: string) => void }) {
+function FeaturedCard({ exp, onDelete, canManage }: { exp: Experience; onDelete: (id: string) => void; canManage: boolean }) {
   const { t } = useLanguage();
   const mood = exp.mood ? MOOD_CONFIG[exp.mood] : null;
   const moodLabel = exp.mood ? (t.experiences.moods as Record<string, string>)[exp.mood] ?? exp.mood : null;
@@ -81,6 +81,7 @@ function FeaturedCard({ exp, onDelete }: { exp: Experience; onDelete: (id: strin
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold tracking-wide">
             {t.experiences.featured}
           </span>
+          {canManage && (
           <div className="flex items-center gap-2 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 transition-opacity">
             <Link
               href={`/experiences/${exp.id}/edit`}
@@ -96,6 +97,7 @@ function FeaturedCard({ exp, onDelete }: { exp: Experience; onDelete: (id: strin
               <Trash2 className="h-3.5 w-3.5" />
             </button>
           </div>
+          )}
         </div>
 
         {/* Content overlay */}
@@ -148,7 +150,7 @@ function FeaturedCard({ exp, onDelete }: { exp: Experience; onDelete: (id: strin
   );
 }
 
-function ExperienceCard({ exp, onDelete }: { exp: Experience; onDelete: (id: string) => void }) {
+function ExperienceCard({ exp, onDelete, canManage }: { exp: Experience; onDelete: (id: string) => void; canManage: boolean }) {
   const { t } = useLanguage();
   const mood = exp.mood ? MOOD_CONFIG[exp.mood] : null;
   const moodLabel = exp.mood ? (t.experiences.moods as Record<string, string>)[exp.mood] ?? exp.mood : null;
@@ -185,6 +187,7 @@ function ExperienceCard({ exp, onDelete }: { exp: Experience; onDelete: (id: str
           )}
 
           {/* Action buttons */}
+          {canManage && (
           <div className="absolute top-3 right-3 flex gap-1.5 opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 transition-opacity">
             <Link
               href={`/experiences/${exp.id}/edit`}
@@ -200,6 +203,7 @@ function ExperienceCard({ exp, onDelete }: { exp: Experience; onDelete: (id: str
               <Trash2 className="h-3 w-3" />
             </button>
           </div>
+          )}
 
           {/* Rating */}
           <div className="absolute bottom-3 left-3">
@@ -262,14 +266,24 @@ export default function ExperiencesPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [moodFilter, setMoodFilter] = useState("ALL");
+  // "community" = relatos aprovados de todos (padrão, o grátis também vê);
+  // "mine" = os meus, inclusive os que aguardam aprovação. Abre em "mine" quando
+  // a URL traz ?mine=1 (ex.: logo após enviar um relato).
+  const [view, setView] = useState<"community" | "mine">(() => {
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("mine") === "1") {
+      return "mine";
+    }
+    return "community";
+  });
 
-  async function load() {
-    const r = await fetch("/api/experiences");
+  async function load(v: "community" | "mine" = view) {
+    setLoading(true);
+    const r = await fetch(v === "mine" ? "/api/experiences?mine=1" : "/api/experiences");
     if (r.ok) setExperiences(await r.json());
     setLoading(false);
   }
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(view); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, [view]);
 
   async function handleDelete(id: string) {
     if (!(await confirmDialog("Excluir esta experiência?"))) return;
@@ -345,6 +359,21 @@ export default function ExperiencesPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* ── Alternância Comunidade / Meus relatos ── */}
+      <div className="inline-flex items-center gap-1 bg-white border border-gray-200 rounded-xl p-1">
+        {([["community", "Comunidade"], ["mine", "Meus relatos"]] as const).map(([v, label]) => (
+          <button
+            key={v}
+            onClick={() => setView(v)}
+            className={`px-4 min-h-[40px] rounded-lg text-sm font-semibold transition-colors ${
+              view === v ? "bg-primary-50 text-primary-700" : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* ── Filters bar ── */}
@@ -432,13 +461,13 @@ export default function ExperiencesPage() {
           )}
 
           {/* Featured card (first result) */}
-          <FeaturedCard exp={featured} onDelete={handleDelete} />
+          <FeaturedCard exp={featured} onDelete={handleDelete} canManage={view === "mine"} />
 
           {/* Grid */}
           {rest.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {rest.map((exp) => (
-                <ExperienceCard key={exp.id} exp={exp} onDelete={handleDelete} />
+                <ExperienceCard key={exp.id} exp={exp} onDelete={handleDelete} canManage={view === "mine"} />
               ))}
             </div>
           )}
