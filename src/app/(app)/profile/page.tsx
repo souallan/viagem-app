@@ -488,21 +488,26 @@ export default function ProfilePage() {
           <Globe className="h-4 w-4 text-gray-500" />
           Idioma
         </h2>
-        <div className="flex gap-2">
+        {/* `grid-cols-3` e não `flex-1`: no Tailwind a grade é
+            `repeat(3, minmax(0,1fr))`, e esse `minmax(0,...)` permite as colunas
+            encolherem abaixo do texto. Com `flex-1` os três botões se recusavam a
+            encolher ("Português"+"Español"+"English" somavam mais que a tela),
+            esticavam o card e, por tabela, a coluna inteira do app. */}
+        <div className="grid grid-cols-3 gap-2">
           {PROFILE_LANGS.map((l) => (
             <button
               key={l.code}
               onClick={() => setLang(l.code)}
               className={cn(
-                "flex-1 flex items-center justify-center gap-2 min-h-[44px] rounded-xl text-sm font-semibold border transition-all",
+                "flex items-center justify-center gap-1.5 min-h-[44px] px-1 rounded-xl text-sm font-semibold border transition-all",
                 lang === l.code
                   ? "bg-primary-50 text-primary-700 border-primary-200"
                   : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
               )}
               aria-pressed={lang === l.code}
             >
-              <span aria-hidden="true">{l.flag}</span>
-              {l.name}
+              <span aria-hidden="true" className="shrink-0">{l.flag}</span>
+              <span className="truncate">{l.name}</span>
             </button>
           ))}
         </div>

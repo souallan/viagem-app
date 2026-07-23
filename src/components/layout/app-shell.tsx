@@ -34,8 +34,14 @@ export function AppShell({
         <Sidebar isAdmin={isAdmin} />
       </div>
 
-      {/* ── Main content ── */}
-      <div className="flex-1 md:ml-64 print:ml-0 flex flex-col min-h-screen">
+      {/* ── Main content ──
+          `min-w-0` é essencial: esta div é um ITEM FLEX, e item flex tem
+          `min-width:auto`, ou seja, cresce para caber o filho mais largo em vez
+          de respeitar a largura da tela. Um único elemento largo (uma URL sem
+          quebra, uma tabela) esticava a COLUNA INTEIRA, e todos os cards iam
+          junto — no perfil o conteúdo saía pela direita e, como a página podia
+          rolar na horizontal, o logo do cabeçalho ficava fora de vista. */}
+      <div className="flex-1 min-w-0 md:ml-64 print:ml-0 flex flex-col min-h-screen">
 
         {/* Mobile top bar */}
         <header className="md:hidden print:hidden sticky top-0 z-30 flex items-center gap-3 px-4 min-h-[3.5rem] pt-safe border-b border-white/5"
