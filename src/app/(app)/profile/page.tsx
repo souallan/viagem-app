@@ -694,8 +694,13 @@ export default function ProfilePage() {
           </h2>
           <p className="text-sm text-gray-500 -mt-1">{tp.referralDesc}</p>
 
+          {/* `min-w-0` no <code> é o que faz o `truncate` funcionar: item flex tem
+              `min-width:auto` por padrão e se RECUSA a encolher abaixo do texto.
+              Com `white-space:nowrap` do truncate, a URL inteira virava a largura
+              mínima e estourava a página no celular — a tela toda deslocava para
+              a direita e a barra inferior perdia o "Meu Perfil". */}
           <div className="flex items-center gap-2 p-3 rounded-2xl bg-blue-50 border border-blue-100">
-            <code className="flex-1 text-sm font-mono text-blue-700 truncate">
+            <code className="flex-1 min-w-0 text-sm font-mono text-blue-700 truncate">
               {typeof window !== "undefined" ? `${window.location.origin}/register?ref=${referral.code}` : `/register?ref=${referral.code}`}
             </code>
             <button
@@ -713,7 +718,7 @@ export default function ProfilePage() {
             </button>
           </div>
 
-          <div className="flex items-center gap-3 pt-1">
+          <div className="flex flex-wrap items-center gap-3 pt-1">
             <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gray-50 border border-gray-100">
               <Users className="h-4 w-4 text-gray-500" />
               <span className="text-sm font-bold text-gray-800">{referral.referredCount}</span>

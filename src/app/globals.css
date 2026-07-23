@@ -59,6 +59,16 @@
     scroll-behavior: smooth;
   }
 
+  /* Rede de segurança contra estouro horizontal.
+     Um único elemento largo demais (uma URL sem quebra, uma tabela) desloca a
+     PÁGINA INTEIRA para o lado no celular — o conteúdo sai pela direita e a
+     barra de navegação inferior fica cortada.
+     `clip` e NÃO `hidden`: `overflow:hidden` transforma o elemento em container
+     de rolagem e quebra o `position: sticky` do cabeçalho e das abas. */
+  html, body {
+    overflow-x: clip;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "cv11", "ss01";
