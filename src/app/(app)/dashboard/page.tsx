@@ -361,13 +361,9 @@ export default function DashboardPage() {
         <TripSection icon={<Globe className="h-5 w-5 text-slate-400" />} title={t.dashboard.past} accent="border-gray-200 bg-gray-50 text-gray-500" trips={past} muted newLabel={t.common.new} />
       )}
 
-      {hasTrips && (
-        <div className="fixed bottom-safe-nav right-6 sm:hidden z-50">
-          <Link href="/trips/new" className="w-14 h-14 rounded-full bg-primary-500 hover:bg-primary-400 text-white flex items-center justify-center shadow-xl transition-colors" aria-label={t.dashboard.newTrip}>
-            <Plus className="h-6 w-6" />
-          </Link>
-        </div>
-      )}
+      {/* O botão flutuante de "nova viagem" saiu daqui: a barra inferior agora
+          tem um botão de ação central, disponível em TODAS as telas e não só no
+          dashboard. Dois botões iguais na mesma tela confundiriam. */}
     </div>
   );
 }
