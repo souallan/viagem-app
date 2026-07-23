@@ -49,3 +49,7 @@ prisma/dev.db-journal
 *.jks
 *.keystore
 upload-keystore*.txt
+
+# Capturas de depuracao do emulador Android (logs e screenshots temporarios)
+_logcat*.txt
+_tela*.png
