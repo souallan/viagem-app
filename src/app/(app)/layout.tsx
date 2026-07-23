@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/contexts/language-context";
 import { EmailVerificationBanner } from "@/components/layout/email-verification-banner";
 import { AnnouncementBanner } from "@/components/layout/announcement-banner";
 import { PushRegistration } from "@/components/native/push-registration";
+import { OfflineIndicator } from "@/components/layout/offline-indicator";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -27,6 +28,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <AppShell isAdmin={isAdmin}>
         {/* Área autenticada: o token de push é vinculado ao usuário logado. */}
         <PushRegistration />
+        <OfflineIndicator />
         <AnnouncementBanner />
         {!emailVerified && !isAdmin && <EmailVerificationBanner email={user?.email ?? ""} />}
         <main className="flex-1 p-4 sm:p-8">{children}</main>

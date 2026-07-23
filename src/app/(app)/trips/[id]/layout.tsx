@@ -5,6 +5,7 @@ import { MapPin } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { TripTabs } from "@/components/trips/trip-tabs";
+import { TripOfflineWarm } from "@/components/trips/trip-offline-warm";
 
 export default async function TripLayout({
   children,
@@ -115,6 +116,10 @@ export default async function TripLayout({
         <TripTabs tripId={id} />
         <div className="h-px bg-gray-200 mt-1" />
       </div>
+
+      {/* Deixa reservas, voos, roteiro, documentos e gastos desta viagem
+          disponíveis offline mesmo que o usuário não abra cada aba. */}
+      <TripOfflineWarm tripId={id} />
 
       <div>{children}</div>
     </div>
